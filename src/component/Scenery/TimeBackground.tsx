@@ -19,30 +19,28 @@ const TimeBackground = ({nowHoursValue}:BackgroundProps) => {
    * 실시간 체크를 못할까..?ㅜㅜ
    */
   const timeZone:timeZoneI = useMemo(():timeZoneI=>{
-    let nowHours = new Date().getHours();
-    
-    if(nowHours<3 || nowHours>20){ // 새벽 3시 전, 저녁 8시 이후 => 밤
+    if(nowHoursValue<3 || nowHoursValue>20){ // 새벽 3시 전, 저녁 8시 이후 => 밤
       return {
         loadTextureName: "night.png",
         sunLightPosition: [30, 10, -3],
         lightColor: "#efe9ff",
         intensity: 1
       }
-    }else if(nowHours>2 && nowHours<6){ // 새벽 2시 이후, 새벽 6시 전 => 새벽
+    }else if(nowHoursValue>2 && nowHoursValue<6){ // 새벽 2시 이후, 새벽 6시 전 => 새벽
       return {
         loadTextureName: "night.png",
         sunLightPosition: [30, 10, -3],
         lightColor: "#e8f7ff",
         intensity: 2
       }
-    }else if(nowHours>5 && nowHours<12){ // 새벽 5시 이후, 오후 12시 전 => 아침
+    }else if(nowHoursValue>5 && nowHoursValue<12){ // 새벽 5시 이후, 오후 12시 전 => 아침
       return {
         loadTextureName: "morning.png",
         sunLightPosition: [30, 10, -15],
         lightColor: "#fff5d8",
         intensity: 4
       }
-    }else if(nowHours>11 && nowHours<17){ // 오전 11시 이후, 오후 5시 전 => 낮
+    }else if(nowHoursValue>11 && nowHoursValue<17){ // 오전 11시 이후, 오후 5시 전 => 낮
       return {
         loadTextureName: "noon.png",
         sunLightPosition: [30, 10, -3],
