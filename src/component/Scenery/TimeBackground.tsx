@@ -3,6 +3,9 @@ import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useState, useEffect, useMemo } from "react";
 
+interface BackgroundProps {
+  nowHoursValue: number;
+}
 interface timeZoneI {
   loadTextureName: string,
   sunLightPosition: number[],
@@ -10,7 +13,7 @@ interface timeZoneI {
   intensity: number
 }
 
-const Background = () => {
+const TimeBackground = ({nowHoursValue}:BackgroundProps) => {
   const { scene } = useThree();
   /**
    * 실시간 체크를 못할까..?ㅜㅜ
@@ -94,7 +97,7 @@ const Background = () => {
       {bgTexture && (
         <>
           <Plane // right wall
-            args={[30, 30]}
+            args={[100, 50]}
             rotation={[0, -Math.PI / 2, 0]}
             position={[50, -2, -3]}
           >
@@ -110,4 +113,4 @@ const Background = () => {
   );
 };
 
-export default Background;
+export default TimeBackground;
