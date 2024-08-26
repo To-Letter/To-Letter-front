@@ -90,6 +90,7 @@ const Room = () => {
 
   return (
     <>
+      <ambientLight />
       <PerspectiveCamera makeDefault position={[0, 0, 3]} />
       {woodTexture && (
         <>
@@ -97,30 +98,30 @@ const Room = () => {
             ref={windowRef}
             rotation-y={-Math.PI / 2}
             scale={0.0025}
-            position={[7.5, 0, -1]}
+            position={[4, 0, -1]}
           >
             <primitive object={windowglb.scene} />
           </mesh>
           <Photo
-            position={[-3, 0.3, -3.95]}
+            position={[-1, 0.3, -3.95]}
             imageUrl="/texture/Photo1.jpg"
-            popupText="This is photo1"
+            popupText="업데이트를 기대해주세요!"
           />
           <Photo
-            position={[-1, 0.6, -3.95]}
+            position={[1, 0.6, -3.95]}
             imageUrl="/texture/Photo2.jpg"
-            popupText="This is photo2"
+            popupText="업데이트를 기대해주세요!"
           />
           <Photo
-            position={[-1.5, -0.8, -3.95]}
+            position={[0.5, -0.8, -3.95]}
             imageUrl="/texture/Photo3.jpg"
-            popupText="This is photo3"
+            popupText="업데이트를 기대해주세요!"
           />
-          <MetalRack width={10} height={5} position={[-2, 0, -4]} />
+          <MetalRack width={10} height={5} position={[0, 0, -4]} />
           <WallComponent // left wall
             args={[12, 10]}
             rotation={[0, Math.PI / 2, 0]}
-            position={[-7.5, 0, 2]}
+            position={[-10, 0, 2]}
             map={woodTexture}
             receiveShadow
             castShadow
@@ -128,7 +129,7 @@ const Room = () => {
           <WallComponent // right wall (top part)
             args={[12, 3.06]}
             rotation={[0, -Math.PI / 2, 0]}
-            position={[7.5, 3.48, 2]}
+            position={[4, 3.48, 2]}
             map={woodTexture}
             receiveShadow
             castShadow
@@ -136,7 +137,7 @@ const Room = () => {
           <WallComponent // right wall (bottom part)
             args={[12, 3.2]}
             rotation={[0, -Math.PI / 2, 0]}
-            position={[7.5, -3.4, 2]}
+            position={[4, -3.4, 2]}
             map={woodTexture}
             receiveShadow
             castShadow
@@ -144,7 +145,7 @@ const Room = () => {
           <WallComponent // right wall (right part)
             args={[7.3, 3.76]}
             rotation={[0, -Math.PI / 2, 0]}
-            position={[7.5, 0.07, 4.35]}
+            position={[4, 0.07, 4.35]}
             map={woodTexture}
             receiveShadow
             castShadow
@@ -152,31 +153,31 @@ const Room = () => {
           <WallComponent // right wall (left part)
             args={[1.32, 3.76]}
             rotation={[0, -Math.PI / 2, 0]}
-            position={[7.5, 0.07, -3.34]}
+            position={[4, 0.07, -3.34]}
             map={woodTexture}
             receiveShadow
             castShadow
           />
           <WallComponent // top wall
-            args={[15, 12]}
+            args={[14, 12]}
             rotation={[-Math.PI / 2, 0, 0]}
-            position={[0, 5, 2]}
+            position={[-3, 5, 2]}
             map={woodTexture}
             receiveShadow
             castShadow
           />
           <WallComponent // front wall
-            args={[15, 10]}
+            args={[14, 10]}
             rotation={[0, 0, 0]}
-            position={[0, 0, -4]}
+            position={[-3, 0, -4]}
             map={woodTexture}
             receiveShadow
             castShadow
           />
           <WallComponent // under wall
-            args={[15, 12]}
+            args={[14, 12]}
             rotation={[Math.PI / 2, 0, 0]}
-            position={[0, -5, 2]}
+            position={[-3, -5, 2]}
             map={woodTexture}
             receiveShadow
             castShadow

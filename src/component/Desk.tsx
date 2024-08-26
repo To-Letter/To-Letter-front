@@ -53,7 +53,7 @@ const Desk = () => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
         mesh.material = new MeshStandardMaterial({
-          color: "#DBB975",
+          color: "#dbb275",
           map: woodTexture,
         }); // 나무 색상으로 변경
         mesh.castShadow = true; // 그림자 생성

@@ -8,7 +8,7 @@ function Home() {
       <Secen />
       <OrbitControls
         minPolarAngle={Math.PI / 2.5} // under
-        maxPolarAngle={Math.PI - Math.PI / 2.5} // top
+        maxPolarAngle={1.396} // 약 80도
         minAzimuthAngle={-Math.PI / 4} // left
         maxAzimuthAngle={Math.PI / 4} // right
         enablePan={false} // Ctrl 키로 시점 이동 비활성화
