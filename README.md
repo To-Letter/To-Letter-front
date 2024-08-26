@@ -11,7 +11,7 @@
 + front: react, typescript
 + 버전 및 이슈관리 : Github, Github Issues, Github Project
 + 서비스 배포 환경
-+ 협업 툴: [Github Wiki](https://github.com/To-Letter/To-Letter-front/wiki).
++ 협업 툴: [Github Wiki](https://github.com/To-Letter/To-Letter-front/wiki/To-Letter-Wiki)
 
 ### 3. 사용 기술
 + threeJs
