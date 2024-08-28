@@ -46,11 +46,11 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContent = styled.div`
-  background: #ffffff7c;
+  background: #000000a6;
   border-radius: 2px;
   width: 400px;
   max-width: 100%;
-  box-shadow: 1px 1px 1px #6b6b6b;
+  box-shadow: 1px 1px 1px #0000005c;
 `;
 
 const MenuWrap = styled.div`
@@ -66,6 +66,8 @@ const MenuTitle = styled.div<styleI>`
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
+  color: white;
+  padding: 0 2px 4px 2px;
   
-  ${({$selected})=> $selected && `border-bottom: 2px solid black;`}
+  ${({$selected})=> $selected && `border-bottom: 2px solid white;`}
 `
