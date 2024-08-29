@@ -5,25 +5,19 @@ import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
 
 interface props {
-  loginModalOpenHdr: () => void
+  loginModalOpenHdr: () => void;
 }
 
-const Chair = ({loginModalOpenHdr}: props) => {
+const Chair = ({ loginModalOpenHdr }: props) => {
   const chairglb = useLoader(GLTFLoader, "/models/chair.glb");
   const meshRef = useRef<THREE.Mesh>(null);
-
-  const woodTexture = useLoader(
-    THREE.TextureLoader,
-    "/texture/brown_wood_texture.jpg"
-  );
 
   useEffect(() => {
     chairglb.scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
         mesh.material = new MeshStandardMaterial({
-          color: "#DBB975",
-          map: woodTexture,
+          color: "#7b5d54",
         }); // 나무 색상으로 변경
         mesh.castShadow = true; // 그림자 생성
         mesh.receiveShadow = true; // 그림자 수신

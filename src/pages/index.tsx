@@ -5,11 +5,11 @@ import { useCallback, useState } from "react";
 import Index from "../component/account/Index";
 
 function Home() {
-  const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
+  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
 
-  const chairClick = useCallback(()=>{
-    setShowLoginModal(prev=>!prev)
-  },[])
+  const chairClick = useCallback(() => {
+    setShowLoginModal((prev) => !prev);
+  }, []);
 
   return (
     <>
@@ -25,7 +25,7 @@ function Home() {
           maxDistance={3} // 최대 축소 거리
         />
       </Canvas>
-      {showLoginModal && <Index onClose={chairClick}/>}
+      {showLoginModal && <Index onClose={chairClick} />}
     </>
   );
 }
