@@ -74,7 +74,7 @@ const Room = () => {
     windowglb.scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
-        if (mesh.name === "Box002" || mesh.name === "Box003") {
+        if (mesh.name === "Object001" || mesh.name === "sss") {
           // 유리 부분을 투명하게 설정
           mesh.material = new THREE.MeshStandardMaterial({
             transparent: true,
@@ -97,8 +97,8 @@ const Room = () => {
           <mesh
             ref={windowRef}
             rotation-y={-Math.PI / 2}
-            scale={0.0025}
-            position={[4, 0, -1]}
+            scale={1.5}
+            position={[7.25, -3.63, 7.5]}
           >
             <primitive object={windowglb.scene} />
           </mesh>
@@ -127,15 +127,15 @@ const Room = () => {
             castShadow
           />
           <WallComponent // right wall (top part)
-            args={[12, 3.06]}
+            args={[12, 3.11]}
             rotation={[0, -Math.PI / 2, 0]}
-            position={[4, 3.48, 2]}
+            position={[4, 3.45, 2]}
             map={woodTexture}
             receiveShadow
             castShadow
           />
           <WallComponent // right wall (bottom part)
-            args={[12, 3.2]}
+            args={[12, 3.3]}
             rotation={[0, -Math.PI / 2, 0]}
             position={[4, -3.4, 2]}
             map={woodTexture}
@@ -143,17 +143,17 @@ const Room = () => {
             castShadow
           />
           <WallComponent // right wall (right part)
-            args={[7.3, 3.76]}
+            args={[5.9, 3.76]}
             rotation={[0, -Math.PI / 2, 0]}
-            position={[4, 0.07, 4.35]}
+            position={[4, 0.07, 5.06]}
             map={woodTexture}
             receiveShadow
             castShadow
           />
           <WallComponent // right wall (left part)
-            args={[1.32, 3.76]}
+            args={[1.07, 3.76]}
             rotation={[0, -Math.PI / 2, 0]}
-            position={[4, 0.07, -3.34]}
+            position={[4, 0.07, -3.47]}
             map={woodTexture}
             receiveShadow
             castShadow

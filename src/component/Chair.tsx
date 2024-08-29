@@ -4,7 +4,11 @@ import { useRef, useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
 
-const Chair = () => {
+interface props {
+  loginModalOpenHdr: () => void
+}
+
+const Chair = ({loginModalOpenHdr}: props) => {
   const chairglb = useLoader(GLTFLoader, "/models/chair.glb");
   const meshRef = useRef<THREE.Mesh>(null);
 
@@ -35,6 +39,7 @@ const Chair = () => {
       position={[0, -5, 0]}
       castShadow
       receiveShadow
+      onClick={loginModalOpenHdr}
     >
       <primitive object={chairglb.scene} />
     </mesh>
