@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import MetalRack from "./MetalRack";
 import Photo from "./Photo";
 import Window from "./Window";
+import Bed from "./Bed";
 
 // 타입 지정
 interface WallProps {
@@ -71,6 +72,9 @@ const Room = () => {
       {/* 게시판 */}
       <MetalRack width={10} height={5} position={[0, 0, -4]} />
 
+      {/* 침대 */}
+      <Bed />
+
       {/* 게시물 */}
       <Photo
         position={[-1, 0.3, -3.95]}
@@ -92,7 +96,7 @@ const Room = () => {
       <WallComponent // left wall
         args={[12, 10]}
         rotation={[0, Math.PI / 2, 0]}
-        position={[-10, 0, 2]}
+        position={[-15, 0, 2]}
         color={"#cbb1a0"}
         receiveShadow
         castShadow
@@ -130,25 +134,25 @@ const Room = () => {
         castShadow
       />
       <WallComponent // top wall
-        args={[14, 12]}
+        args={[19, 12]}
         rotation={[-Math.PI / 2, 0, 0]}
-        position={[-3, 5, 2]}
+        position={[-5.5, 5, 2]}
         color={"#cbb1a0"}
         receiveShadow
         castShadow
       />
       <WallComponent // front wall
-        args={[14, 10]}
+        args={[19, 10]}
         rotation={[0, 0, 0]}
-        position={[-3, 0, -4]}
+        position={[-5.5, 0, -4]}
         color={"#cbb1a0"}
         receiveShadow
         castShadow
       />
       <WallComponent // under wall
-        args={[14, 12]}
+        args={[19, 12]}
         rotation={[Math.PI / 2, 0, 0]}
-        position={[-3, -5, 2]}
+        position={[-5.5, -5, 2]}
         color={"#7b5d54"}
         receiveShadow
         castShadow

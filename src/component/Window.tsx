@@ -10,7 +10,6 @@ const Window = () => {
 
   const curtainglb = useLoader(GLTFLoader, "/models/curtain.glb");
   const curtainRef = useRef<THREE.Mesh>(null);
-  console.log(curtainglb);
 
   // 창문 texture
   const curtainTexture = useLoader(
