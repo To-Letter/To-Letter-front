@@ -7,7 +7,6 @@ const Bed = () => {
   // 모델 선언
   const bedglb = useLoader(GLTFLoader, "/models/bed.glb");
   const bedRef = useRef<THREE.Mesh>(null);
-  console.log(bedglb.nodes);
 
   useEffect(() => {
     // 침대 모델 조정
@@ -21,6 +20,8 @@ const Bed = () => {
         if (mesh.name === "malm_blanket_002") {
           mesh.material = new THREE.MeshStandardMaterial({ color: "#453de6" });
         }
+        mesh.castShadow = true; // 그림자 생성
+        mesh.receiveShadow = true; // 그림자 수신
       }
     });
   }, [bedglb]);

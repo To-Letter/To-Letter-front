@@ -7,6 +7,8 @@ import MetalRack from "./MetalRack";
 import Photo from "./Photo";
 import Window from "./Window";
 import Bed from "./Bed";
+import Drawer from "./Drawer";
+import Lamp from "./Lamp";
 
 // 타입 지정
 interface WallProps {
@@ -74,6 +76,12 @@ const Room = () => {
 
       {/* 침대 */}
       <Bed />
+
+      {/* 서랍 */}
+      <Drawer />
+
+      {/* 램프 */}
+      <Lamp />
 
       {/* 게시물 */}
       <Photo
