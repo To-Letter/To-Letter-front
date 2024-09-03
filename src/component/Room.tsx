@@ -88,16 +88,19 @@ const Room = () => {
         position={[-1, 0.3, -3.95]}
         imageUrl="/texture/Photo1.jpg"
         popupText="업데이트를 기대해주세요!"
+        popupId="photo1"
       />
       <Photo
         position={[1, 0.6, -3.95]}
         imageUrl="/texture/Photo2.jpg"
         popupText="업데이트를 기대해주세요!"
+        popupId="photo2"
       />
       <Photo
         position={[0.5, -0.8, -3.95]}
         imageUrl="/texture/Photo3.jpg"
         popupText="업데이트를 기대해주세요!"
+        popupId="photo3"
       />
 
       {/* 벽 */}
