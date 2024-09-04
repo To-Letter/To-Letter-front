@@ -62,6 +62,8 @@ const Calendar = () => {
         <boxGeometry args={[0.7, 0.1, 0.8]} />
         <meshStandardMaterial color="red" />
       </mesh>
+
+      {/* month text */}
       <Text
         ref={monthRef}
         position={[-2, -1.2, -2.33]}
@@ -71,6 +73,8 @@ const Calendar = () => {
       >
         {month}
       </Text>
+
+      {/* day text */}
       <Text
         ref={dayRef}
         position={[-2.02, -1.6, -2.2]}

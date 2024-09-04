@@ -6,6 +6,7 @@ import * as THREE from "three";
 import Calender from "./Calender";
 import Bookshelf from "./Bookshelf";
 
+// 연필통 색상 수정
 const meshColors: { [key: string]: string } = {
   Plane_1: "invisible",
   Plane_2: "invisible",
@@ -35,6 +36,7 @@ const setMeshProperties = (mesh: THREE.Mesh, name: string) => {
 };
 
 const Desk = () => {
+  // 모델 선언
   const deskglb = useLoader(GLTFLoader, "/models/desk.glb");
   const deskRef = useRef<THREE.Mesh>(null);
   const candleglb = useLoader(GLTFLoader, "/models/candle.glb");
@@ -42,19 +44,14 @@ const Desk = () => {
   const pencilglb = useLoader(GLTFLoader, "/models/pencil_case.glb");
   const pencilRef = useRef<THREE.Mesh>(null);
 
-  const woodTexture = useLoader(
-    THREE.TextureLoader,
-    "/texture/brown_wood_texture.jpg"
-  );
-
+  // 모델 수정
   useEffect(() => {
-    woodTexture.anisotropy = 16; // 애니소트로픽 필터링 적용
+    // 책상
     deskglb.scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
         mesh.material = new MeshStandardMaterial({
-          color: "#dbb275",
-          map: woodTexture,
+          color: "#7b5d54",
         }); // 나무 색상으로 변경
         mesh.castShadow = true; // 그림자 생성
         mesh.receiveShadow = true; // 그림자 수신
@@ -67,6 +64,7 @@ const Desk = () => {
         mesh.receiveShadow = true; // 그림자 수신
       }
     });
+    // 연필통
     pencilglb.scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
@@ -79,8 +77,13 @@ const Desk = () => {
 
   return (
     <group>
+      {/* 캘린더 */}
       <Calender />
+
+      {/* 책선반 */}
       <Bookshelf position={[1, -1.83, -2.7]} />
+
+      {/* 책상 */}
       <mesh ref={deskRef} rotation-y={Math.PI} scale={5} position={[0, -5, -2]}>
         <primitive object={deskglb.scene} />
       </mesh>
