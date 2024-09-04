@@ -1,26 +1,28 @@
-import { useState } from "react";
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
 import Popup from "./Popup";
+import { usePopup } from "./PopupContext";
 
 const Photo = ({
   position,
   imageUrl,
   popupText,
+  popupId,
 }: {
   position: [number, number, number];
   imageUrl: string;
   popupText: string;
+  popupId: string;
 }) => {
   const texture = useLoader(TextureLoader, imageUrl);
-  const [showPopup, setShowPopup] = useState(false);
+  const { activePopup, setActivePopup } = usePopup();
 
   const handleClick = () => {
-    setShowPopup(true);
+    setActivePopup(popupId);
   };
 
   const handleClose = () => {
-    setShowPopup(false);
+    setActivePopup(null);
   };
 
   return (
@@ -37,7 +39,9 @@ const Photo = ({
           <meshStandardMaterial color="white" />
         </mesh>
       </group>
-      {showPopup && <Popup text={popupText} onClose={handleClose} />}
+      {activePopup === popupId && (
+        <Popup text={popupText} onClose={handleClose} />
+      )}
     </>
   );
 };
