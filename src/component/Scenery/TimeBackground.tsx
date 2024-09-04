@@ -22,35 +22,35 @@ const TimeBackground = ({nowHoursValue}:BackgroundProps) => {
     if(nowHoursValue<3 || nowHoursValue>20){ // 새벽 3시 전, 저녁 8시 이후 => 밤
       return {
         loadTextureName: "night.png",
-        sunLightPosition: [30, 10, -3],
+        sunLightPosition: [0, 80, 65],
         lightColor: "#efe9ff",
         intensity: 1
       }
     }else if(nowHoursValue>2 && nowHoursValue<6){ // 새벽 2시 이후, 새벽 6시 전 => 새벽
       return {
         loadTextureName: "night.png",
-        sunLightPosition: [30, 10, -3],
+        sunLightPosition: [0, 80, -65],
         lightColor: "#e8f7ff",
         intensity: 2
       }
     }else if(nowHoursValue>5 && nowHoursValue<12){ // 새벽 5시 이후, 오후 12시 전 => 아침
       return {
         loadTextureName: "morning.png",
-        sunLightPosition: [30, 10, -15],
+        sunLightPosition: [0, 80, -45],
         lightColor: "#fff5d8",
         intensity: 4
       }
     }else if(nowHoursValue>11 && nowHoursValue<17){ // 오전 11시 이후, 오후 5시 전 => 낮
       return {
         loadTextureName: "noon.png",
-        sunLightPosition: [30, 10, -3],
+        sunLightPosition: [0, 80, -3],
         lightColor: "#ffffff",
         intensity: 4
       }
     }else{// 오후 4시 이후, 밤 9시 전 => 저녁
       return {
         loadTextureName: "evening.png",
-        sunLightPosition: [30, 10, 15],
+        sunLightPosition: [0, 80, 45],
         lightColor: "#fff6e9",
         intensity: 3
       }
@@ -74,10 +74,12 @@ const TimeBackground = ({nowHoursValue}:BackgroundProps) => {
 
   useEffect(() => {
     const directionalLight1 = new THREE.DirectionalLight(timeZone.lightColor, timeZone.intensity);
-    directionalLight1.position.set(timeZone.sunLightPosition[0], timeZone.sunLightPosition[1], timeZone.sunLightPosition[2]);
+    directionalLight1.position.set(0, 80, 65);
+    // directionalLight1.position.set(30, 110, -15);
+    // directionalLight1.position.set(timeZone.sunLightPosition[0], timeZone.sunLightPosition[1], timeZone.sunLightPosition[2]);
     directionalLight1.castShadow = true;
     directionalLight1.receiveShadow = true;
-    directionalLight1.shadow.bias = -0.0001; // 그림자 세기 조절
+    directionalLight1.shadow.bias = 100; // 그림자 세기 조절
     directionalLight1.shadow.mapSize = new THREE.Vector2(2048, 2048);
 
     const target = new THREE.Object3D();
