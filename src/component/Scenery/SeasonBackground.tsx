@@ -72,7 +72,7 @@ const SeasonBackground = ({ nowMonthValue }: SeasonBackgroundProps) => {
       <Plane
         args={[50, 75]}
         rotation={[Math.PI / 2, 0, 0]}
-        position={[50, -28, -30]}
+        position={[50, -30, -60]}
       >
         {
           floorTexture && <meshStandardMaterial
