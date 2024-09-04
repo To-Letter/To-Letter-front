@@ -59,24 +59,24 @@ export const seasonFile: seasonFilesI = {
     floorColor:"#324233"
   },
   spring: {
-    modelPath: "/models/summerTree.obj",
-    texturePath: "/models/springTree.mtl",
+    modelPath: "/models/summerTree.glb",
+    texturePath: "/texture/scenery/treeTexture1.png",
     scale: 0.21,
     color: "#576403",
-    floorColor:""
+    floorColor:"#479e4d"
   },
   summer: {
-    modelPath: "/models/summerTree.obj",
+    modelPath: "/models/summerTree.glb",
     texturePath: "/models/summerTree.mtl",
     scale: 0.21,
     color: "#2a3f01",
-    floorColor:""
+    floorColor:"#82b68547"
   },
   autumn: {
-    modelPath: "/models/summerTree.obj",
+    modelPath: "/models/summerTree.glb",
     texturePath: "/models/autumnTree.mtl",
     scale: 0.21,
     color: "#925115",
-    floorColor:""
+    floorColor:"#d69f06"
   },
 };

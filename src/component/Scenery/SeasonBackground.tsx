@@ -7,6 +7,7 @@ import { useHelper } from '@react-three/drei';
 import * as THREE from "three";
 import Winter from "./Winter";
 import { seasonFile } from "../../constants/seasonTree";
+import Spring from "./Spring";
 
 
 /**
@@ -25,7 +26,7 @@ const SeasonBackground = ({ nowMonthValue }: SeasonBackgroundProps) => {
     if(index === 0) return "winter"
     else if(index === 1) return "spring"
     else if(index === 2) return "summer"
-    else if(index === 3) return "autumn"
+    else return "autumn"
   },[, nowMonthValue]);
 
 
@@ -39,12 +40,11 @@ const SeasonBackground = ({ nowMonthValue }: SeasonBackgroundProps) => {
     loader.load(
       `/texture/scenery/base.jpg`,
       (texture) => {
-        console.log("바닥!", texture)
         setFloorTexture(texture);
       },
       undefined,
       (error) => {
-        console.error("An error occurred while loading the texture.", error);
+        console.error("(floor texture)An error occurred while loading the texture.", error);
       }
     );
 
@@ -66,9 +66,8 @@ const SeasonBackground = ({ nowMonthValue }: SeasonBackgroundProps) => {
         intensity={1000}
         castShadow
       />
-      {
-        seasonIndex === "winter" && <Winter/>
-      }
+      {seasonIndex === "winter" && <Winter/>}
+      {seasonIndex === "spring" && <Spring/>}
       <Plane
         args={[50, 75]}
         rotation={[Math.PI / 2, 0, 0]}
@@ -77,7 +76,7 @@ const SeasonBackground = ({ nowMonthValue }: SeasonBackgroundProps) => {
         {
           floorTexture && <meshStandardMaterial
           map={floorTexture}
-          color={"#2a2e2a"}
+          color={seasonFile[seasonIndex].floorColor}
           side={THREE.DoubleSide}
         />
         }
