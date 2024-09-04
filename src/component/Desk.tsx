@@ -39,8 +39,6 @@ const Desk = () => {
   // 모델 선언
   const deskglb = useLoader(GLTFLoader, "/models/desk.glb");
   const deskRef = useRef<THREE.Mesh>(null);
-  const candleglb = useLoader(GLTFLoader, "/models/candle.glb");
-  const candleRef = useRef<THREE.Mesh>(null);
   const pencilglb = useLoader(GLTFLoader, "/models/pencil_case.glb");
   const pencilRef = useRef<THREE.Mesh>(null);
 
@@ -57,13 +55,6 @@ const Desk = () => {
         mesh.receiveShadow = true; // 그림자 수신
       }
     });
-    candleglb.scene.traverse((child) => {
-      if ((child as THREE.Mesh).isMesh) {
-        const mesh = child as THREE.Mesh;
-        mesh.castShadow = true; // 그림자 생성
-        mesh.receiveShadow = true; // 그림자 수신
-      }
-    });
     // 연필통
     pencilglb.scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
@@ -73,7 +64,7 @@ const Desk = () => {
         mesh.receiveShadow = true; // 그림자 수신
       }
     });
-  }, [deskglb, candleglb, pencilglb]);
+  }, [deskglb, pencilglb]);
 
   return (
     <group>
@@ -81,16 +72,13 @@ const Desk = () => {
       <Calender />
 
       {/* 책선반 */}
-      <Bookshelf position={[1, -1.83, -2.7]} />
+      <Bookshelf position={[1.1, -1.68, -2.7]} />
 
       {/* 책상 */}
       <mesh ref={deskRef} rotation-y={Math.PI} scale={5} position={[0, -5, -2]}>
         <primitive object={deskglb.scene} />
       </mesh>
-      <mesh ref={candleRef} scale={0.035} position={[2.5, -2.1, -2.7]}>
-        <primitive object={candleglb.scene} />
-      </mesh>
-      <mesh ref={pencilRef} scale={0.2} position={[1.8, -1.74, -2.7]}>
+      <mesh ref={pencilRef} scale={0.2} position={[2.3, -1.74, -2.7]}>
         <primitive object={pencilglb.scene} />
       </mesh>
     </group>
