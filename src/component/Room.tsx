@@ -9,6 +9,7 @@ import Window from "./Window";
 import Bed from "./Bed";
 import Drawer from "./Drawer";
 import Lamp from "./Lamp";
+import Books from "./Books";
 
 // 타입 지정
 interface WallProps {
@@ -55,9 +56,6 @@ const Room = () => {
     pointLight1.shadow.bias = -0.0001; // 그림자 세기 조절
     pointLight1.shadow.mapSize = new THREE.Vector2(2048, 2048);
     scene.add(pointLight1);
-
-    const pointLightHelper1 = new THREE.PointLightHelper(pointLight1);
-    scene.add(pointLightHelper1);
   }, [scene]);
 
   return (
@@ -82,6 +80,9 @@ const Room = () => {
 
       {/* 램프 */}
       <Lamp />
+
+      {/* 책 */}
+      <Books />
 
       {/* 게시물 */}
       <Photo

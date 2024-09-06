@@ -18,7 +18,7 @@ const Bed = () => {
           mesh.material = new THREE.MeshStandardMaterial({ color: "#352929" });
         }
         if (mesh.name === "malm_blanket_002") {
-          mesh.material = new THREE.MeshStandardMaterial({ color: "#453de6" });
+          mesh.material = new THREE.MeshStandardMaterial({ color: "#402626" });
         }
         mesh.castShadow = true; // 그림자 생성
         mesh.receiveShadow = true; // 그림자 수신

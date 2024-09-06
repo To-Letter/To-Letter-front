@@ -33,7 +33,13 @@ const Calendar = () => {
   // 요일에 따라 dayText 색상 변경
   const dayColor = useMemo(() => {
     const dayOfWeek = date.getDay();
-    return dayOfWeek === 0 || dayOfWeek === 6 ? "red" : "black";
+    if (dayOfWeek === 0) {
+      return "red"; // 일요일
+    } else if (dayOfWeek === 6) {
+      return "blue"; // 토요일
+    } else {
+      return "black"; // 평일
+    }
   }, [date]);
 
   return (
