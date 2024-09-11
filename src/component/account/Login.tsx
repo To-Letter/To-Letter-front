@@ -6,7 +6,12 @@ interface loginFormI {
   email: string
   password: string
 }
-const Login: React.FC = () => {
+
+interface props {
+  setMenuNumber: React.Dispatch<React.SetStateAction<number>>
+}
+
+const Login = ({setMenuNumber}: props) => {
   const [loginForm, setLoginForm] = useState<loginFormI>({
     email: "",
     password: ""
@@ -42,7 +47,7 @@ const Login: React.FC = () => {
       </LoginContent>
       <LoginBtn onClick={onClickLogin}>Login</LoginBtn>
       <SocialLoginWrap>
-      <LoginBtn>카카오톡 로그인</LoginBtn>
+      <LoginBtn onClick={()=>setMenuNumber(3)}>카카오톡 로그인</LoginBtn>
       {/* <SocialLoginBtn>google 로그인</SocialLoginBtn> */}
       </SocialLoginWrap>
       <FindAccountTextWrap>
@@ -94,6 +99,26 @@ const FormInput = styled.input`
     outline: none; /* 기본 outline 제거 */
     box-shadow: none; /* 기본 box-shadow 제거 */
   }
+  &:-internal-autofill-selected {
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid white;
+    width: 100%;
+    height: 28px;
+    font-size: 20px;
+    margin-top: 8px;
+    color: #ffffff;
+  }
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover, 
+  &:-webkit-autofill:focus {
+    border: none;
+    -webkit-text-fill-color: #ffffff !important;
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+    background-color: transparent !important;
+    transition: background-color 5000s ease-in-out 0s;
+    border-bottom: 1px solid white;
+  }
 `
 
 const LoginBtn = styled.div`
@@ -106,6 +131,8 @@ const LoginBtn = styled.div`
   margin-bottom: 16px;
   color: #e9e9e9;
   background-color: #262523;
+
+  cursor: pointer;
 `
 
 const SocialLoginWrap = styled.div`
@@ -121,6 +148,7 @@ const FindAccountTextWrap = styled.div`
   justify-content: flex-end;
   align-items: center;
   color: #e9e9e9;
+  cursor: pointer;
 `
 
 // const SocialLoginBtn = styled(LoginBtn)`
