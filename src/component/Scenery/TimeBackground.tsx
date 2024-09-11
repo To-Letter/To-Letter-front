@@ -74,9 +74,7 @@ const TimeBackground = ({nowHoursValue}:BackgroundProps) => {
 
   useEffect(() => {
     const directionalLight1 = new THREE.DirectionalLight(timeZone.lightColor, timeZone.intensity);
-    directionalLight1.position.set(0, 80, 65);
-    // directionalLight1.position.set(30, 110, -15);
-    // directionalLight1.position.set(timeZone.sunLightPosition[0], timeZone.sunLightPosition[1], timeZone.sunLightPosition[2]);
+    directionalLight1.position.set(timeZone.sunLightPosition[0], timeZone.sunLightPosition[1], timeZone.sunLightPosition[2]);
     directionalLight1.castShadow = true;
     directionalLight1.receiveShadow = true;
     directionalLight1.shadow.bias = 100; // 그림자 세기 조절
@@ -97,13 +95,12 @@ const TimeBackground = ({nowHoursValue}:BackgroundProps) => {
       {bgTexture && (
         <>
           <Plane
-            args={[100, 75]}
+            args={[200, 75]}
             rotation={[0, -Math.PI / 2, 0]}
-            position={[50, -7, -40]}
+            position={[100, 0, -75]}
           >
             <meshStandardMaterial
               map={bgTexture}
-              // color={0x9977bb}
               side={THREE.DoubleSide}
             />
           </Plane>

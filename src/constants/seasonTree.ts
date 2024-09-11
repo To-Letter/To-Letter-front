@@ -40,14 +40,21 @@ export const treePosition: number[][] = [
   [38, -24, -39],
   [39, -27, -36],
   [41, -29, -50],
-
-  
   [37, -29, -5],
   [40, -28, -9],
   [38, -27, -13],
   [37, -29, 0],
   [39, -27, 2],
+]
 
+export const grassPosition: number[][] = [
+  [37, -28, -50],
+  [43, -28, -50],
+  [43, -29, -47],
+  [42, -32, -50],
+  [39, -30, -62],
+  [42, -29, -59],
+  [40, -27, -59],
 ]
 
 export const seasonFile: seasonFilesI = {
@@ -59,24 +66,24 @@ export const seasonFile: seasonFilesI = {
     floorColor:"#324233"
   },
   spring: {
-    modelPath: "/models/summerTree.glb",
+    modelPath: "/models/springTree.glb",
     texturePath: "/texture/scenery/treeTexture1.png",
-    scale: 0.21,
+    scale: 0.0035,
     color: "#576403",
-    floorColor:"#479e4d"
+    floorColor:"#387a3c"
   },
   summer: {
-    modelPath: "/models/summerTree.glb",
-    texturePath: "/models/summerTree.mtl",
-    scale: 0.21,
+    modelPath: "/models/springTree.glb",
+    texturePath: "/texture/scenery/treeTexture1.png",
+    scale: 0.0035,
     color: "#2a3f01",
-    floorColor:"#82b68547"
+    floorColor:"#205e24"
   },
   autumn: {
-    modelPath: "/models/summerTree.glb",
-    texturePath: "/models/autumnTree.mtl",
-    scale: 0.21,
+    modelPath: "/models/springTree.glb",
+    texturePath: "/texture/scenery/treeTexture1.png",
+    scale: 0.0035,
     color: "#925115",
-    floorColor:"#d69f06"
+    floorColor:"#a7a323"
   },
 };

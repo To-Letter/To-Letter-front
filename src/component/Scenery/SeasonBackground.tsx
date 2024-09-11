@@ -1,13 +1,16 @@
 
 
-import React, { useRef, useEffect, useState, useMemo } from "react";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { useLoader } from "@react-three/fiber";import React, { useRef, useEffect, useState, useMemo } from "react";
 import { Plane } from "@react-three/drei";
 import { Group, Mesh, MeshStandardMaterial, Object3DEventMap, SpotLight, SpotLightHelper } from "three";
 import { useHelper } from '@react-three/drei';
 import * as THREE from "three";
 import Winter from "./Winter";
-import { seasonFile } from "../../constants/seasonTree";
+import { grassPosition, seasonFile } from "../../constants/seasonTree";
 import Spring from "./Spring";
+import Summer from "./Summer";
+import Autumn from "./Autumn";
 
 
 /**
@@ -18,7 +21,11 @@ interface SeasonBackgroundProps {
 }
 
 const SeasonBackground = ({ nowMonthValue }: SeasonBackgroundProps) => { 
-  const [floorTexture, setFloorTexture] = useState<THREE.Texture | null>(null);
+  const groundGlb = useLoader(GLTFLoader, "/models/ground.glb");
+  const grassGlb = useLoader(GLTFLoader, "/models/grass.glb");
+  const groundTexture = useLoader(THREE.TextureLoader, `/texture/scenery/base.jpg`);
+  const [grassClones, setGrassClones] = useState<Group<Object3DEventMap>[]>([]);
+  const meshRef = useRef<THREE.Mesh>(null);
 
   // 월에 따른 계절 결정 (예: 12, 1, 2월 = 겨울)
   const seasonIndex = useMemo(()=>{
@@ -36,23 +43,46 @@ const SeasonBackground = ({ nowMonthValue }: SeasonBackgroundProps) => {
   useHelper(spotLightRef, SpotLightHelper);
 
   useEffect(() => {
-    const loader = new THREE.TextureLoader();
-    loader.load(
-      `/texture/scenery/base.jpg`,
-      (texture) => {
-        setFloorTexture(texture);
-      },
-      undefined,
-      (error) => {
-        console.error("(floor texture)An error occurred while loading the texture.", error);
+    groundGlb.scene.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mesh = child as THREE.Mesh;
+        mesh.material = new MeshStandardMaterial({
+          color: seasonFile[seasonIndex].floorColor,
+          map: groundTexture
+        }); 
+        mesh.castShadow = true; // 그림자 생성
+        mesh.receiveShadow = true; // 그림자 수신
       }
-    );
+    });
+
+    grassGlb.scene.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mesh = child as THREE.Mesh;
+        mesh.material = new MeshStandardMaterial({
+          color: seasonFile[seasonIndex].floorColor,
+          map: groundTexture
+        }); 
+        if(mesh.name === "grass_2"){
+          mesh.visible=false;
+        }else{
+          mesh.castShadow = true; // 그림자 생성
+          mesh.receiveShadow = true; // 그림자 수신
+        }
+      }
+    });
 
     if (spotLightRef.current) {
       // SpotLight의 타겟을 첫 번째 나무 위치로 설정
       spotLightRef.current.target.position.set(40, -15, -10);
       spotLightRef.current.target.updateMatrixWorld();
     }
+
+    //바닥 풀 복제
+    setGrassClones(grassPosition.map(() => {
+      const clone = grassGlb.scene.clone();
+      return clone;
+    }));
+
 
   }, []);
 
@@ -68,20 +98,33 @@ const SeasonBackground = ({ nowMonthValue }: SeasonBackgroundProps) => {
       />
       {seasonIndex === "winter" && <Winter/>}
       {seasonIndex === "spring" && <Spring/>}
-      <Plane
-        args={[50, 75]}
-        rotation={[Math.PI / 2, 0, 0]}
-        position={[50, -30, -60]}
+      {seasonIndex === "summer" && <Summer/>}
+      {seasonIndex === "autumn" && <Autumn/>}
+
+
+      {
+        grassClones.map((model, idx)=>(
+          <mesh
+          key={`grass${idx}`}
+          scale={0.015}
+          position={[grassPosition[idx][0], grassPosition[idx][1], grassPosition[idx][2]]}
+          castShadow
+          receiveShadow
+          >
+            <primitive object={model} />
+          </mesh>
+        ))
+      }
+      
+      <mesh
+      ref={meshRef}
+      scale={0.5}
+      position={[20, -38, -60]}
+      castShadow
+      receiveShadow
       >
-        {
-          floorTexture && <meshStandardMaterial
-          map={floorTexture}
-          color={seasonFile[seasonIndex].floorColor}
-          side={THREE.DoubleSide}
-        />
-        }
-        
-      </Plane>
+        <primitive args={[50, 75]} object={groundGlb.scene} />
+      </mesh>
     </>
   );
 };
