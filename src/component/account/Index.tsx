@@ -2,6 +2,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Login from './Login';
+import Signup from './Signup';
+import KakaoSignup from './KakaoSignup';
+import MailVerify from './MailVerify';
 
 interface styleI {
   $selected?: boolean
@@ -20,12 +23,15 @@ const Index: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             Login
           </MenuTitle>
           <MenuTitle 
-          $selected={menuNumber === 2}
+          $selected={menuNumber !== 1}
           onClick={()=>setMenuNumber(2)}>
             Signup
           </MenuTitle>
         </MenuWrap>
-        {menuNumber === 1 && <Login/>}
+        {menuNumber === 1 && <Login setMenuNumber={setMenuNumber}/>}
+        {menuNumber === 2 && <Signup setMenuNumber={setMenuNumber}/>}
+        {menuNumber === 3 && <KakaoSignup/>}
+        {menuNumber === 4 && <MailVerify />}
       </ModalContent>
     </ModalOverlay>
   );
