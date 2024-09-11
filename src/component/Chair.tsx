@@ -4,18 +4,21 @@ import { useRef, useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
 
-const Chair = () => {
+interface props {
+  loginModalOpenHdr: () => void;
+}
+
+const Chair = ({ loginModalOpenHdr }: props) => {
   const chairglb = useLoader(GLTFLoader, "/models/chair.glb");
   const meshRef = useRef<THREE.Mesh>(null);
-  console.log("chair : ", chairglb);
 
   useEffect(() => {
     chairglb.scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
-        const mesh = child as THREE.Mesh
+        const mesh = child as THREE.Mesh;
         mesh.material = new MeshStandardMaterial({
-          color: "#DBB975",  
-          }); // 나무 색상으로 변경
+          color: "#7b5d54",
+        }); // 나무 색상으로 변경
         mesh.castShadow = true; // 그림자 생성
         mesh.receiveShadow = true; // 그림자 수신
       }
@@ -30,6 +33,7 @@ const Chair = () => {
       position={[0, -5, 0]}
       castShadow
       receiveShadow
+      onClick={loginModalOpenHdr}
     >
       <primitive object={chairglb.scene} />
     </mesh>
