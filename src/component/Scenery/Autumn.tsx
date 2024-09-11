@@ -24,8 +24,6 @@ const meshColors: { [key: string]: string } = {
 const Autumn = () => {
   const [treeClones, setTreeClones] = useState<Group<Object3DEventMap>[]>([]);
 
-  console.log(seasonFile.autumn)
-
   const treeglb = useLoader(GLTFLoader, seasonFile.autumn.modelPath);
 
   const woodTexture = useLoader(

@@ -24,8 +24,6 @@ const meshColors: { [key: string]: string } = {
 const Spring = () => {
   const [treeClones, setTreeClones] = useState<Group<Object3DEventMap>[]>([]);
 
-  console.log(seasonFile.spring)
-
   const treeglb = useLoader(GLTFLoader, seasonFile.spring.modelPath);
 
   const woodTexture = useLoader(
