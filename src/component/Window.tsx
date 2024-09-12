@@ -11,12 +11,6 @@ const Window = () => {
   const curtainglb = useLoader(GLTFLoader, "/models/curtain.glb");
   const curtainRef = useRef<THREE.Mesh>(null);
 
-  // 창문 texture
-  const curtainTexture = useLoader(
-    THREE.TextureLoader,
-    "/texture/curtain_texture.jpg"
-  );
-
   useEffect(() => {
     // 창문 모델 조정
     windowglb.scene.traverse((child) => {
@@ -40,7 +34,6 @@ const Window = () => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
         mesh.material = new THREE.MeshStandardMaterial({
-          //   map: curtainTexture,
           color: "#7b5d54",
         });
         if (
@@ -55,7 +48,7 @@ const Window = () => {
         }
       }
     });
-  }, [windowglb, curtainglb, curtainTexture]);
+  }, [windowglb, curtainglb]);
 
   return (
     <>
