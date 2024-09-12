@@ -20,7 +20,6 @@ const Books = () => {
   // 모델 선언
   const booksglb = useLoader(GLTFLoader, "/models/books.glb");
   const booksRef = useRef<THREE.Mesh>(null);
-  console.log(booksglb);
 
   useEffect(() => {
     // 40의 책중 쓸 노드
