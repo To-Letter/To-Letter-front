@@ -119,7 +119,7 @@ const Desk = () => {
       </mesh>
       {showPopup && (
         <Html center>
-          <LetterPopup onClose={() => setShowPopup(false)} />
+          <LetterPopup onClose={() => setShowPopup(false)} senderName="Test" />
         </Html>
       )}
     </group>

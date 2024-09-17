@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { IoIosSend } from "react-icons/io";
+import { IoMdClose } from "react-icons/io";
 
 interface LetterPopupProps {
   onClose: () => void;
+  senderName: string;
 }
 
 const Popup = styled.div`
@@ -10,62 +13,119 @@ const Popup = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #f9f9f9;
+  background: url("/images/letter_background.jpg") no-repeat center center;
+  background-size: cover;
   border: 1px solid #ccc;
   padding: 20px;
   z-index: 1000;
-  width: 300px;
+  width: 80vw;
+  height: 80vh;
+  max-width: 600px;
+  max-height: 800px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const PopupInner = styled.div`
   display: flex;
   flex-direction: column;
+  height: calc(100% - 60px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 20px;
+  -webkit-overflow-scrolling: touch;
 `;
 
-const PopupInput = styled.input`
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-`;
-
-const PopupTextarea = styled.textarea`
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-`;
-
-const PopupButton = styled.button`
-  padding: 10px;
-  margin-top: 10px;
+const StyledTextarea = styled.textarea`
+  width: 100%;
+  height: 100%;
   border: none;
-  background: #007bff;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
+  background: transparent;
+  padding: 10px 5px;
+  font-family: "Handwriting", sans-serif;
+  font-size: 1.2vw;
+  outline: none;
+  resize: none;
+  overflow: auto;
+  white-space: pre-wrap;
+  line-height: 1.5em;
+  border-bottom: 1px solid #ccc;
 
-  &:hover {
-    background: #0056b3;
+  &:focus {
+    border-bottom: 1px solid #007bff;
   }
 `;
 
-const LetterPopup: React.FC<LetterPopupProps> = ({ onClose }) => {
-  const [title, setTitle] = useState("");
-  const [contents, setContents] = useState("");
+const ToInput = styled.div`
+  font-family: "Handwriting", sans-serif;
+  font-size: 1.2vw;
+  margin-bottom: 10px;
+`;
+
+const SendButton = styled.button`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 2vw;
+  padding: 0;
+
+  &:hover {
+    color: #0056b3;
+  }
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 2vw;
+  padding: 0;
+
+  &:hover {
+    color: #ff0000;
+  }
+`;
+
+const FromText = styled.div`
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  font-family: "Handwriting", sans-serif;
+  font-size: 1.5vw;
+`;
+
+const LetterPopup: React.FC<LetterPopupProps> = ({ onClose, senderName }) => {
+  const [content, setContent] = useState("");
   const popupRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
+  };
 
   const handleSubmit = () => {
-    // 서버에 편지 제목과 내용을 전송하는 로직을 구현합니다.
-    console.log("Title:", title);
-    console.log("Contents:", contents);
+    console.log("Contents:", content);
     onClose();
   };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
       onClose();
+    }
+  };
+
+  const handleWheel = (event: WheelEvent) => {
+    if (innerRef.current) {
+      event.preventDefault();
+      innerRef.current.scrollTop += event.deltaY;
     }
   };
 
@@ -76,24 +136,34 @@ const LetterPopup: React.FC<LetterPopupProps> = ({ onClose }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (popupRef.current) {
+      popupRef.current.addEventListener("wheel", handleWheel);
+    }
+    return () => {
+      if (popupRef.current) {
+        popupRef.current.removeEventListener("wheel", handleWheel);
+      }
+    };
+  }, []);
+
   return (
     <Popup ref={popupRef}>
-      <PopupInner>
-        <h2>편지 쓰기</h2>
-        <PopupInput
-          type="text"
-          placeholder="제목"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+      <CloseButton onClick={onClose}>
+        <IoMdClose />
+      </CloseButton>
+      <PopupInner ref={innerRef}>
+        <ToInput>To.</ToInput>
+        <StyledTextarea
+          value={content}
+          onChange={handleChange}
+          placeholder="Write your letter here..."
         />
-        <PopupTextarea
-          placeholder="내용"
-          value={contents}
-          onChange={(e) => setContents(e.target.value)}
-        />
-        <PopupButton onClick={handleSubmit}>전송</PopupButton>
-        <PopupButton onClick={onClose}>닫기</PopupButton>
       </PopupInner>
+      <FromText>From. {senderName}</FromText>
+      <SendButton onClick={handleSubmit}>
+        <IoIosSend />
+      </SendButton>
     </Popup>
   );
 };
