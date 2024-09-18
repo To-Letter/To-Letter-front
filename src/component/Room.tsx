@@ -9,13 +9,13 @@ import Window from "./Window";
 import Bed from "./Bed";
 import Drawer from "./Drawer";
 import Lamp from "./Lamp";
+import Books from "./Books";
 
 // 타입 지정
 interface WallProps {
   args: number[];
   rotation: [number, number, number];
   position: [number, number, number];
-  // map: THREE.Texture | null;
   color: string;
   receiveShadow: boolean;
   castShadow: boolean;
@@ -55,9 +55,6 @@ const Room = () => {
     pointLight1.shadow.bias = -0.0001; // 그림자 세기 조절
     pointLight1.shadow.mapSize = new THREE.Vector2(2048, 2048);
     scene.add(pointLight1);
-
-    const pointLightHelper1 = new THREE.PointLightHelper(pointLight1);
-    scene.add(pointLightHelper1);
   }, [scene]);
 
   return (
@@ -83,22 +80,25 @@ const Room = () => {
       {/* 램프 */}
       <Lamp />
 
+      {/* 책 */}
+      <Books />
+
       {/* 게시물 */}
       <Photo
         position={[-1, 0.3, -3.95]}
-        imageUrl="/texture/Photo1.jpg"
+        imageUrl="/images/Photo1.jpg"
         popupText="업데이트를 기대해주세요!"
         popupId="photo1"
       />
       <Photo
         position={[1, 0.6, -3.95]}
-        imageUrl="/texture/Photo2.jpg"
+        imageUrl="/images/Photo2.jpg"
         popupText="업데이트를 기대해주세요!"
         popupId="photo2"
       />
       <Photo
         position={[0.5, -0.8, -3.95]}
-        imageUrl="/texture/Photo3.jpg"
+        imageUrl="/images/Photo3.jpg"
         popupText="업데이트를 기대해주세요!"
         popupId="photo3"
       />

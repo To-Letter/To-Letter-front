@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useMemo } from "react";
 import { Text } from "@react-three/drei";
 
 const Calendar = () => {
@@ -29,6 +29,18 @@ const Calendar = () => {
   ];
   const month = monthNames[date.getMonth()];
   const day = date.getDate();
+
+  // 요일에 따라 dayText 색상 변경
+  const dayColor = useMemo(() => {
+    const dayOfWeek = date.getDay();
+    if (dayOfWeek === 0) {
+      return "red"; // 일요일
+    } else if (dayOfWeek === 6) {
+      return "blue"; // 토요일
+    } else {
+      return "black"; // 평일
+    }
+  }, [date]);
 
   return (
     <group>
@@ -80,7 +92,7 @@ const Calendar = () => {
         position={[-2.02, -1.6, -2.2]}
         rotation={[-Math.PI / 10, 0, 0]}
         fontSize={0.5}
-        color="black"
+        color={dayColor}
       >
         {day}
       </Text>

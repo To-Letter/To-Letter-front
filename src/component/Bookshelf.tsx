@@ -1,7 +1,7 @@
 const Bookshelf = ({ position }: { position: [number, number, number] }) => {
-  const shelfWidth = 1;
-  const shelfHeight = 0.5;
-  const shelfDepth = 0.5;
+  const shelfWidth = 1.5;
+  const shelfHeight = 0.8;
+  const shelfDepth = 0.8;
   const boardThickness = 0.05;
 
   return (
