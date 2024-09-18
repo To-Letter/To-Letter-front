@@ -18,12 +18,13 @@ import Autumn from "./Autumn";
  */
 interface SeasonBackgroundProps {
   nowMonthValue: number;
+  weatherInfo : string
 }
 
-const SeasonBackground = ({ nowMonthValue }: SeasonBackgroundProps) => { 
+const SeasonBackground = ({ nowMonthValue, weatherInfo }: SeasonBackgroundProps) => { 
   const groundGlb = useLoader(GLTFLoader, "/models/ground.glb");
   const grassGlb = useLoader(GLTFLoader, "/models/grass.glb");
-  const groundTexture = useLoader(THREE.TextureLoader, `/texture/scenery/base.jpg`);
+  const groundTexture = useLoader(THREE.TextureLoader, `/images/scenery/base.jpg`);
   const [grassClones, setGrassClones] = useState<Group<Object3DEventMap>[]>([]);
   const meshRef = useRef<THREE.Mesh>(null);
 
@@ -96,10 +97,10 @@ const SeasonBackground = ({ nowMonthValue }: SeasonBackgroundProps) => {
         intensity={1000}
         castShadow
       />
-      {seasonIndex === "winter" && <Winter/>}
-      {seasonIndex === "spring" && <Spring/>}
-      {seasonIndex === "summer" && <Summer/>}
-      {seasonIndex === "autumn" && <Autumn/>}
+      {seasonIndex === "winter" && weatherInfo !=="Snow" && <Winter/>}
+      {seasonIndex === "spring" && weatherInfo !=="Snow" && <Spring/>}
+      {seasonIndex === "summer" && weatherInfo !=="Snow" && <Summer/>}
+      {seasonIndex === "autumn" && weatherInfo !=="Snow" && <Autumn/>}
 
 
       {

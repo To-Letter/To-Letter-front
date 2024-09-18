@@ -61,7 +61,7 @@ const TimeBackground = ({nowHoursValue}:BackgroundProps) => {
   useEffect(() => {
     const loader = new THREE.TextureLoader();
     loader.load(
-      `/texture/scenery/${timeZone.loadTextureName}`,
+      `/images/scenery/${timeZone.loadTextureName}`,
       (texture) => {
         setBgTexture(texture);
       },

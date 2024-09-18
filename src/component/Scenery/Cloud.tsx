@@ -15,7 +15,7 @@ const Cloud = () => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
         mesh.material = new THREE.MeshStandardMaterial({
-          color: "#a8a8a8",
+          color: "#b6b6b6",
         });
         mesh.castShadow = true;
         mesh.receiveShadow = true;

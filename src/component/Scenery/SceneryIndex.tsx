@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import TimeBackground from "./TimeBackground";
 import SeasonBackground from "./SeasonBackground";
 import WeatherBackground from "./WeatherBackground";
+import { getCurrentWeather } from "../../utils/weatherApi";
 
 export interface locationI{
   lat:	number
@@ -10,11 +11,14 @@ export interface locationI{
 
 const SceneryIndex = () => {
   const [now, setNow] = useState<Date>(new Date());
-  const [onLocation, setOnLocation] = useState<boolean>(false);
-  const [myLocation, setMyLocation] = useState<locationI>({
-    lat: 0,
-    lng: 0
-  })
+  const [weatherInfo, setWeatherInfo] =useState<any>("")
+
+  const getWeather = async ({lat, lng}: { lat: number; lng: number; })=>{
+    const data = await getCurrentWeather({lat:lat, lng:lng, key: process.env.REACT_APP_OPENWEATHERMAP_API_KEY});
+    // setWeatherInfo(data.weather[0].main)
+    setWeatherInfo("Rain")
+
+  }
 
 
   useEffect(()=>{
@@ -22,7 +26,7 @@ const SceneryIndex = () => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const { latitude, longitude } = position.coords;
-          setMyLocation({ lat: latitude, lng: longitude });
+          getWeather({ lat: latitude, lng: longitude });
         },
         (error) => {
           switch (error.code) {
@@ -39,26 +43,19 @@ const SceneryIndex = () => {
               alert('알 수 없는 오류가 발생했습니다.');
               break;
           }
-          setMyLocation({
-            lat: 0,
-            lng: 0
-          })
         })
     } else {
       alert('이 브라우저는 위치 정보를 지원하지 않습니다.');
-      setMyLocation({
-        lat: 0,
-        lng: 0
-      })
     }
   },[])
   return (
     <>
-      <TimeBackground nowHoursValue={now.getHours()}/>
-      <SeasonBackground nowMonthValue={now.getMonth()}/>
+      {/* <TimeBackground nowHoursValue={now.getHours()}/>
+      <SeasonBackground nowMonthValue={now.getMonth()} weatherInfo={weatherInfo} /> */}
+      <TimeBackground nowHoursValue={12}/>
+      <SeasonBackground nowMonthValue={4} weatherInfo={weatherInfo} />
       {
-        (myLocation.lat !== 0 || myLocation.lng !== 0)
-        && <WeatherBackground lat={myLocation.lat} lng={myLocation.lng} />
+        weatherInfo !=="" && <WeatherBackground weatherInfo={weatherInfo} />
       }
     </>
   );

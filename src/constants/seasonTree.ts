@@ -84,6 +84,36 @@ export const grassPosition: number[][] = [
   [40, -27, -59],
 ]
 
+
+/// 일반 비 구름
+
+export const rainPosition: number[][] = [
+  [100, 5, -40],
+  [100, -1, -80],
+  [100, -5, -5],
+  [100, 6, -120], //맨 왼쪽 구름
+  [100, 12, -90],//왼쪽 기준 두번째 줄 구름
+  [100, -5, -120], //맨 왼쪽 구름
+  [100, 18, -60], //왼쪽 기준 두번째 줄 구름
+]
+
+export const rainRotation: number[][] = [
+  [0, Math.PI/4, 0],
+  [0, Math.PI/12, 0],
+  [0, Math.PI/4, 0.1],
+  [0, Math.PI/6, 0.1],
+  [0, Math.PI/4, 0.1],
+  [0.1, Math.PI/4,0],
+  [0.1, Math.PI/6, 0.1],
+]
+
+export const rainScale: number[] = [
+  35, 32, 30, 30, 20, 30, 25
+]
+
+
+
+/// 일반 흐림 구름
 export const cloudPosition: number[][] = [
   [100, 7, -40],
   [100, -1, -80],
@@ -100,32 +130,31 @@ export const cloudScale: number[] = [
   35, 32, 30
 ]
 
-
 export const seasonFile: seasonFilesI = {
   winter: {
     modelPath: "/models/winterTree.glb",
-    texturePath: "/texture/scenery/treeTexture1.png",
+    texturePath: "/images/scenery/treeTexture1.png",
     scale: 0.008,
     color: "#2f3335",
     floorColor:"#324233"
   },
   spring: {
     modelPath: "/models/springTree.glb",
-    texturePath: "/texture/scenery/treeTexture1.png",
+    texturePath: "/images/scenery/treeTexture1.png",
     scale: 0.0035,
     color: "#576403",
     floorColor:"#387a3c"
   },
   summer: {
     modelPath: "/models/springTree.glb",
-    texturePath: "/texture/scenery/treeTexture1.png",
+    texturePath: "/images/scenery/treeTexture1.png",
     scale: 0.0035,
     color: "#2a3f01",
     floorColor:"#205e24"
   },
   autumn: {
     modelPath: "/models/springTree.glb",
-    texturePath: "/texture/scenery/treeTexture1.png",
+    texturePath: "/images/scenery/treeTexture1.png",
     scale: 0.0035,
     color: "#925115",
     floorColor:"#a7a323"
