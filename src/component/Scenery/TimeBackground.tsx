@@ -95,9 +95,9 @@ const TimeBackground = ({nowHoursValue}:BackgroundProps) => {
       {bgTexture && (
         <>
           <Plane
-            args={[200, 75]}
+            args={[400, 75]}
             rotation={[0, -Math.PI / 2, 0]}
-            position={[100, 0, -75]}
+            position={[150, 0, -75]}
           >
             <meshStandardMaterial
               map={bgTexture}

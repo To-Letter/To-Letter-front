@@ -120,11 +120,11 @@ const SeasonBackground = ({ nowMonthValue, weatherInfo }: SeasonBackgroundProps)
       <mesh
       ref={meshRef}
       scale={0.5}
-      position={[20, -38, -60]}
+      position={[20, -38, -150]}
       castShadow
       receiveShadow
       >
-        <primitive args={[50, 75]} object={groundGlb.scene} />
+        <primitive args={[50, 105]} object={groundGlb.scene} />
       </mesh>
     </>
   );
