@@ -1,7 +1,7 @@
 import Chair from "./Chair";
 import Desk from "./Desk";
 import Room from "./Room";
-// import SceneryIndex from "./Scenery/SceneryIndex";
+import SceneryIndex from "./Scenery/SceneryIndex";
 
 interface props {
   loginModalOpenHdr: () => void;
@@ -10,7 +10,7 @@ interface props {
 const Secen = ({ loginModalOpenHdr }: props) => {
   return (
     <>
-      {/* <SceneryIndex/> */}
+      <SceneryIndex/>
       <Room />
       <Chair loginModalOpenHdr={loginModalOpenHdr} />
       <Desk />
