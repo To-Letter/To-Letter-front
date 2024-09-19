@@ -15,9 +15,7 @@ const SceneryIndex = () => {
 
   const getWeather = async ({lat, lng}: { lat: number; lng: number; })=>{
     const data = await getCurrentWeather({lat:lat, lng:lng, key: process.env.REACT_APP_OPENWEATHERMAP_API_KEY});
-    // setWeatherInfo(data.weather[0].main)
-    setWeatherInfo("Rain")
-
+    setWeatherInfo(data.weather[0].main)
   }
 
 
@@ -50,10 +48,8 @@ const SceneryIndex = () => {
   },[])
   return (
     <>
-      {/* <TimeBackground nowHoursValue={now.getHours()}/>
-      <SeasonBackground nowMonthValue={now.getMonth()} weatherInfo={weatherInfo} /> */}
-      <TimeBackground nowHoursValue={12}/>
-      <SeasonBackground nowMonthValue={4} weatherInfo={weatherInfo} />
+      <TimeBackground nowHoursValue={now.getHours()}/>
+      <SeasonBackground nowMonthValue={now.getMonth()} weatherInfo={weatherInfo} />
       {
         weatherInfo !=="" && <WeatherBackground weatherInfo={weatherInfo} />
       }
