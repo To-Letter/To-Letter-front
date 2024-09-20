@@ -1,7 +1,5 @@
 import axios from "axios";
 import { AUTH_KEY } from "../constants/authkey";
-import { SESSION_ACCESSTOKEN_KEY, SESSION_REFRESHTOKEN_KEY } from "../constants/session";
-import sessionStorageService from "../utils/sessionStorageService";
 import { getReissue } from "./controller/account";
 
 axios.defaults.withCredentials = true;
@@ -15,12 +13,13 @@ axiosInterceptor.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    console.log("axiosInterceptor error(cors관련X):", error)
     try {
-      if (error?.response.status === 1003 && !originalRequest._retry) {
+      if (error.response.data.code === 1003 && !originalRequest._retry) {
         originalRequest._retry = true;
         try {
-          await getReissue();
+          const res = await getReissue();
+          originalRequest.headers['Authorization'] = `${res.headers.get("authorization")}`;
+          originalRequest.headers['refreshToken'] = `${res.headers.get("refreshtoken")}`;
           return axiosInterceptor(originalRequest);
         } catch (err) {
           console.error("Token refresh failed", err);
@@ -28,7 +27,7 @@ axiosInterceptor.interceptors.response.use(
         }
       }
     } catch (error) {
-      console.error("axiosInterceptor error(cors관련X)")
+      console.error("axiosInterceptor error")
     }
     
     return Promise.reject(error);
