@@ -22,10 +22,6 @@ export const sendApi = {
     }
   },
 
-  guestGet: (url: string) => {
-    return axios.get(AUTH_KEY.apiUrl + url);
-  },
-
   post: (url: string, req: object = {}) => {
     return axiosInterceptor.post(
       AUTH_KEY.apiUrl + url,
