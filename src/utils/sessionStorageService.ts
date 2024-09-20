@@ -1,27 +1,31 @@
+import { SESSION_ACCESSTOKEN_KEY, SESSION_REFRESHTOKEN_KEY } from "../constants/session";
+
 const sessionStorageService = {
-  set: (key: string, value: string = "") => {
-    return typeof window !== "undefined"
-      ? sessionStorage.setItem(key, value)
-      : null;
-  },
-  get: (key: string = "", type: "accessToken" | "refreshToken") => {
-    const data =
-      typeof window !== "undefined" ? sessionStorage.getItem(key) : null;
-    if (data) {
-      const storedObject = JSON.parse(data);
-      const accessToken = storedObject?.JWTDataState?.accessToken;
-      const refreshToken = storedObject?.JWTDataState?.refreshToken;
-      if (accessToken && type === "accessToken") {
-        return accessToken;
-      } else if (refreshToken && type === "refreshToken") {
-        return refreshToken;
+  set: (type: "accessToken" | "refreshToken", value: string = "") => {
+    if(typeof window !== "undefined"){
+      if(type === "accessToken"){
+        return sessionStorage.setItem(SESSION_ACCESSTOKEN_KEY, value)
+      }else if( type === "refreshToken"){
+        return sessionStorage.setItem(SESSION_REFRESHTOKEN_KEY, value)
       }
     }
-    return typeof window !== "undefined" ? sessionStorage.getItem(key) : null;
   },
-  delete: (key: string = "") => {
+  get: (type: "accessToken" | "refreshToken") => {
+    if(typeof window !== "undefined"){
+    const data = type ==="accessToken" 
+    ? sessionStorage.getItem(SESSION_ACCESSTOKEN_KEY) 
+    : sessionStorage.getItem(SESSION_REFRESHTOKEN_KEY);
+    
+      if (data) {
+        return data;
+      }
+      return  null;
+    }
+  },
+  delete: () => {
     return typeof window !== "undefined"
-      ? sessionStorage.removeItem(key)
+      ? (sessionStorage.removeItem(SESSION_ACCESSTOKEN_KEY)
+         ,sessionStorage.removeItem(SESSION_REFRESHTOKEN_KEY))
       : null;
   },
 };

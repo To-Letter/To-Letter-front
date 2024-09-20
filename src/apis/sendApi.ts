@@ -1,17 +1,19 @@
 import axios from "axios";
 import { AUTH_KEY } from "../constants/authkey";
-import { SESSION_KEY } from "../constants/session";
 import sessionStorageService from "../utils/sessionStorageService";
 import authorization from "../utils/httpService";
 import axiosInterceptor from "./axiosInterceptor";
 
+
+
 export const sendApi = {
+  
   get: (url: string) => {
-    const accessToken = sessionStorageService.get(SESSION_KEY, "accessToken");
+    const accessToken = sessionStorageService.get("accessToken");
     if (accessToken !== null) {
       return axiosInterceptor.get(
         AUTH_KEY.apiUrl + url,
-        authorization(accessToken)
+        authorization()
       );
     } else {
       return axios.get(AUTH_KEY.apiUrl + url, { withCredentials: true });
@@ -23,28 +25,25 @@ export const sendApi = {
   },
 
   post: (url: string, req: object = {}) => {
-    const accessToken = sessionStorageService.get(SESSION_KEY, "accessToken");
     return axiosInterceptor.post(
       AUTH_KEY.apiUrl + url,
       req,
-      authorization(accessToken)
+      authorization()
     );
   },
 
   put: (url: string, req: object = {}) => {
-    const accessToken = sessionStorageService.get(SESSION_KEY, "accessToken");
     return axiosInterceptor.put(
       AUTH_KEY.apiUrl + url,
       req,
-      authorization(accessToken)
+      authorization()
     );
   },
 
   delete: (url: string) => {
-    const accessToken = sessionStorageService.get(SESSION_KEY, "accessToken");
     return axiosInterceptor.delete(
       AUTH_KEY.apiUrl + url,
-      authorization(accessToken)
+      authorization()
     );
   },
 };
