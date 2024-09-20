@@ -2,8 +2,6 @@ import axios from "axios";
 import { AUTH_KEY } from "../constants/authkey";
 import { getReissue } from "./controller/account";
 
-axios.defaults.withCredentials = true;
-//토큰 만료시 후처리 인터셉터(현재 검증 안 됨)
 const axiosInterceptor = axios.create({
   baseURL: AUTH_KEY.apiUrl,
   withCredentials: true,
