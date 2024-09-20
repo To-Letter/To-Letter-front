@@ -1,6 +1,6 @@
-// Modal.tsx
 import React, { ChangeEvent, useState } from 'react';
 import styled from 'styled-components';
+import { postLocalLogin } from '../../apis/controller/account';
 
 interface loginFormI {
   email: string
@@ -18,19 +18,28 @@ const Login = ({setMenuNumber}: props) => {
   })
 
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>)=>{
+
     setLoginForm(prev => ({
       ...prev,
       [e.target.name]: e.target.value
     }))
   }
 
-  const onClickLogin = () => {
+
+  const onClickLogin = async () => {
     if(loginForm.email === ''){
       alert('이메일을 정확히 입력해주세요.')
     }else if(loginForm.password === ''){
       alert('비밀번호를 입력해주세요.')
     }
     console.log("login data: ", loginForm);
+    try {
+      let res:any = await postLocalLogin({email: loginForm.email, password: loginForm.password})
+      if(res.data.responseCode === "200"){
+      }
+    } catch (error) {
+      alert('이메일 혹은 비밀번호를 잘 못 입력하셨습니다.')
+    }
   }
 
   return (
@@ -53,7 +62,6 @@ const Login = ({setMenuNumber}: props) => {
       <FindAccountTextWrap>
         can't login?
       </FindAccountTextWrap>
-      
     </LoginWrap>
   );
 };
