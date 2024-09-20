@@ -10,9 +10,11 @@ export const sendApi = {
   
   get: (url: string) => {
     const accessToken = sessionStorageService.get("accessToken");
+    // accessToken 존재시 즉, 로그인한 상태
     if (accessToken !== null) {
       return axiosInterceptor.get(
         AUTH_KEY.apiUrl + url,
+        //기본 헤더 설정, 엑세스 토큰 및 리프레시 토큰 설정
         authorization()
       );
     } else {

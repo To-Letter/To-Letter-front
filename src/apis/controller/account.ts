@@ -7,6 +7,7 @@ export const postLocalLogin = async (loginData: { email: string; password?: stri
     password: loginData.password,
   });
 
+  // 각각의 토큰 저장
   const accessToken = response.headers.get("authorization");
   const refreshToken = response.headers.get("refreshtoken");
 
