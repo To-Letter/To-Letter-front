@@ -1,8 +1,6 @@
 import React, { ChangeEvent, useState } from 'react';
 import styled from 'styled-components';
-import { getLogout, postLocalLogin } from '../../apis/controller/account';
-import sessionStorageService from '../../utils/sessionStorageService';
-import { getMypage } from '../../apis/controller/user';
+import { postLocalLogin } from '../../apis/controller/account';
 
 interface loginFormI {
   email: string
@@ -20,22 +18,11 @@ const Login = ({setMenuNumber}: props) => {
   })
 
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>)=>{
-    console.log("로그인 전 엑세스 토큰: ", sessionStorageService.get("accessToken"))
 
     setLoginForm(prev => ({
       ...prev,
       [e.target.name]: e.target.value
     }))
-  }
-
-  const onClickMypage = async() => {
-    const res = await getMypage();
-    console.log("mypage 통신 시도 결과: ", res)
-  }
-
-  const onClickLogout = async() => {
-    const res = await getLogout();
-    console.log("logout 통신 시도 결과: ", res)
   }
 
 
@@ -49,8 +36,6 @@ const Login = ({setMenuNumber}: props) => {
     try {
       let res:any = await postLocalLogin({email: loginForm.email, password: loginForm.password})
       if(res.data.responseCode === "200"){
-        console.log("세션 스토리지 저장 엑세스 토큰: ", sessionStorageService.get("accessToken"))
-        console.log("세션 스토리지 저장 리프레시 토큰: ", sessionStorageService.get("refreshToken"))
       }
     } catch (error) {
       alert('이메일 혹은 비밀번호를 잘 못 입력하셨습니다.')
@@ -74,14 +59,8 @@ const Login = ({setMenuNumber}: props) => {
       <LoginBtn onClick={()=>setMenuNumber(3)}>카카오톡 로그인</LoginBtn>
       {/* <SocialLoginBtn>google 로그인</SocialLoginBtn> */}
       </SocialLoginWrap>
-      {/* <FindAccountTextWrap>
+      <FindAccountTextWrap>
         can't login?
-      </FindAccountTextWrap> */}
-      <FindAccountTextWrap onClick={onClickLogout}>
-        logoutTest
-      </FindAccountTextWrap>
-      <FindAccountTextWrap onClick={onClickMypage}>
-        MypageTest
       </FindAccountTextWrap>
     </LoginWrap>
   );
