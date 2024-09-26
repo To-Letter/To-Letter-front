@@ -58,6 +58,27 @@ export const getEmialConfirm = async (email: { email: string }) => {
   return response;
 };
 
+// 이메일 인증코드 발송
+export const getEmialAuth = async (email: { email: string }) => {
+  const queryString = `?toEmail=${encodeURIComponent(email.email)}`;
+  const response: any = await sendApi.get(`/users/email/auth${queryString}`);
+
+  return response;
+};
+
+// 이메일 인증 요청
+export const postEmailVerify = async (emailData: {
+  email: string;
+  randomCode: string;
+}) => {
+  const response: any = await sendApi.post(`/users/email/verify`, {
+    email: emailData.email,
+    randomCode: emailData.randomCode,
+  });
+
+  return response;
+};
+
 export const getReissue = async () => {
   const response: any = await sendApi.get(`/users/reissue`);
 

@@ -21,9 +21,10 @@ interface defaultStyleProps {
 
 interface props {
   setMenuNumber: React.Dispatch<React.SetStateAction<number>>;
+  setEmail: (email: string) => void;
 }
 
-const Signup = ({ setMenuNumber }: props) => {
+const Signup = ({ setMenuNumber, setEmail }: props) => {
   const [signupForm, setSignupForm] = useState<loginFormI>({
     nickName: "",
     email: "",
@@ -72,16 +73,15 @@ const Signup = ({ setMenuNumber }: props) => {
           password: signupForm.password,
           address: signupForm.mailboxAddress,
         });
-        if (res.data.responeCode === "200") {
+        if (res.status === 200) {
           console.log("회원가입 성공");
+          setEmail(signupForm.email);
           setMenuNumber(4);
         }
-        console.log("res: ", res.data.responeCode);
       } catch (err) {
         alert("입력란을 다시 확인해주세요.");
       }
     }
-    console.log("sign data: ", signupForm);
   };
 
   // 닉네임 중복확인
