@@ -1,45 +1,51 @@
 
-import React, { useRef, useEffect, useState } from "react";
-import { useLoader } from "@react-three/fiber";
-import { Group, Object3DEventMap } from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { Plane } from "@react-three/drei";
+import { useEffect, useState, useMemo } from "react";
 import * as THREE from "three";
-import { cloudPosition, cloudRotation, cloudScale } from "../../constants/seasonTree";
 
-const Cloud = () => {
-  const cloudGlb = useLoader(GLTFLoader, "/models/cloud.glb");
-  const [cloudClones, setCloudClones] = useState<Group<Object3DEventMap>[]>([]);
+const Cloud = ({nowHoursValue}:{nowHoursValue: number;}) => {
+  const [bgTexture, setBgTexture] = useState<THREE.Texture | null>(null);
+  const timeZone:string = useMemo(():string=>{
+    if(nowHoursValue>5 && nowHoursValue<20){ // 새벽 5시 이후, 저녁 8시 이전 => 해 떠있을 때
+      return `/images/scenery/noonCloud.png`
+    }else{
+      return `/images/scenery/nightCloud.png`
+    }
+  }, [nowHoursValue])
 
   useEffect(() => {
-    cloudGlb.scene.traverse((child) => {
-      if ((child as THREE.Mesh).isMesh) {
-        const mesh = child as THREE.Mesh;
-        mesh.material = new THREE.MeshStandardMaterial({
-          color: "#b6b6b6",
-        });
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
+    const loader = new THREE.TextureLoader();
+    loader.load(
+      timeZone,
+      (texture) => {
+        setBgTexture(texture);
+      },
+      undefined,
+      (error) => {
+        console.error("An error occurred while loading the texture.", error);
       }
-    });
+    );
+  }, []);
 
-    setCloudClones(cloudPosition.map(() => {
-      const clone = cloudGlb.scene.clone();
-      return clone;
-    }));
-
-  }, [cloudGlb]);
 
   return (
     <>
-    {cloudClones.map((model, idx)=>(
-      <group 
-        key={`cloudGroup${idx}`} 
-        rotation={[cloudRotation[idx][0], cloudRotation[idx][1], cloudRotation[idx][2]]}
-        scale={cloudScale[idx]} 
-        position={[cloudPosition[idx][0], cloudPosition[idx][1], cloudPosition[idx][2]]}>
-        <primitive key={`cloudPrimitive${idx}`} object={model} />
-      </group>
-    ))}
+      {bgTexture && (
+        <>
+          <Plane
+            args={[400, 75]}
+            rotation={[0, -Math.PI / 2, 0]}
+            position={[149, 0, -75]}
+          >
+            <meshStandardMaterial
+              map={bgTexture}
+              side={THREE.DoubleSide}
+              transparent={true}      // 투명도 활성화
+              alphaTest={0.0001}   
+            />
+          </Plane>
+        </>
+      )}
     </>
   );
 };

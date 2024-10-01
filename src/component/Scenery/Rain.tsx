@@ -1,45 +1,43 @@
 
-import React, { useRef, useEffect, useState } from "react";
-import { useLoader } from "@react-three/fiber";
-import { Group, Object3DEventMap } from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { Plane } from "@react-three/drei";
+import { useEffect, useState } from "react";
 import * as THREE from "three";
-import { rainPosition, rainRotation, rainScale } from "../../constants/seasonTree";
 
 const Rain = () => {
-  const rainGlb = useLoader(GLTFLoader, "/models/cloud.glb");
-  const [rainClones, setCloudClones] = useState<Group<Object3DEventMap>[]>([]);
-
+  const [bgTexture, setBgTexture] = useState<THREE.Texture | null>(null);
   useEffect(() => {
-    rainGlb.scene.traverse((child) => {
-      if ((child as THREE.Mesh).isMesh) {
-        const mesh = child as THREE.Mesh;
-        mesh.material = new THREE.MeshStandardMaterial({
-          color: "#9c9c9c",
-        });
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
+    const loader = new THREE.TextureLoader();
+    loader.load(
+      `/images/scenery/rain.png`,
+      (texture) => {
+        setBgTexture(texture);
+      },
+      undefined,
+      (error) => {
+        console.error("An error occurred while loading the texture.", error);
       }
-    });
+    );
+  }, []);
 
-    setCloudClones(rainPosition.map(() => {
-      const clone = rainGlb.scene.clone();
-      return clone;
-    }));
-
-  }, [rainGlb]);
 
   return (
     <>
-    {rainClones.map((model, idx)=>(
-      <group 
-        key={`rainGroup${idx}`} 
-        rotation={[rainRotation[idx][0], rainRotation[idx][1], rainRotation[idx][2]]}
-        scale={rainScale[idx]} 
-        position={[rainPosition[idx][0], rainPosition[idx][1], rainPosition[idx][2]]}>
-        <primitive key={`rainPrimitive${idx}`} object={model} />
-      </group>
-    ))}
+      {bgTexture && (
+        <>
+          <Plane
+            args={[400, 75]}
+            rotation={[0, -Math.PI / 2, 0]}
+            position={[149, 0, -75]}
+          >
+            <meshStandardMaterial
+              map={bgTexture}
+              side={THREE.DoubleSide}
+              transparent={true}      // 투명도 활성화
+              alphaTest={0.0001}   
+            />
+          </Plane>
+        </>
+      )}
     </>
   );
 };
