@@ -1,17 +1,13 @@
 import React, { ChangeEvent, useState } from "react";
 import styled from "styled-components";
-import { postLocalLogin } from "../../apis/controller/account";
+import { getKakaoURL, postLocalLogin } from "../../apis/controller/account";
 
 interface loginFormI {
   email: string;
   password: string;
 }
 
-interface props {
-  setMenuNumber: React.Dispatch<React.SetStateAction<number>>;
-}
-
-const Login = ({ setMenuNumber }: props) => {
+const Login = () => {
   const [loginForm, setLoginForm] = useState<loginFormI>({
     email: "",
     password: "",
@@ -45,6 +41,18 @@ const Login = ({ setMenuNumber }: props) => {
     }
   };
 
+  const onClickKakaoLogin = async () => {
+    try {
+      let res: any = await getKakaoURL();
+      console.log("카카오 res :", res);
+      if (res.status === 200) {
+        window.location.href = res.data;
+      }
+    } catch (err) {
+      alert("입력란을 다시 확인해주세요.");
+    }
+  };
+
   return (
     <LoginWrap>
       <LoginContent>
@@ -63,7 +71,7 @@ const Login = ({ setMenuNumber }: props) => {
       </LoginContent>
       <LoginBtn onClick={onClickLogin}>Login</LoginBtn>
       <SocialLoginWrap>
-        <LoginBtn onClick={() => setMenuNumber(3)}>카카오톡 로그인</LoginBtn>
+        <LoginBtn onClick={onClickKakaoLogin}>카카오톡 로그인</LoginBtn>
         {/* <SocialLoginBtn>google 로그인</SocialLoginBtn> */}
       </SocialLoginWrap>
       <FindAccountTextWrap>can't login?</FindAccountTextWrap>

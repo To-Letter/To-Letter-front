@@ -1,16 +1,25 @@
 import { Canvas } from "@react-three/fiber";
 import Secen from "../component/Secen";
 import { OrbitControls } from "@react-three/drei";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useContext, useEffect } from "react";
 import Index from "../component/account/Index";
-import { PopupProvider } from "../component/PopupContext";
+import { PopupProvider } from "../context/PopupContext";
+import { MenuContext } from "../context/MenuContext";
+import KakaoSignup from "../component/account/KakaoSignup";
 
 function Home() {
+  const { menuNumber, setMenuNumber } = useContext(MenuContext)!;
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
 
   const chairClick = useCallback(() => {
     setShowLoginModal((prev) => !prev);
   }, []);
+
+  useEffect(() => {
+    if (menuNumber === 3) {
+      setShowLoginModal(true);
+    }
+  }, [menuNumber]);
 
   return (
     <>
@@ -28,6 +37,7 @@ function Home() {
           />
         </Canvas>
         {showLoginModal && <Index onClose={chairClick} />}
+        {menuNumber === 3 && <KakaoSignup />}
       </PopupProvider>
     </>
   );

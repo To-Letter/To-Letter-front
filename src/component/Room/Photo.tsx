@@ -1,7 +1,7 @@
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
 import Popup from "./Popup";
-import { usePopup } from "./PopupContext";
+import { usePopup } from "../../context/PopupContext";
 
 const Photo = ({
   position,

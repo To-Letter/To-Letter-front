@@ -1,17 +1,18 @@
 // Modal.tsx
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import Login from "./Login";
 import Signup from "./Signup";
 import KakaoSignup from "./KakaoSignup";
 import MailVerify from "./MailVerify";
+import { MenuContext } from "../../context/MenuContext";
 
 interface styleI {
   $selected?: boolean;
 }
 
 const Index: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const [menuNumber, setMenuNumber] = useState<number>(1);
+  const { menuNumber, setMenuNumber } = useContext(MenuContext)!;
   const [email, setEmail] = useState<string>("");
 
   return (
@@ -31,7 +32,7 @@ const Index: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             Signup
           </MenuTitle>
         </MenuWrap>
-        {menuNumber === 1 && <Login setMenuNumber={setMenuNumber} />}
+        {menuNumber === 1 && <Login />}
         {menuNumber === 2 && (
           <Signup setMenuNumber={setMenuNumber} setEmail={setEmail} />
         )}

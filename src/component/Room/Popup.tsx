@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Html } from "@react-three/drei";
-import { usePopup } from "./PopupContext";
+import { usePopup } from "../../context/PopupContext";
 import styled from "styled-components";
 
 interface PopupProps {
