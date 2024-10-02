@@ -81,7 +81,7 @@ const TimeBackground = ({nowHoursValue}:BackgroundProps) => {
     directionalLight1.shadow.mapSize = new THREE.Vector2(2048, 2048);
 
     const target = new THREE.Object3D();
-    target.position.set(50, -2, -3); // Plane의 위치를 타겟으로 설정
+    target.position.set(150, 0, -75); // Plane의 위치를 타겟으로 설정
     scene.add(target);
     directionalLight1.target = target;
     scene.add(directionalLight1);

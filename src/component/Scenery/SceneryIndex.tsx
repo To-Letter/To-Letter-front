@@ -51,7 +51,7 @@ const SceneryIndex = () => {
       <TimeBackground nowHoursValue={now.getHours()}/>
       <SeasonBackground nowMonthValue={now.getMonth()} weatherInfo={weatherInfo} />
       {
-        weatherInfo !=="" && <WeatherBackground weatherInfo={weatherInfo} />
+        weatherInfo !=="" && <WeatherBackground nowHoursValue={now.getHours()} weatherInfo={weatherInfo} />
       }
     </>
   );

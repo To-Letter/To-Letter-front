@@ -7,6 +7,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
 import { treePosition } from "../../constants/seasonTree";
 import { seasonFile } from "../../constants/seasonTree";
+import { Plane } from "@react-three/drei";
 
 
 const meshColors: { [key: string]: string } = {
@@ -21,6 +22,7 @@ const meshColors: { [key: string]: string } = {
 };
 
 const Winter = () => {
+  const [bgTexture, setBgTexture] = useState<THREE.Texture | null>(null);
   const [treeClones, setTreeClones] = useState<Group<Object3DEventMap>[]>([]);
 
   console.log(seasonFile.spring)
@@ -36,6 +38,18 @@ const Winter = () => {
 
   useEffect(() => {
   
+    const loader = new THREE.TextureLoader();
+    loader.load(
+      `/images/scenery/snow.png`,
+      (texture) => {
+        setBgTexture(texture);
+      },
+      undefined,
+      (error) => {
+        console.error("An error occurred while loading the texture.", error);
+      }
+    );
+
     treeglb.scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
@@ -76,6 +90,22 @@ const Winter = () => {
         <primitive key={`treePrimitive${idx}`} object={model} />
       </group>
     ))}
+    {bgTexture && (
+        <>
+          <Plane
+            args={[400, 75]}
+            rotation={[0, -Math.PI / 2, 0]}
+            position={[149, 0, -75]}
+          >
+            <meshStandardMaterial
+              map={bgTexture}
+              side={THREE.DoubleSide}
+              transparent={true}      // 투명도 활성화
+              alphaTest={0.0001}   
+            />
+          </Plane>
+        </>
+      )}
     </>
   );
 };
