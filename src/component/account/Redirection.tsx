@@ -2,6 +2,7 @@ import { useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { postKakaoToken } from "../../apis/controller/account";
 import { MenuContext } from "../../context/MenuContext";
+import ProgressBar from "../ProgreassBar";
 
 const Redirection = () => {
   const { setMenuNumber } = useContext(MenuContext)!;
@@ -19,8 +20,10 @@ const Redirection = () => {
         if (res.status === 200) {
           if (res.data !== undefined || res.data !== null) {
             console.log("data :", res.data);
-            setMenuNumber(3);
-            navigate("/"); // Home으로 리디렉션
+            setTimeout(() => {
+              setMenuNumber(3);
+              navigate("/"); // Home으로 리디렉션
+            }, 2000);
           }
         }
       } catch (err) {
@@ -36,9 +39,13 @@ const Redirection = () => {
       hasFetched.current = true;
       OnClickKakaoToken();
     }
-  }, []); // 빈 배열을 의존성 배열로 설정
+  }, []);
 
-  return <div>로그인 중입니다.</div>;
+  return (
+    <div>
+      <ProgressBar />
+    </div>
+  );
 };
 
 export default Redirection;

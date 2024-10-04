@@ -6,6 +6,7 @@ import {
   getNicknameConfirm,
   getEmialConfirm,
 } from "../../apis/controller/account";
+import ToastMessage from "../ToastMessage";
 
 interface loginFormI {
   nickName: string;
@@ -32,6 +33,7 @@ const Signup = ({ setMenuNumber, setEmail }: props) => {
     mailboxAddress: "",
   });
   const [openAddressModal, setOpenAddressModal] = useState<boolean>(false);
+  const [showToast, setShowToast] = useState<boolean>(false);
 
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
     setSignupForm((prev) => ({
@@ -57,7 +59,8 @@ const Signup = ({ setMenuNumber, setEmail }: props) => {
   // 회원가입
   const onClickSignup = async () => {
     if (signupForm.email === "") {
-      alert("이메일을 입력해주세요.");
+      setShowToast(true);
+      // alert("이메일을 입력해주세요.");
     } else if (signupForm.password === "") {
       alert("비밀번호를 입력해주세요.");
     } else if (signupForm.nickName === "") {
@@ -168,6 +171,7 @@ const Signup = ({ setMenuNumber, setEmail }: props) => {
         </FormLabel>
       </SignupContent>
       <SignupBtn onClick={onClickSignup}>Signup</SignupBtn>
+      {showToast && <ToastMessage message="이메일을 입력해주세요." />}
     </SignupWrap>
   );
 };

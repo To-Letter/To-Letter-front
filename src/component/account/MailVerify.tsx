@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
 import { postEmailVerify, getEmialAuth } from "../../apis/controller/account";
+import ToastMessage from "../ToastMessage";
 
 interface defaultStyleProps {
   $direction?: "row" | "column";
@@ -16,6 +17,7 @@ const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
   const [verifyMe, setVerifyMe] = useState<boolean>(false);
   const [mailKey, setMailKey] = useState<string>("");
   const [timer, setTimer] = useState<number>(300); // 10분 = 600초
+  const [showToast, setShowToast] = useState<boolean>(false);
 
   const onChangeMailKeyHdr = (e: ChangeEvent<HTMLInputElement>) => {
     setMailKey(e.target.value);
@@ -26,6 +28,7 @@ const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
     let res: any = await getEmialAuth({ email: email });
     if (res.status === 200) {
       setVerifyMe(true);
+      setShowToast(true);
       console.log("이메일 인증코드 발송 성공");
     } else {
       console.log("email auth error : ", res);
@@ -90,6 +93,9 @@ const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
         </FormLabel>
       </SignupContent>
       <SignupBtn onClick={submitSignup}>Signup</SignupBtn>
+      {showToast && (
+        <ToastMessage message="이메일 인증코드가 발송되었습니다." />
+      )}
     </SignupWrap>
   );
 };
