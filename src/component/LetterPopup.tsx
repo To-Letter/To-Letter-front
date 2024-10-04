@@ -31,13 +31,6 @@ const LetterPopup: React.FC<LetterPopupProps> = ({ onClose, senderName }) => {
     }
   };
 
-  const handleWheel = (event: WheelEvent) => {
-    if (innerRef.current) {
-      event.preventDefault();
-      innerRef.current.scrollTop += event.deltaY;
-    }
-  };
-
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
       if (textareaRef.current) {
@@ -91,7 +84,7 @@ const Popup = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: url("/images/letter_background2.jpg") no-repeat center center;
+  background: url("/images/letter_background6.jpg") no-repeat center center;
   background-size: cover;
   border: 1px solid #ccc;
   padding: 20px;
@@ -118,19 +111,20 @@ const PopupInner = styled.div`
 
 const StyledTextarea = styled.textarea`
   width: 87%;
-  height: 100%;
+  height: 89.5%;
   border: none;
   background: transparent;
-  /* padding: 10px 5px; */
   font-family: "Handwriting", sans-serif;
   font-size: 1.2vw;
   outline: none;
   resize: none;
-  overflow-y: auto; /* 세로 스크롤 추가 */
+  overflow-y: auto;
   white-space: pre-wrap;
-  line-height: 1.7em;
+  line-height: 2.13em;
   border-bottom: 1px solid #ccc;
   margin: 0% 7.5%; /* 양쪽에서 동일하게 줄어들도록 설정 */
+  padding-top: 10px; /* 텍스트 상단 여백 추가 */
+  padding-right: 30px; /* 텍스트 좌측 여백 추가 */
 
   &:focus {
     border-bottom: 1px solid #007bff;
