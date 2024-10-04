@@ -79,6 +79,20 @@ export const postEmailVerify = async (emailData: {
   return response;
 };
 
+// kakao 로그인
+export const getKakaoURL = async () => {
+  const response: any = await sendApi.get(`/users/kakao/auth`);
+
+  return response;
+};
+
+export const postKakaoToken = async (code: { code: string }) => {
+  const queryString = `?code=${encodeURIComponent(code.code)}`;
+  const response: any = await sendApi.post(`/users/kakao/token${queryString}`);
+
+  return response;
+};
+
 export const getReissue = async () => {
   const response: any = await sendApi.get(`/users/reissue`);
 

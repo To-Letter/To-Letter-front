@@ -1,6 +1,6 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import styled from 'styled-components';
-import AddressModal from './AddressModal';
+import React, { ChangeEvent, useEffect, useState } from "react";
+import styled from "styled-components";
+import AddressModal from "./AddressModal";
 
 interface kakaoLoginFormI {
   nickName: string;
@@ -8,48 +8,47 @@ interface kakaoLoginFormI {
   mailboxAddress: string;
 }
 interface defaultStyleProps {
-  $direction?: 'row' | 'column'
-  $justifyContent?: string
-  $alignItems?: string
-  $margin?: string
+  $direction?: "row" | "column";
+  $justifyContent?: string;
+  $alignItems?: string;
+  $margin?: string;
 }
 
 const KakaoSignup: React.FC = () => {
   const [signupForm, setSignupForm] = useState<kakaoLoginFormI>({
     nickName: "",
     email: "",
-    mailboxAddress: ""
+    mailboxAddress: "",
   });
   const [openAddressModal, setOpenAddressModal] = useState<boolean>(false);
 
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
-    setSignupForm(prev => ({
+    setSignupForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
   const onChangheAddress = (address: string) => {
-    setSignupForm(prev => ({
+    setSignupForm((prev) => ({
       ...prev,
-      mailboxAddress: address
+      mailboxAddress: address,
     }));
   };
 
   const onClickOpenModal = () => {
-    setOpenAddressModal(prev => !prev)
-  }
+    setOpenAddressModal((prev) => !prev);
+  };
 
-  useEffect(()=>{}, [openAddressModal, signupForm.mailboxAddress])
-  
+  useEffect(() => {}, [openAddressModal, signupForm.mailboxAddress]);
 
   const onClickSignup = () => {
-    if (signupForm.email === '') {
-      alert('이메일을 입력해주세요.');
-    }  else if (signupForm.nickName === '') {
-      alert('닉네임을 입력해주세요.');
-    } else if (signupForm.mailboxAddress === '') {
-      alert('우편함 주소를 입력해주세요.');
+    if (signupForm.email === "") {
+      alert("이메일을 입력해주세요.");
+    } else if (signupForm.nickName === "") {
+      alert("닉네임을 입력해주세요.");
+    } else if (signupForm.mailboxAddress === "") {
+      alert("우편함 주소를 입력해주세요.");
     }
     console.log("sign data: ", signupForm);
   };
@@ -58,39 +57,50 @@ const KakaoSignup: React.FC = () => {
     <SignupWrap>
       <SignupContent>
         <FormLabel>
-          <Box $alignItems='center' $justifyContent='space-between'>
-          NickName
-          <Button>중복 체크</Button>
+          <Box $alignItems="center" $justifyContent="space-between">
+            NickName
+            <Button>중복 체크</Button>
           </Box>
-          <FormInput type='text' name="nickName" onChange={onChangeFormHdr} />
+          <FormInput type="text" name="nickName" onChange={onChangeFormHdr} />
         </FormLabel>
         <FormLabel>
           Email
-          <FormInput type='text' name="email" value={'tamd5971@gmail.com'} onChange={onChangeFormHdr} disabled />
+          <FormInput
+            type="text"
+            name="email"
+            value={"wodbs5602@naver.com"}
+            onChange={onChangeFormHdr}
+            disabled
+          />
         </FormLabel>
         <FormLabel>
-          <Box $alignItems='center' $justifyContent='space-between' $margin='8px 0 0 0'>
-            <Box $justifyContent='flex-start' $alignItems='center'>
+          <Box
+            $alignItems="center"
+            $justifyContent="space-between"
+            $margin="8px 0 0 0"
+          >
+            <Box $justifyContent="flex-start" $alignItems="center">
               MailboxAddress
               <MailBoxSummry>
                 ?
                 <TipBox>
-                  To Letter가 우편 배송 기간을 계산할 때 사용하는 도로명 주소 값으로, 실제 자신의 주소를 입력하지 않아도 괜찮아요!
+                  To Letter가 우편 배송 기간을 계산할 때 사용하는 도로명 주소
+                  값으로, 실제 자신의 주소를 입력하지 않아도 괜찮아요!
                 </TipBox>
               </MailBoxSummry>
             </Box>
             <Button onClick={onClickOpenModal}>주소 입력</Button>
           </Box>
-          {
-            signupForm.mailboxAddress !== '' &&
-            <FormAddressInput>
-              {signupForm.mailboxAddress} 
-            </FormAddressInput>
-          }
-          
-          {
-            openAddressModal && <AddressModal onChangheAddress={onChangheAddress} onClickOpenModal={onClickOpenModal}/>
-          }
+          {signupForm.mailboxAddress !== "" && (
+            <FormAddressInput>{signupForm.mailboxAddress}</FormAddressInput>
+          )}
+
+          {openAddressModal && (
+            <AddressModal
+              onChangheAddress={onChangheAddress}
+              onClickOpenModal={onClickOpenModal}
+            />
+          )}
         </FormLabel>
       </SignupContent>
       <SignupBtn onClick={onClickSignup}>Signup</SignupBtn>
@@ -102,12 +112,12 @@ export default KakaoSignup;
 
 export const Box = styled.div<defaultStyleProps>`
   display: flex;
-  flex-direction: ${({$direction}) => $direction};
-  justify-content: ${({$justifyContent}) => $justifyContent};
-  align-items: ${({$alignItems}) => $alignItems};
-  margin: ${({$margin}) => $margin};
+  flex-direction: ${({ $direction }) => $direction};
+  justify-content: ${({ $justifyContent }) => $justifyContent};
+  align-items: ${({ $alignItems }) => $alignItems};
+  margin: ${({ $margin }) => $margin};
   position: relative;
-`
+`;
 
 const MailBoxSummry = styled.div`
   margin-left: 8px;
@@ -130,7 +140,7 @@ const MailBoxSummry = styled.div`
 const TipBox = styled.div`
   display: none;
   position: absolute;
-  bottom: -88px; 
+  bottom: -88px;
   left: 50%;
   transform: translateX(-50%);
   background-color: #333;
@@ -194,7 +204,7 @@ const FormInput = styled.input`
     color: #ffffff;
   }
   &:-webkit-autofill,
-  &:-webkit-autofill:hover, 
+  &:-webkit-autofill:hover,
   &:-webkit-autofill:focus {
     border: none;
     -webkit-text-fill-color: #ffffff !important;
