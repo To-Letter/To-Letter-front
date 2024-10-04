@@ -1,6 +1,11 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import styled from 'styled-components';
-import AddressModal from './AddressModal';
+import React, { ChangeEvent, useEffect, useState } from "react";
+import styled from "styled-components";
+import AddressModal from "./AddressModal";
+import {
+  postLocalSignup,
+  getNicknameConfirm,
+  getEmialConfirm,
+} from "../../apis/controller/account";
 
 interface loginFormI {
   nickName: string;
@@ -9,102 +14,157 @@ interface loginFormI {
   mailboxAddress: string;
 }
 interface defaultStyleProps {
-  $direction?: 'row' | 'column'
-  $justifyContent?: string
-  $alignItems?: string
+  $direction?: "row" | "column";
+  $justifyContent?: string;
+  $alignItems?: string;
 }
 
 interface props {
-  setMenuNumber: React.Dispatch<React.SetStateAction<number>>
+  setMenuNumber: React.Dispatch<React.SetStateAction<number>>;
+  setEmail: (email: string) => void;
 }
 
-const Signup = ({setMenuNumber}: props) => {
+const Signup = ({ setMenuNumber, setEmail }: props) => {
   const [signupForm, setSignupForm] = useState<loginFormI>({
     nickName: "",
     email: "",
     password: "",
-    mailboxAddress: ""
+    mailboxAddress: "",
   });
   const [openAddressModal, setOpenAddressModal] = useState<boolean>(false);
 
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
-    setSignupForm(prev => ({
+    setSignupForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
   const onChangheAddress = (address: string) => {
-    setSignupForm(prev => ({
+    setSignupForm((prev) => ({
       ...prev,
-      mailboxAddress: address
+      mailboxAddress: address,
     }));
   };
 
   const onClickOpenModal = () => {
-    console.log("whyrano...", openAddressModal)
-    setOpenAddressModal(prev => !prev)
-  }
+    console.log("whyrano...", openAddressModal);
+    setOpenAddressModal((prev) => !prev);
+  };
 
-  useEffect(()=>{}, [openAddressModal, signupForm.mailboxAddress])
-  
+  useEffect(() => {}, [openAddressModal, signupForm.mailboxAddress]);
 
-  const onClickSignup = () => {
-    if (signupForm.email === '') {
-      alert('이메일을 입력해주세요.');
-    } else if (signupForm.password === '') {
-      alert('비밀번호를 입력해주세요.');
-    } else if (signupForm.nickName === '') {
-      alert('닉네임을 입력해주세요.');
-    } else if (signupForm.mailboxAddress === '') {
-      alert('우편함 주소를 입력해주세요.');
-    }else{
-      setMenuNumber(4)
+  // 회원가입
+  const onClickSignup = async () => {
+    if (signupForm.email === "") {
+      alert("이메일을 입력해주세요.");
+    } else if (signupForm.password === "") {
+      alert("비밀번호를 입력해주세요.");
+    } else if (signupForm.nickName === "") {
+      alert("닉네임을 입력해주세요.");
+    } else if (signupForm.mailboxAddress === "") {
+      alert("우편함 주소를 입력해주세요.");
+    } else {
+      try {
+        let res: any = await postLocalSignup({
+          nickname: signupForm.nickName,
+          email: signupForm.email,
+          loginType: "localLogin",
+          password: signupForm.password,
+          address: signupForm.mailboxAddress,
+        });
+        if (res.status === 200) {
+          console.log("회원가입 성공");
+          setEmail(signupForm.email);
+          setMenuNumber(4);
+        }
+      } catch (err) {
+        alert("입력란을 다시 확인해주세요.");
+      }
     }
-    console.log("sign data: ", signupForm);
+  };
+
+  // 닉네임 중복확인
+  const onClickConfirmNickname = async () => {
+    if (signupForm.nickName === "") {
+      alert("닉네임을 입력해주세요.");
+    } else {
+      try {
+        let res: any = await getNicknameConfirm({
+          nickname: signupForm.nickName,
+        });
+        console.log("nickname중복 결과 : ", res);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
+  // 이메일 중복확인
+  const onClickConfirmEmail = async () => {
+    if (signupForm.nickName === "") {
+      alert("이메일을 입력해주세요.");
+    } else {
+      try {
+        let res: any = await getEmialConfirm({
+          email: signupForm.email,
+        });
+        console.log("emial중복 결과 : ", res);
+      } catch (err) {
+        console.error(err);
+      }
+    }
   };
 
   return (
     <SignupWrap>
       <SignupContent>
         <FormLabel>
-          <Box $alignItems='center' $justifyContent='space-between'>
-          NickName
-          <Button>중복 체크</Button>
+          <Box $alignItems="center" $justifyContent="space-between">
+            NickName
+            <Button onClick={onClickConfirmNickname}>중복 체크</Button>
           </Box>
-          <FormInput type='text' name="nickName" onChange={onChangeFormHdr} />
+          <FormInput type="text" name="nickName" onChange={onChangeFormHdr} />
         </FormLabel>
         <FormLabel>
-          Email
-          <FormInput type='text' name="email" onChange={onChangeFormHdr} />
+          <Box $alignItems="center" $justifyContent="space-between">
+            Email
+            <Button onClick={onClickConfirmEmail}>중복 체크</Button>
+          </Box>
+          <FormInput type="text" name="email" onChange={onChangeFormHdr} />
         </FormLabel>
         <FormLabel>
           Password
-          <FormInput type='password' name="password" onChange={onChangeFormHdr} />
+          <FormInput
+            type="password"
+            name="password"
+            onChange={onChangeFormHdr}
+          />
         </FormLabel>
         <FormLabel>
-          <Box $alignItems='center' $justifyContent='space-between'>
-            <Box $justifyContent='flex-start' $alignItems='center'>
+          <Box $alignItems="center" $justifyContent="space-between">
+            <Box $justifyContent="flex-start" $alignItems="center">
               MailboxAddress
               <MailBoxSummry>
                 ?
                 <TipBox>
-                  To Letter가 우편 배송 기간을 계산할 때 사용하는 도로명 주소 값으로, 실제 자신의 주소를 입력하지 않아도 괜찮아요!
+                  To Letter가 우편 배송 기간을 계산할 때 사용하는 도로명 주소
+                  값으로, 실제 자신의 주소를 입력하지 않아도 괜찮아요!
                 </TipBox>
               </MailBoxSummry>
             </Box>
             <Button onClick={onClickOpenModal}>주소 입력</Button>
           </Box>
-          {
-            signupForm.mailboxAddress !== '' &&
-            <FormAddressInput>
-              {signupForm.mailboxAddress} 
-            </FormAddressInput>
-          }
-          
-          {
-            openAddressModal && <AddressModal onChangheAddress={onChangheAddress} onClickOpenModal={onClickOpenModal}/>
-          }
+          {signupForm.mailboxAddress !== "" && (
+            <FormAddressInput>{signupForm.mailboxAddress}</FormAddressInput>
+          )}
+
+          {openAddressModal && (
+            <AddressModal
+              onChangheAddress={onChangheAddress}
+              onClickOpenModal={onClickOpenModal}
+            />
+          )}
         </FormLabel>
       </SignupContent>
       <SignupBtn onClick={onClickSignup}>Signup</SignupBtn>
@@ -116,11 +176,11 @@ export default Signup;
 
 export const Box = styled.div<defaultStyleProps>`
   display: flex;
-  flex-direction: ${({$direction}) => $direction};
-  justify-content: ${({$justifyContent}) => $justifyContent};
-  align-items: ${({$alignItems}) => $alignItems};
+  flex-direction: ${({ $direction }) => $direction};
+  justify-content: ${({ $justifyContent }) => $justifyContent};
+  align-items: ${({ $alignItems }) => $alignItems};
   position: relative;
-`
+`;
 
 const MailBoxSummry = styled.div`
   margin-left: 8px;
@@ -143,7 +203,7 @@ const MailBoxSummry = styled.div`
 const TipBox = styled.div`
   display: none;
   position: absolute;
-  bottom: -88px; 
+  bottom: -88px;
   left: 50%;
   transform: translateX(-50%);
   background-color: #333;
@@ -207,7 +267,7 @@ const FormInput = styled.input`
     color: #ffffff;
   }
   &:-webkit-autofill,
-  &:-webkit-autofill:hover, 
+  &:-webkit-autofill:hover,
   &:-webkit-autofill:focus {
     border: none;
     -webkit-text-fill-color: #ffffff !important;

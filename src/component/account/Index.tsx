@@ -1,37 +1,44 @@
 // Modal.tsx
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import Login from './Login';
-import Signup from './Signup';
-import KakaoSignup from './KakaoSignup';
-import MailVerify from './MailVerify';
+import React, { useState } from "react";
+import styled from "styled-components";
+import Login from "./Login";
+import Signup from "./Signup";
+import KakaoSignup from "./KakaoSignup";
+import MailVerify from "./MailVerify";
 
 interface styleI {
-  $selected?: boolean
+  $selected?: boolean;
 }
 
 const Index: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [menuNumber, setMenuNumber] = useState<number>(1);
+  const [email, setEmail] = useState<string>("");
 
   return (
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <MenuWrap>
-          <MenuTitle 
-          $selected={menuNumber === 1}
-          onClick={()=>setMenuNumber(1)}>
+          <MenuTitle
+            $selected={menuNumber === 1}
+            onClick={() => setMenuNumber(1)}
+          >
             Login
           </MenuTitle>
-          <MenuTitle 
-          $selected={menuNumber !== 1}
-          onClick={()=>setMenuNumber(2)}>
+          <MenuTitle
+            $selected={menuNumber !== 1}
+            onClick={() => setMenuNumber(2)}
+          >
             Signup
           </MenuTitle>
         </MenuWrap>
-        {menuNumber === 1 && <Login setMenuNumber={setMenuNumber}/>}
-        {menuNumber === 2 && <Signup setMenuNumber={setMenuNumber}/>}
-        {menuNumber === 3 && <KakaoSignup/>}
-        {menuNumber === 4 && <MailVerify />}
+        {menuNumber === 1 && <Login setMenuNumber={setMenuNumber} />}
+        {menuNumber === 2 && (
+          <Signup setMenuNumber={setMenuNumber} setEmail={setEmail} />
+        )}
+        {menuNumber === 3 && <KakaoSignup />}
+        {menuNumber === 4 && (
+          <MailVerify setMenuNumber={setMenuNumber} email={email} />
+        )}
       </ModalContent>
     </ModalOverlay>
   );
@@ -65,7 +72,7 @@ const MenuWrap = styled.div`
   align-items: center;
   margin-bottom: 16px;
   margin: 32px 40px 8px 40px;
-`
+`;
 
 const MenuTitle = styled.div<styleI>`
   margin-right: 20px;
@@ -74,6 +81,6 @@ const MenuTitle = styled.div<styleI>`
   cursor: pointer;
   color: white;
   padding: 0 2px 4px 2px;
-  
-  ${({$selected})=> $selected && `border-bottom: 2px solid white;`}
-`
+
+  ${({ $selected }) => $selected && `border-bottom: 2px solid white;`}
+`;

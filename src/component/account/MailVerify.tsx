@@ -1,37 +1,59 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import styled from 'styled-components';
-import AddressModal from './AddressModal';
+import React, { ChangeEvent, useEffect, useState } from "react";
+import styled from "styled-components";
+import { postEmailVerify, getEmialAuth } from "../../apis/controller/account";
 
-interface loginFormI {
-  nickName: string;
-  email: string;
-  password: string;
-  mailboxAddress: string;
-}
 interface defaultStyleProps {
-  $direction?: 'row' | 'column'
-  $justifyContent?: string
-  $alignItems?: string
+  $direction?: "row" | "column";
+  $justifyContent?: string;
+  $alignItems?: string;
+}
+interface MailVerifyProps {
+  email: string;
+  setMenuNumber: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const MailVerify: React.FC = () => {
+const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
   const [verifyMe, setVerifyMe] = useState<boolean>(false);
   const [mailKey, setMailKey] = useState<string>("");
-  const [timer, setTimer] = useState<number>(180); // 10분 = 600초
+  const [timer, setTimer] = useState<number>(300); // 10분 = 600초
 
   const onChangeMailKeyHdr = (e: ChangeEvent<HTMLInputElement>) => {
     setMailKey(e.target.value);
   };
 
-  const submitSignup =() => {
-    if(!verifyMe){
-      alert("인증 요청 버튼을 먼저 눌러주세요.")
-    }else if(mailKey === "" || mailKey.length!==6){
-      alert("인증 키가 제대로 입력되지 않았습니다.")
-    }else{
-      alert("인증키 입력")
+  // 이메일 인증코드 발송
+  const authRequest = async () => {
+    let res: any = await getEmialAuth({ email: email });
+    if (res.status === 200) {
+      setVerifyMe(true);
+      console.log("이메일 인증코드 발송 성공");
+    } else {
+      console.log("email auth error : ", res);
     }
-  }
+  };
+
+  // 이메일 인증 요청
+  const submitSignup = async () => {
+    if (!verifyMe) {
+      alert("인증 요청 버튼을 먼저 눌러주세요.");
+    } else if (mailKey === "" || mailKey.length !== 6) {
+      alert("인증 키가 제대로 입력되지 않았습니다.");
+    } else {
+      try {
+        let res: any = await postEmailVerify({
+          email: email,
+          randomCode: mailKey,
+        });
+        if (res.status === 200) {
+          alert("회원가입 성공!");
+          setMenuNumber(1);
+        }
+        console.log("emailVerify중복 결과 : ", res);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -41,7 +63,7 @@ const MailVerify: React.FC = () => {
       }, 1000);
     } else if (timer === 0) {
       setVerifyMe(false);
-      setTimer(600); // 타이머 초기화
+      setTimer(300); // 타이머 초기화
     }
     return () => clearInterval(interval);
   }, [verifyMe, timer]);
@@ -49,22 +71,22 @@ const MailVerify: React.FC = () => {
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
   };
 
   return (
     <SignupWrap>
       <SignupContent>
         <FormLabel>
-          <Box $alignItems='center' $justifyContent='space-between'>
+          <Box $alignItems="center" $justifyContent="space-between">
             이메일 인증
             {verifyMe ? (
               <Timer>{formatTime(timer)}</Timer>
             ) : (
-              <Button onClick={() => setVerifyMe(true)}>인증 요청</Button>
+              <Button onClick={authRequest}>인증 요청</Button>
             )}
           </Box>
-          <FormInput type='text' onChange={onChangeMailKeyHdr} />
+          <FormInput type="text" onChange={onChangeMailKeyHdr} />
         </FormLabel>
       </SignupContent>
       <SignupBtn onClick={submitSignup}>Signup</SignupBtn>
@@ -132,7 +154,7 @@ const FormInput = styled.input`
     color: #ffffff;
   }
   &:-webkit-autofill,
-  &:-webkit-autofill:hover, 
+  &:-webkit-autofill:hover,
   &:-webkit-autofill:focus {
     border: none;
     -webkit-text-fill-color: #ffffff !important;
