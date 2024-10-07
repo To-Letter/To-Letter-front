@@ -33,7 +33,10 @@ const Signup = ({ setMenuNumber, setEmail }: props) => {
     mailboxAddress: "",
   });
   const [openAddressModal, setOpenAddressModal] = useState<boolean>(false);
-  const [showToast, setShowToast] = useState<boolean>(false);
+  const [toast, setToast] = useState<{ message: string; visible: boolean }>({
+    message: "",
+    visible: false,
+  });
 
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
     setSignupForm((prev) => ({
@@ -59,14 +62,13 @@ const Signup = ({ setMenuNumber, setEmail }: props) => {
   // 회원가입
   const onClickSignup = async () => {
     if (signupForm.email === "") {
-      setShowToast(true);
-      // alert("이메일을 입력해주세요.");
+      setToast({ message: "이메일을 입력해주세요.", visible: true });
     } else if (signupForm.password === "") {
-      alert("비밀번호를 입력해주세요.");
+      setToast({ message: "비밀번호를 입력해주세요.", visible: true });
     } else if (signupForm.nickName === "") {
-      alert("닉네임을 입력해주세요.");
+      setToast({ message: "닉네임을 입력해주세요.", visible: true });
     } else if (signupForm.mailboxAddress === "") {
-      alert("우편함 주소를 입력해주세요.");
+      setToast({ message: "우편함 주소를 입력해주세요.", visible: true });
     } else {
       try {
         let res: any = await postLocalSignup({
@@ -77,12 +79,17 @@ const Signup = ({ setMenuNumber, setEmail }: props) => {
           address: signupForm.mailboxAddress,
         });
         if (res.status === 200) {
+          setToast({
+            message: "이메일 인증 단계로 넘어갑니다.",
+            visible: true,
+          });
+          // 다른 status code에 대한 처리
           console.log("회원가입 성공");
           setEmail(signupForm.email);
           setMenuNumber(4);
         }
       } catch (err) {
-        alert("입력란을 다시 확인해주세요.");
+        setToast({ message: "입력란을 다시 확인해주세요.", visible: true });
       }
     }
   };
@@ -90,12 +97,17 @@ const Signup = ({ setMenuNumber, setEmail }: props) => {
   // 닉네임 중복확인
   const onClickConfirmNickname = async () => {
     if (signupForm.nickName === "") {
-      alert("닉네임을 입력해주세요.");
+      setToast({ message: "닉네임을 입력해주세요.", visible: true });
     } else {
       try {
         let res: any = await getNicknameConfirm({
           nickname: signupForm.nickName,
         });
+        if (res.status === 200) {
+          setToast({ message: "사용 가능한 닉네임입니다.", visible: true });
+        } else if (res.status === 400) {
+          setToast({ message: "중복된 닉네임입니다.", visible: true });
+        }
         console.log("nickname중복 결과 : ", res);
       } catch (err) {
         console.error(err);
@@ -106,12 +118,17 @@ const Signup = ({ setMenuNumber, setEmail }: props) => {
   // 이메일 중복확인
   const onClickConfirmEmail = async () => {
     if (signupForm.nickName === "") {
-      alert("이메일을 입력해주세요.");
+      setToast({ message: "이메일을 입력해주세요.", visible: true });
     } else {
       try {
         let res: any = await getEmialConfirm({
           email: signupForm.email,
         });
+        if (res.status === 200) {
+          setToast({ message: "사용 가능한 이메일입니다.", visible: true });
+        } else if (res.status === 400) {
+          setToast({ message: "중복된 이메일입니다.", visible: true });
+        }
         console.log("emial중복 결과 : ", res);
       } catch (err) {
         console.error(err);
@@ -171,7 +188,12 @@ const Signup = ({ setMenuNumber, setEmail }: props) => {
         </FormLabel>
       </SignupContent>
       <SignupBtn onClick={onClickSignup}>Signup</SignupBtn>
-      {showToast && <ToastMessage message="이메일을 입력해주세요." />}
+      {toast.visible && (
+        <ToastMessage
+          message={toast.message}
+          onClose={() => setToast({ ...toast, visible: false })}
+        />
+      )}
     </SignupWrap>
   );
 };

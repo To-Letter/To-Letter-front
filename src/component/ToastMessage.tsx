@@ -4,25 +4,23 @@ import styled, { keyframes } from "styled-components";
 interface ToastMessageProps {
   message: string;
   duration?: number; // 메시지가 표시되는 시간 (기본값: 3초)
+  onClose: () => void;
 }
 
 const ToastMessage: React.FC<ToastMessageProps> = ({
   message,
   duration = 3000,
+  onClose,
 }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      // 메시지를 일정 시간 후에 사라지게 하는 로직
-      const toast = document.getElementById("toast-message");
-      if (toast) {
-        toast.style.display = "none";
-      }
+      onClose();
     }, duration);
 
     return () => clearTimeout(timer);
-  }, [duration]);
+  }, [duration, onClose]);
 
-  return <ToastContainer id="toast-message">{message}</ToastContainer>;
+  return <ToastContainer>{message}</ToastContainer>;
 };
 
 const fadeIn = keyframes`

@@ -17,7 +17,10 @@ const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
   const [verifyMe, setVerifyMe] = useState<boolean>(false);
   const [mailKey, setMailKey] = useState<string>("");
   const [timer, setTimer] = useState<number>(300); // 10분 = 600초
-  const [showToast, setShowToast] = useState<boolean>(false);
+  const [toast, setToast] = useState<{ message: string; visible: boolean }>({
+    message: "",
+    visible: false,
+  });
 
   const onChangeMailKeyHdr = (e: ChangeEvent<HTMLInputElement>) => {
     setMailKey(e.target.value);
@@ -28,7 +31,7 @@ const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
     let res: any = await getEmialAuth({ email: email });
     if (res.status === 200) {
       setVerifyMe(true);
-      setShowToast(true);
+      setToast({ message: "이메일 인증코드가 발송되었습니다.", visible: true });
       console.log("이메일 인증코드 발송 성공");
     } else {
       console.log("email auth error : ", res);
@@ -38,9 +41,12 @@ const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
   // 이메일 인증 요청
   const submitSignup = async () => {
     if (!verifyMe) {
-      alert("인증 요청 버튼을 먼저 눌러주세요.");
+      setToast({ message: "인증 요청 버튼을 먼저 눌러주세요.", visible: true });
     } else if (mailKey === "" || mailKey.length !== 6) {
-      alert("인증 키가 제대로 입력되지 않았습니다.");
+      setToast({
+        message: "인증 키가 제대로 입력되지 않았습니다.",
+        visible: true,
+      });
     } else {
       try {
         let res: any = await postEmailVerify({
@@ -48,7 +54,7 @@ const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
           randomCode: mailKey,
         });
         if (res.status === 200) {
-          alert("회원가입 성공!");
+          setToast({ message: "회원가입 성공!", visible: true });
           setMenuNumber(1);
         }
         console.log("emailVerify중복 결과 : ", res);
@@ -93,8 +99,11 @@ const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
         </FormLabel>
       </SignupContent>
       <SignupBtn onClick={submitSignup}>Signup</SignupBtn>
-      {showToast && (
-        <ToastMessage message="이메일 인증코드가 발송되었습니다." />
+      {toast.visible && (
+        <ToastMessage
+          message={toast.message}
+          onClose={() => setToast({ ...toast, visible: false })}
+        />
       )}
     </SignupWrap>
   );
