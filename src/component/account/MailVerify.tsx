@@ -1,18 +1,18 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
 import { postEmailVerify, getEmialAuth } from "../../apis/controller/account";
+import { useRecoilState } from "recoil";
+import { accountModalState, emailState } from "../../recoil/accountAtom";
 
 interface defaultStyleProps {
   $direction?: "row" | "column";
   $justifyContent?: string;
   $alignItems?: string;
 }
-interface MailVerifyProps {
-  email: string;
-  setMenuNumber: React.Dispatch<React.SetStateAction<number>>;
-}
 
-const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
+const MailVerify: React.FC = () => {
+  const [email] = useRecoilState(emailState);
+  const [_modalState, setModalState] = useRecoilState(accountModalState);
   const [verifyMe, setVerifyMe] = useState<boolean>(false);
   const [mailKey, setMailKey] = useState<string>("");
   const [timer, setTimer] = useState<number>(300); // 10분 = 600초
@@ -46,7 +46,10 @@ const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
         });
         if (res.status === 200) {
           alert("회원가입 성공!");
-          setMenuNumber(1);
+          setModalState({
+            isOpen: true,
+            type: 'login', // 로그인 타입으로 설정
+          })
         }
         console.log("emailVerify중복 결과 : ", res);
       } catch (err) {

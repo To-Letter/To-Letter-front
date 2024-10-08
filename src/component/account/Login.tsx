@@ -1,6 +1,8 @@
 import React, { ChangeEvent, useState } from "react";
 import styled from "styled-components";
 import { getKakaoURL, postLocalLogin } from "../../apis/controller/account";
+import { useRecoilState } from "recoil";
+import { accountModalState, emailState } from "../../recoil/accountAtom";
 
 interface loginFormI {
   email: string;
@@ -8,6 +10,8 @@ interface loginFormI {
 }
 
 const Login = () => {
+  const [_email, setEmail] = useRecoilState(emailState);
+  const [_modalState, setModalState] = useRecoilState(accountModalState);
   const [loginForm, setLoginForm] = useState<loginFormI>({
     email: "",
     password: "",
@@ -18,6 +22,9 @@ const Login = () => {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+    if(e.target.name === 'email'){
+      setEmail(e.target.value)
+    }
   };
 
   const onClickLogin = async () => {
@@ -34,6 +41,10 @@ const Login = () => {
       });
       if (res.data.responseCode === "200") {
         console.log("login success");
+        setModalState({
+          isOpen: false,
+          type: null, // 로그인 타입으로 설정
+        })
       }
       console.log("login res : ", res);
     } catch (error) {

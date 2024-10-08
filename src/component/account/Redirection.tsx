@@ -1,10 +1,11 @@
 import { useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { postKakaoToken } from "../../apis/controller/account";
-import { MenuContext } from "../../context/MenuContext";
+import { useRecoilState } from "recoil";
+import { accountModalState } from "../../recoil/accountAtom";
 
 const Redirection = () => {
-  const { setMenuNumber } = useContext(MenuContext)!;
+  const [_modalState, setModalState] = useRecoilState(accountModalState);
   const code = new URL(window.location.href).searchParams.get("code");
   const navigate = useNavigate();
   console.log("code :", code);
@@ -19,7 +20,10 @@ const Redirection = () => {
         if (res.status === 200) {
           if (res.data !== undefined || res.data !== null) {
             console.log("data :", res.data);
-            setMenuNumber(3);
+            setModalState({
+            isOpen: true,
+            type: 'MailVerify', // 로그인 타입으로 설정
+          });
             navigate("/"); // Home으로 리디렉션
           }
         }

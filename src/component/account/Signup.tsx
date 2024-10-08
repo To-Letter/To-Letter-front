@@ -6,6 +6,8 @@ import {
   getNicknameConfirm,
   getEmialConfirm,
 } from "../../apis/controller/account";
+import { useRecoilState } from "recoil";
+import { accountModalState, emailState } from "../../recoil/accountAtom";
 
 interface loginFormI {
   nickName: string;
@@ -19,12 +21,9 @@ interface defaultStyleProps {
   $alignItems?: string;
 }
 
-interface props {
-  setMenuNumber: React.Dispatch<React.SetStateAction<number>>;
-  setEmail: (email: string) => void;
-}
-
-const Signup = ({ setMenuNumber, setEmail }: props) => {
+const Signup = () => {
+  const [_email, setEmail] = useRecoilState(emailState);
+  const [_modalState, setModalState] = useRecoilState(accountModalState);
   const [signupForm, setSignupForm] = useState<loginFormI>({
     nickName: "",
     email: "",
@@ -48,7 +47,6 @@ const Signup = ({ setMenuNumber, setEmail }: props) => {
   };
 
   const onClickOpenModal = () => {
-    console.log("whyrano...", openAddressModal);
     setOpenAddressModal((prev) => !prev);
   };
 
@@ -76,7 +74,10 @@ const Signup = ({ setMenuNumber, setEmail }: props) => {
         if (res.status === 200) {
           console.log("회원가입 성공");
           setEmail(signupForm.email);
-          setMenuNumber(4);
+          setModalState({
+            isOpen: true,
+            type: 'MailVerify', // 로그인 타입으로 설정
+          })
         }
       } catch (err) {
         alert("입력란을 다시 확인해주세요.");
