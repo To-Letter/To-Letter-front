@@ -21,6 +21,7 @@ const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
     message: "",
     visible: false,
   });
+  const [authReqMessage, setAuthReqMessage] = useState<boolean>(false);
 
   const onChangeMailKeyHdr = (e: ChangeEvent<HTMLInputElement>) => {
     setMailKey(e.target.value);
@@ -30,8 +31,9 @@ const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
   const authRequest = async () => {
     let res: any = await getEmialAuth({ email: email });
     if (res.status === 200) {
+      // setToast({ message: "이메일 인증코드가 발송되었습니다.", visible: true });
+      setAuthReqMessage(true);
       setVerifyMe(true);
-      setToast({ message: "이메일 인증코드가 발송되었습니다.", visible: true });
       console.log("이메일 인증코드 발송 성공");
     } else {
       console.log("email auth error : ", res);
@@ -55,7 +57,13 @@ const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
         });
         if (res.status === 200) {
           setToast({ message: "회원가입 성공!", visible: true });
-          setMenuNumber(1);
+          setTimeout(() => {
+            setMenuNumber(1);
+          }, 1000);
+        } else if (res.status === 401) {
+          setToast({ message: "이메일 인증 시간 초과입니다.", visible: true });
+        } else if (res.status === 403) {
+          setToast({ message: "코드가 불일치합니다.", visible: true });
         }
         console.log("emailVerify중복 결과 : ", res);
       } catch (err) {
@@ -96,6 +104,7 @@ const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
             )}
           </Box>
           <FormInput type="text" onChange={onChangeMailKeyHdr} />
+          {authReqMessage && "이메일 인증코드가 발송되었습니다."}
         </FormLabel>
       </SignupContent>
       <SignupBtn onClick={submitSignup}>Signup</SignupBtn>
