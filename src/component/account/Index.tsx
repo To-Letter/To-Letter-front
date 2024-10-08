@@ -5,41 +5,47 @@ import Login from "./Login";
 import Signup from "./Signup";
 import KakaoSignup from "./KakaoSignup";
 import MailVerify from "./MailVerify";
-import { MenuContext } from "../../context/MenuContext";
+import { accountModalState } from "../../recoil/accountAtom";
+import { useRecoilState } from "recoil";
 
 interface styleI {
   $selected?: boolean;
 }
 
-const Index: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { menuNumber, setMenuNumber } = useContext(MenuContext)!;
-  const [email, setEmail] = useState<string>("");
+const Index: React.FC = () => {
+  const [modalState, setModalState] = useRecoilState(accountModalState);
 
   return (
-    <ModalOverlay onClick={onClose}>
+    <ModalOverlay>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <MenuWrap>
           <MenuTitle
-            $selected={menuNumber === 1}
-            onClick={() => setMenuNumber(1)}
+            $selected={modalState.type === 'login'}
+            onClick={() => {
+              setModalState({
+                isOpen: true,
+                type: 'login', // 로그인 타입으로 설정
+              });
+            }}
           >
             Login
           </MenuTitle>
           <MenuTitle
-            $selected={menuNumber !== 1}
-            onClick={() => setMenuNumber(2)}
+            $selected={modalState.type !== 'login'}
+            onClick={() => {
+              setModalState({
+                isOpen: true,
+                type: 'signup', // 로그인 타입으로 설정
+              });
+            }}
           >
             Signup
           </MenuTitle>
         </MenuWrap>
-        {menuNumber === 1 && <Login />}
-        {menuNumber === 2 && (
-          <Signup setMenuNumber={setMenuNumber} setEmail={setEmail} />
-        )}
-        {menuNumber === 3 && <KakaoSignup />}
-        {menuNumber === 4 && (
-          <MailVerify setMenuNumber={setMenuNumber} email={email} />
-        )}
+        {modalState.type === 'login' && <Login />}
+        {modalState.type === 'signup' && <Signup />}
+        {modalState.type === 'kakaoSignup' && <KakaoSignup />}
+        {modalState.type === 'MailVerify' && <MailVerify />}
       </ModalContent>
     </ModalOverlay>
   );

@@ -4,22 +4,19 @@ import { OrbitControls } from "@react-three/drei";
 import { useCallback, useState, useContext, useEffect } from "react";
 import Index from "../component/account/Index";
 import { PopupProvider } from "../context/PopupContext";
-import { MenuContext } from "../context/MenuContext";
 import KakaoSignup from "../component/account/KakaoSignup";
+import { useRecoilState } from "recoil";
+import { accountModalState } from "../recoil/accountAtom";
 
 function Home() {
-  const { menuNumber, setMenuNumber } = useContext(MenuContext)!;
-  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
+  const [modalState, setModalState] = useRecoilState(accountModalState);
 
   const chairClick = useCallback(() => {
-    setShowLoginModal((prev) => !prev);
+    setModalState({
+      isOpen: true,
+      type: 'login', // 로그인 타입으로 설정
+    });
   }, []);
-
-  useEffect(() => {
-    if (menuNumber === 3) {
-      setShowLoginModal(true);
-    }
-  }, [menuNumber]);
 
   return (
     <>
@@ -36,8 +33,7 @@ function Home() {
             maxDistance={3} // 최대 축소 거리
           />
         </Canvas>
-        {showLoginModal && <Index onClose={chairClick} />}
-        {menuNumber === 3 && <KakaoSignup />}
+        {modalState.isOpen && <Index/>}
       </PopupProvider>
     </>
   );
