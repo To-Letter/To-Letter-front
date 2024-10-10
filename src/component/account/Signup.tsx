@@ -6,6 +6,7 @@ import {
   getNicknameConfirm,
   getEmialConfirm,
 } from "../../apis/controller/account";
+import ToastMessage from "../ToastMessage";
 import { useRecoilState } from "recoil";
 import { accountModalState, emailState } from "../../recoil/accountAtom";
 
@@ -31,6 +32,12 @@ const Signup = () => {
     mailboxAddress: "",
   });
   const [openAddressModal, setOpenAddressModal] = useState<boolean>(false);
+  const [toast, setToast] = useState<{ message: string; visible: boolean }>({
+    message: "",
+    visible: false,
+  });
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+  const [isEmailChecked, setIsEmailChecked] = useState(false);
 
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
     setSignupForm((prev) => ({
@@ -54,25 +61,53 @@ const Signup = () => {
 
   // 회원가입
   const onClickSignup = async () => {
-    if (signupForm.email === "") {
-      alert("이메일을 입력해주세요.");
-    } else if (signupForm.password === "") {
-      alert("비밀번호를 입력해주세요.");
-    } else if (signupForm.nickName === "") {
-      alert("닉네임을 입력해주세요.");
-    } else if (signupForm.mailboxAddress === "") {
-      alert("우편함 주소를 입력해주세요.");
-    } else {
-      try {
-        let res: any = await postLocalSignup({
-          nickname: signupForm.nickName,
-          email: signupForm.email,
-          loginType: "localLogin",
-          password: signupForm.password,
-          address: signupForm.mailboxAddress,
+    const conditions = [
+      {
+        check: signupForm.nickName !== "",
+        message: "닉네임을 입력해주세요.",
+      },
+      {
+        check: signupForm.email !== "",
+        message: "이메일을 입력해주세요.",
+      },
+      {
+        check: signupForm.password !== "",
+        message: "비밀번호를 입력해주세요.",
+      },
+      {
+        check: signupForm.mailboxAddress !== "",
+        message: "우편함 주소를 입력해주세요.",
+      },
+      {
+        check: isNicknameChecked,
+        message: "닉네임 중복 체크를 해주세요.",
+      },
+      {
+        check: isEmailChecked,
+        message: "이메일 중복 체크를 해주세요.",
+      },
+    ];
+
+    for (const condition of conditions) {
+      if (!condition.check) {
+        setToast({ message: condition.message, visible: true });
+        return;
+      }
+    }
+
+    try {
+      let res: any = await postLocalSignup({
+        nickname: signupForm.nickName,
+        email: signupForm.email,
+        loginType: "localLogin",
+        password: signupForm.password,
+        address: signupForm.mailboxAddress,
+      });
+      if (res.status === 200) {
+        setToast({
+          message: "이메일 인증 단계로 넘어갑니다.",
+          visible: true,
         });
-        if (res.status === 200) {
-          console.log("회원가입 성공");
           setEmail(signupForm.email);
           setModalState({
             isOpen: true,
@@ -82,18 +117,28 @@ const Signup = () => {
       } catch (err) {
         alert("입력란을 다시 확인해주세요.");
       }
+    } catch (err) {
+      setToast({ message: "입력란을 다시 확인해주세요.", visible: true });
     }
   };
 
   // 닉네임 중복확인
   const onClickConfirmNickname = async () => {
     if (signupForm.nickName === "") {
-      alert("닉네임을 입력해주세요.");
+      setToast({ message: "닉네임을 입력해주세요.", visible: true });
     } else {
       try {
         let res: any = await getNicknameConfirm({
           nickname: signupForm.nickName,
         });
+        if (res.status === 200) {
+          setToast({ message: "사용 가능한 닉네임입니다.", visible: true });
+          setIsNicknameChecked(true);
+        } else if (res.status === 401) {
+          // error 왜 401때는 그냥 콘솔에 에러만 뜨고 안뜨냐 후..
+          setToast({ message: "중복된 닉네임입니다.", visible: true });
+          setIsNicknameChecked(false);
+        }
         console.log("nickname중복 결과 : ", res);
       } catch (err) {
         console.error(err);
@@ -104,15 +149,29 @@ const Signup = () => {
   // 이메일 중복확인
   const onClickConfirmEmail = async () => {
     if (signupForm.nickName === "") {
-      alert("이메일을 입력해주세요.");
+      setToast({ message: "이메일을 입력해주세요.", visible: true });
     } else {
       try {
         let res: any = await getEmialConfirm({
           email: signupForm.email,
         });
+        console.log("emial중복 status : ", res.status);
+
+        if (res.status === 200) {
+          setToast({ message: "사용 가능한 이메일입니다.", visible: true });
+          setIsEmailChecked(true);
+        } else if (res.status === 401) {
+          // error 왜 401때는 그냥 콘솔에 에러만 뜨고 안뜨냐 후..
+          setToast({ message: "중복된 이메일입니다.", visible: true });
+          setIsEmailChecked(false);
+        }
         console.log("emial중복 결과 : ", res);
       } catch (err) {
-        console.error(err);
+        setToast({
+          message: "서버와의 통신 중 오류가 발생했습니다.",
+          visible: true,
+        });
+        console.error("catch 블록 에러:", err);
       }
     }
   };
@@ -169,6 +228,12 @@ const Signup = () => {
         </FormLabel>
       </SignupContent>
       <SignupBtn onClick={onClickSignup}>Signup</SignupBtn>
+      {toast.visible && (
+        <ToastMessage
+          message={toast.message}
+          onClose={() => setToast({ ...toast, visible: false })}
+        />
+      )}
     </SignupWrap>
   );
 };

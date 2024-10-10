@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
 import { postEmailVerify, getEmialAuth } from "../../apis/controller/account";
+import ToastMessage from "../ToastMessage";
 import { useRecoilState } from "recoil";
 import { accountModalState, emailState } from "../../recoil/accountAtom";
 
@@ -16,6 +17,11 @@ const MailVerify: React.FC = () => {
   const [verifyMe, setVerifyMe] = useState<boolean>(false);
   const [mailKey, setMailKey] = useState<string>("");
   const [timer, setTimer] = useState<number>(300); // 10분 = 600초
+  const [toast, setToast] = useState<{ message: string; visible: boolean }>({
+    message: "",
+    visible: false,
+  });
+  const [authReqMessage, setAuthReqMessage] = useState<boolean>(false);
 
   const onChangeMailKeyHdr = (e: ChangeEvent<HTMLInputElement>) => {
     setMailKey(e.target.value);
@@ -25,6 +31,8 @@ const MailVerify: React.FC = () => {
   const authRequest = async () => {
     let res: any = await getEmialAuth({ email: email });
     if (res.status === 200) {
+      // setToast({ message: "이메일 인증코드가 발송되었습니다.", visible: true });
+      setAuthReqMessage(true);
       setVerifyMe(true);
       console.log("이메일 인증코드 발송 성공");
     } else {
@@ -35,9 +43,12 @@ const MailVerify: React.FC = () => {
   // 이메일 인증 요청
   const submitSignup = async () => {
     if (!verifyMe) {
-      alert("인증 요청 버튼을 먼저 눌러주세요.");
+      setToast({ message: "인증 요청 버튼을 먼저 눌러주세요.", visible: true });
     } else if (mailKey === "" || mailKey.length !== 6) {
-      alert("인증 키가 제대로 입력되지 않았습니다.");
+      setToast({
+        message: "인증 키가 제대로 입력되지 않았습니다.",
+        visible: true,
+      });
     } else {
       try {
         let res: any = await postEmailVerify({
@@ -90,9 +101,16 @@ const MailVerify: React.FC = () => {
             )}
           </Box>
           <FormInput type="text" onChange={onChangeMailKeyHdr} />
+          {authReqMessage && "이메일 인증코드가 발송되었습니다."}
         </FormLabel>
       </SignupContent>
       <SignupBtn onClick={submitSignup}>Signup</SignupBtn>
+      {toast.visible && (
+        <ToastMessage
+          message={toast.message}
+          onClose={() => setToast({ ...toast, visible: false })}
+        />
+      )}
     </SignupWrap>
   );
 };

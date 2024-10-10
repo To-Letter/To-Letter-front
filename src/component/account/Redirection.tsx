@@ -1,6 +1,7 @@
 import { useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { postKakaoToken } from "../../apis/controller/account";
+import ProgressBar from "../ProgreassBar";
 import { useRecoilState } from "recoil";
 import { accountModalState } from "../../recoil/accountAtom";
 
@@ -40,9 +41,13 @@ const Redirection = () => {
       hasFetched.current = true;
       OnClickKakaoToken();
     }
-  }, []); // 빈 배열을 의존성 배열로 설정
+  }, []);
 
-  return <div>로그인 중입니다.</div>;
+  return (
+    <div>
+      <ProgressBar />
+    </div>
+  );
 };
 
 export default Redirection;
