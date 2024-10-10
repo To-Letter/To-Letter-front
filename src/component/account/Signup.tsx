@@ -7,6 +7,8 @@ import {
   getEmialConfirm,
 } from "../../apis/controller/account";
 import ToastMessage from "../ToastMessage";
+import { useRecoilState } from "recoil";
+import { accountModalState, emailState } from "../../recoil/accountAtom";
 
 interface loginFormI {
   nickName: string;
@@ -20,12 +22,9 @@ interface defaultStyleProps {
   $alignItems?: string;
 }
 
-interface props {
-  setMenuNumber: React.Dispatch<React.SetStateAction<number>>;
-  setEmail: (email: string) => void;
-}
-
-const Signup = ({ setMenuNumber, setEmail }: props) => {
+const Signup = () => {
+  const [_email, setEmail] = useRecoilState(emailState);
+  const [_modalState, setModalState] = useRecoilState(accountModalState);
   const [signupForm, setSignupForm] = useState<loginFormI>({
     nickName: "",
     email: "",
@@ -55,7 +54,6 @@ const Signup = ({ setMenuNumber, setEmail }: props) => {
   };
 
   const onClickOpenModal = () => {
-    console.log("whyrano...", openAddressModal);
     setOpenAddressModal((prev) => !prev);
   };
 
@@ -110,10 +108,14 @@ const Signup = ({ setMenuNumber, setEmail }: props) => {
           message: "이메일 인증 단계로 넘어갑니다.",
           visible: true,
         });
-        setTimeout(() => {
           setEmail(signupForm.email);
-          setMenuNumber(4);
-        }, 1000);
+          setModalState({
+            isOpen: true,
+            type: 'MailVerify', // 로그인 타입으로 설정
+          })
+        }
+      } catch (err) {
+        alert("입력란을 다시 확인해주세요.");
       }
     } catch (err) {
       setToast({ message: "입력란을 다시 확인해주세요.", visible: true });

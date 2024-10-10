@@ -2,18 +2,18 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
 import { postEmailVerify, getEmialAuth } from "../../apis/controller/account";
 import ToastMessage from "../ToastMessage";
+import { useRecoilState } from "recoil";
+import { accountModalState, emailState } from "../../recoil/accountAtom";
 
 interface defaultStyleProps {
   $direction?: "row" | "column";
   $justifyContent?: string;
   $alignItems?: string;
 }
-interface MailVerifyProps {
-  email: string;
-  setMenuNumber: React.Dispatch<React.SetStateAction<number>>;
-}
 
-const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
+const MailVerify: React.FC = () => {
+  const [email] = useRecoilState(emailState);
+  const [_modalState, setModalState] = useRecoilState(accountModalState);
   const [verifyMe, setVerifyMe] = useState<boolean>(false);
   const [mailKey, setMailKey] = useState<string>("");
   const [timer, setTimer] = useState<number>(300); // 10분 = 600초
@@ -56,14 +56,11 @@ const MailVerify: React.FC<MailVerifyProps> = ({ setMenuNumber, email }) => {
           randomCode: mailKey,
         });
         if (res.status === 200) {
-          setToast({ message: "회원가입 성공!", visible: true });
-          setTimeout(() => {
-            setMenuNumber(1);
-          }, 1000);
-        } else if (res.status === 401) {
-          setToast({ message: "이메일 인증 시간 초과입니다.", visible: true });
-        } else if (res.status === 403) {
-          setToast({ message: "코드가 불일치합니다.", visible: true });
+          alert("회원가입 성공!");
+          setModalState({
+            isOpen: true,
+            type: 'login', // 로그인 타입으로 설정
+          })
         }
         console.log("emailVerify중복 결과 : ", res);
       } catch (err) {

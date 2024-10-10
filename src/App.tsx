@@ -1,18 +1,18 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages";
 import Redirection from "./component/account/Redirection";
-import { MenuProvider } from "./context/MenuContext";
+import { RecoilRoot } from "recoil";
 
 function App() {
   return (
-    <MenuProvider>
+    <RecoilRoot>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/users/kakao" element={<Redirection />} />
         </Routes>
       </BrowserRouter>
-    </MenuProvider>
+    </RecoilRoot>
   );
 }
 

@@ -4,42 +4,51 @@ import { OrbitControls } from "@react-three/drei";
 import { useCallback, useState, useContext, useEffect } from "react";
 import Index from "../component/account/Index";
 import { PopupProvider } from "../context/PopupContext";
-import { MenuContext } from "../context/MenuContext";
-import KakaoSignup from "../component/account/KakaoSignup";
-import { useLocation } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { accountModalState } from "../recoil/accountAtom";
+import sessionStorageService from "../utils/sessionStorageService";
 
 function Home() {
-  const { menuNumber, setMenuNumber } = useContext(MenuContext)!;
-  const [showLoginModal, setShowLoginModal] = useState<boolean>(false);
-  const location = useLocation();
+  const [modalState, setModalState] = useRecoilState(accountModalState);
 
   const chairClick = useCallback(() => {
-    setShowLoginModal((prev) => !prev);
+    setModalState({
+      isOpen: true,
+      type: 'login', // 로그인 타입으로 설정
+    });
   }, []);
-
-  useEffect(() => {
-    if (menuNumber === 3 || location.state?.showPopup) {
-      setShowLoginModal(true);
-    }
-  }, [menuNumber, location.state]);
 
   return (
     <>
       <PopupProvider>
         <Canvas shadows>
           <Secen loginModalOpenHdr={chairClick} />
-          <OrbitControls
-            minPolarAngle={Math.PI / 2.5} // under
-            maxPolarAngle={1.396} // 약 80도
-            minAzimuthAngle={-Math.PI / 4} // left
-            maxAzimuthAngle={Math.PI / 4} // right
-            enablePan={false} // Ctrl 키로 시점 이동 비활성화
-            minDistance={3} // 최소 확대 거리
-            maxDistance={3} // 최대 축소 거리
-          />
+          {
+            sessionStorageService.get("accessToken") === null
+            && <OrbitControls
+              minPolarAngle={Math.PI / 2.5} // under
+              maxPolarAngle={1.396} // 약 80도
+              minAzimuthAngle={-Math.PI / 4} // left
+              maxAzimuthAngle={Math.PI / 4} // right
+              enablePan={false} // Ctrl 키로 시점 이동 비활성화
+              minDistance={3} // 최소 확대 거리
+              maxDistance={3} // 최대 축소 거리
+            />
+          }
+          {
+            sessionStorageService.get("accessToken") !== null
+            && <OrbitControls
+              minPolarAngle={Math.PI / 2.8} // under
+              maxPolarAngle={1.396} // 약 80도
+              minAzimuthAngle={-Math.PI / 4} // left
+              maxAzimuthAngle={Math.PI / 4} // right
+              enablePan={false} // Ctrl 키로 시점 이동 비활성화
+              minDistance={2} // 최소 확대 거리
+              maxDistance={2} // 최대 축소 거리
+            />
+          }
         </Canvas>
-        {showLoginModal && <Index onClose={chairClick} />}
-        {menuNumber === 3 && <KakaoSignup />}
+        {modalState.isOpen && <Index/>}
       </PopupProvider>
     </>
   );
