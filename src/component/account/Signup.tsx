@@ -108,14 +108,11 @@ const Signup = () => {
           message: "이메일 인증 단계로 넘어갑니다.",
           visible: true,
         });
-          setEmail(signupForm.email);
-          setModalState({
-            isOpen: true,
-            type: 'MailVerify', // 로그인 타입으로 설정
-          })
-        }
-      } catch (err) {
-        alert("입력란을 다시 확인해주세요.");
+        setEmail(signupForm.email);
+        setModalState({
+          isOpen: true,
+          type: "MailVerify", // 로그인 타입으로 설정
+        });
       }
     } catch (err) {
       setToast({ message: "입력란을 다시 확인해주세요.", visible: true });
