@@ -22,7 +22,6 @@ const Login = () => {
       ...prev,
       [e.target.name]: e.target.value,
     }));
-    
   };
 
   const onClickLogin = async () => {
@@ -43,18 +42,18 @@ const Login = () => {
         setModalState({
           isOpen: false,
           type: null, // 로그인 타입으로 설정
-        })
-      }else if(res.data.responseCode === "403") {
+        });
+      } else if (res.data.responseCode === "403") {
         // 이메일 인증 미완료 계정
-        setEmail(loginForm.email)
-        alert('이메일 인증이 되지않은 계정입니다.')
+        setEmail(loginForm.email);
+        alert("이메일 인증이 되지않은 계정입니다.");
         setModalState({
           isOpen: true,
-          type: 'MailVerify', 
-        })
-      }else if(res.data.responseCode === "400") {
+          type: "MailVerify",
+        });
+      } else if (res.data.responseCode === "400") {
         // 걍 틀림
-        alert('이메일 혹은 비밀번호를 잘 못 입력하셨습니다.')
+        alert("이메일 혹은 비밀번호를 잘 못 입력하셨습니다.");
       }
       console.log("login res : ", res);
     } catch (error) {
@@ -66,11 +65,15 @@ const Login = () => {
     try {
       let res: any = await getKakaoURL();
       console.log("카카오 res :", res);
-      if (res.status === 200) {
+      if (res.responseCode === 200) {
         window.location.href = res.data;
       }
-    } catch (err) {
-      alert("입력란을 다시 확인해주세요.");
+    } catch (err: any) {
+      console.error("kakao Login Error:", err);
+      if (err.response.status === 401) {
+        console.log("왜 그러는건데");
+      }
+      alert("kakao Login code Error");
     }
   };
 

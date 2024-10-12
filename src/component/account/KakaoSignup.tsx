@@ -1,6 +1,13 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
 import AddressModal from "./AddressModal";
+import ToastMessage from "../ToastMessage";
+import {
+  getNicknameConfirm,
+  postKakaoSignup,
+} from "../../apis/controller/account";
+import { useRecoilState } from "recoil";
+import { accountModalState, emailState } from "../../recoil/accountAtom";
 
 interface kakaoLoginFormI {
   nickName: string;
@@ -21,6 +28,12 @@ const KakaoSignup: React.FC = () => {
     mailboxAddress: "",
   });
   const [openAddressModal, setOpenAddressModal] = useState<boolean>(false);
+  const [toast, setToast] = useState<{ message: string; visible: boolean }>({
+    message: "",
+    visible: false,
+  });
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+  const [_modalState, setModalState] = useRecoilState(accountModalState);
 
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
     setSignupForm((prev) => ({
@@ -42,15 +55,82 @@ const KakaoSignup: React.FC = () => {
 
   useEffect(() => {}, [openAddressModal, signupForm.mailboxAddress]);
 
-  const onClickSignup = () => {
-    if (signupForm.email === "") {
-      alert("이메일을 입력해주세요.");
-    } else if (signupForm.nickName === "") {
-      alert("닉네임을 입력해주세요.");
-    } else if (signupForm.mailboxAddress === "") {
-      alert("우편함 주소를 입력해주세요.");
+  const onClickKakaoSignup = async () => {
+    const conditions = [
+      {
+        check: signupForm.nickName !== "",
+        message: "닉네임을 입력해주세요.",
+      },
+      {
+        check: signupForm.email !== "",
+        message: "이메일을 입력해주세요.",
+      },
+      {
+        check: signupForm.mailboxAddress !== "",
+        message: "우편함 주소를 입력해주세요.",
+      },
+      {
+        check: isNicknameChecked,
+        message: "닉네임 중복 체크를 해주세요.",
+      },
+    ];
+
+    for (const condition of conditions) {
+      if (!condition.check) {
+        setToast({ message: condition.message, visible: true });
+        return;
+      }
     }
-    console.log("sign data: ", signupForm);
+
+    try {
+      let res: any = await postKakaoSignup({
+        address: signupForm.mailboxAddress,
+        email: signupForm.email,
+        nickname: signupForm.nickName,
+      });
+      if (res.responseCode === 200) {
+        setToast({
+          message: "회원가입 성공!",
+          visible: true,
+        });
+        setModalState({
+          isOpen: true,
+          type: "login", // 로그인 모달로 이동
+        });
+      } else if (res.responseCode === 401) {
+        alert("같은 이메일이 회원정보에 존재합니다.");
+        setModalState({
+          isOpen: true,
+          type: "login", // 로그인 모달로 이동
+        });
+      }
+    } catch (err) {
+      setToast({ message: "입력란을 다시 확인해주세요.", visible: true });
+    }
+  };
+
+  // 닉네임 중복확인
+  const onClickConfirmNickname = async () => {
+    if (signupForm.nickName === "") {
+      setToast({ message: "닉네임을 입력해주세요.", visible: true });
+    } else {
+      try {
+        let res: any = await getNicknameConfirm({
+          nickname: signupForm.nickName,
+        });
+        if (res.status === 200) {
+          setToast({ message: "사용 가능한 닉네임입니다.", visible: true });
+          setIsNicknameChecked(true);
+        }
+        console.log("nickname중복 결과 : ", res);
+      } catch (err: any) {
+        console.log("ninameerror : ", err);
+        if (err.response.data.status === 401) {
+          setToast({ message: "중복된 닉네임입니다.", visible: true });
+          setIsNicknameChecked(false);
+        }
+      }
+    }
   };
 
   return (
@@ -59,7 +139,7 @@ const KakaoSignup: React.FC = () => {
         <FormLabel>
           <Box $alignItems="center" $justifyContent="space-between">
             NickName
-            <Button>중복 체크</Button>
+            <Button onClick={onClickConfirmNickname}>중복 체크</Button>
           </Box>
           <FormInput type="text" name="nickName" onChange={onChangeFormHdr} />
         </FormLabel>
@@ -68,9 +148,9 @@ const KakaoSignup: React.FC = () => {
           <FormInput
             type="text"
             name="email"
-            value={"wodbs5602@naver.com"}
+            // value={"wodbs5602@naver.com"}
             onChange={onChangeFormHdr}
-            disabled
+            // disabled
           />
         </FormLabel>
         <FormLabel>
@@ -103,7 +183,13 @@ const KakaoSignup: React.FC = () => {
           )}
         </FormLabel>
       </SignupContent>
-      <SignupBtn onClick={onClickSignup}>Signup</SignupBtn>
+      <SignupBtn onClick={onClickKakaoSignup}>Signup</SignupBtn>
+      {toast.visible && (
+        <ToastMessage
+          message={toast.message}
+          onClose={() => setToast({ ...toast, visible: false })}
+        />
+      )}
     </SignupWrap>
   );
 };
