@@ -65,8 +65,8 @@ const Login = () => {
     try {
       let res: any = await getKakaoURL();
       console.log("카카오 res :", res);
-      if (res.responseCode === 200) {
-        window.location.href = res.data;
+      if (res.data.responseCode === 200) {
+        window.location.href = res.data.responseData;
       }
     } catch (err: any) {
       console.error("kakao Login Error:", err);

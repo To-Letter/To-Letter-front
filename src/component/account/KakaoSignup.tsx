@@ -88,7 +88,7 @@ const KakaoSignup: React.FC = () => {
         email: signupForm.email,
         nickname: signupForm.nickName,
       });
-      if (res.responseCode === 200) {
+      if (res.data.responseCode === 200) {
         setToast({
           message: "회원가입 성공!",
           visible: true,
@@ -97,7 +97,7 @@ const KakaoSignup: React.FC = () => {
           isOpen: true,
           type: "login", // 로그인 모달로 이동
         });
-      } else if (res.responseCode === 401) {
+      } else if (res.data.responseCode === 401) {
         alert("같은 이메일이 회원정보에 존재합니다.");
         setModalState({
           isOpen: true,
