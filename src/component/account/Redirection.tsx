@@ -23,7 +23,7 @@ const Redirection = () => {
           navigate("/"); // Home으로 리디렉션
           setModalState({
             isOpen: true,
-            type: "kakaoSignup", // 로그인 타입으로 설정
+            type: "login", // 로그인 타입으로 설정
           });
         } else if (res.data.responseCode === 201) {
           // 이미 카카오 회원가입 된 유저라 바로 로그인 처리
