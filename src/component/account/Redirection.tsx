@@ -31,7 +31,7 @@ const Redirection = () => {
             isOpen: false,
             type: null,
           });
-          navigate("/"); // Home으로 리디��션
+          navigate("/"); // Home으로 리디렉션
         } else if (res.data.responseCode === 400) {
           // 2차 회원가입(닉네임, 주소)이 제대로 진행이 되지 않음.
           setModalState({

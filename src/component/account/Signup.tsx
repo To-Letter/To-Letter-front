@@ -103,7 +103,7 @@ const Signup = () => {
         password: signupForm.password,
         address: signupForm.mailboxAddress,
       });
-      if (res.status === 200) {
+      if (res.data.responseCode === 200) {
         setToast({
           message: "이메일 인증 단계로 넘어갑니다.",
           visible: true,
@@ -128,7 +128,7 @@ const Signup = () => {
         let res: any = await getNicknameConfirm({
           nickname: signupForm.nickName,
         });
-        if (res.status === 200) {
+        if (res.data.responseCode === 200) {
           setToast({ message: "사용 가능한 닉네임입니다.", visible: true });
           setIsNicknameChecked(true);
         }
@@ -152,7 +152,7 @@ const Signup = () => {
         let res: any = await getEmialConfirm({
           email: signupForm.email,
         });
-        if (res.status === 200) {
+        if (res.data.responseCode === 200) {
           setToast({ message: "사용 가능한 이메일입니다.", visible: true });
           setIsEmailChecked(true);
         }
