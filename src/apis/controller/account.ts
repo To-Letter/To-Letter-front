@@ -93,18 +93,6 @@ export const postKakaoToken = async (code: { code: string }) => {
   return response;
 };
 
-export const getReissue = async () => {
-  const response: any = await sendApi.get(`/users/reissue`);
-
-  const accessToken = response.headers.get("authorization");
-  const refreshToken = response.headers.get("refreshtoken");
-
-  sessionStorageService.set("accessToken", accessToken);
-  sessionStorageService.set("refreshToken", refreshToken);
-
-  return response;
-};
-
 export const getLogout = async () => {
   const response: any = await sendApi.get(`/users/logout`);
 
