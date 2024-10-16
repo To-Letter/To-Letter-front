@@ -35,7 +35,11 @@ const LetterPopup: React.FC<LetterPopupProps> = ({ onClose, senderName }) => {
     const handleWheel = (event: WheelEvent) => {
       if (textareaRef.current) {
         event.preventDefault();
-        textareaRef.current.scrollTop += event.deltaY;
+        const lineHeight = parseFloat(
+          window.getComputedStyle(textareaRef.current).lineHeight
+        );
+        textareaRef.current.scrollTop +=
+          event.deltaY > 0 ? lineHeight : -lineHeight;
       }
     };
 
@@ -84,57 +88,48 @@ const Popup = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: url("/images/letter_background6.jpg") no-repeat center center;
-  background-size: cover;
-  border: 1px solid #ccc;
-  padding: 20px;
+  background: url("/images/letter_background.jpg") no-repeat center center;
+  background-size: contain;
+  padding: 10px;
   z-index: 1000;
-  width: 80vw;
-  height: 80vh;
+  width: 40vw;
+  height: 62vh;
   max-width: 600px;
   max-height: 800px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: block;
 `;
 
 const PopupInner = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100% - 60px);
+  height: 92%;
+  width: 87%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 20px;
   -webkit-overflow-scrolling: touch;
+  margin: auto;
+  box-sizing: border-box;
 `;
 
 const StyledTextarea = styled.textarea`
-  width: 87%;
-  height: 89.5%;
+  width: 100%;
+  height: 100%;
   border: none;
   background: transparent;
   font-family: "Handwriting", sans-serif;
-  font-size: 1.2vw;
+  font-size: 16px;
   outline: none;
   resize: none;
   overflow-y: auto;
   white-space: pre-wrap;
-  line-height: 2.13em;
+  line-height: 1.8em;
   border-bottom: 1px solid #ccc;
-  margin: 0% 7.5%; /* 양쪽에서 동일하게 줄어들도록 설정 */
-  padding-top: 10px; /* 텍스트 상단 여백 추가 */
-  padding-right: 30px; /* 텍스트 좌측 여백 추가 */
-
-  &:focus {
-    border-bottom: 1px solid #007bff;
-  }
 `;
 
 const ToInput = styled.div`
   font-family: "Handwriting", sans-serif;
-  font-size: 1.2vw;
-  margin-bottom: 10px;
+  font-size: 16px;
+  padding-top: 24px;
 `;
 
 const SendButton = styled.button`
@@ -144,7 +139,7 @@ const SendButton = styled.button`
   border: none;
   background: transparent;
   cursor: pointer;
-  font-size: 2vw;
+  font-size: 24px;
   padding: 0;
 
   &:hover {
@@ -159,7 +154,7 @@ const CloseButton = styled.button`
   border: none;
   background: transparent;
   cursor: pointer;
-  font-size: 2vw;
+  font-size: 24px;
   padding: 0;
 
   &:hover {
@@ -172,7 +167,7 @@ const FromText = styled.div`
   bottom: 29px;
   right: 67px;
   font-family: "Handwriting", sans-serif;
-  font-size: 1.5vw;
+  font-size: 18px;
 `;
 
 export default LetterPopup;
