@@ -26,7 +26,7 @@ axiosInterceptor.interceptors.response.use(
   },
   async (error) => {
     try {
-      if (error.response.data.code === 1003) {
+      if (error.response.data.code === 1003 && error.response.data.code === 1002) {
         alert('로그인 유지 시간이 만료되었습니다. 재로그인 해주세요.')
         sessionStorageService.delete();
         window.location.href = '/'
