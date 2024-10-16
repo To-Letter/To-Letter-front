@@ -131,14 +131,13 @@ const Signup = () => {
         if (res.data.responseCode === 200) {
           setToast({ message: "사용 가능한 닉네임입니다.", visible: true });
           setIsNicknameChecked(true);
-        }
-        console.log("nickname중복 결과 : ", res);
-      } catch (err: any) {
-        console.log("ninameerror : ", err);
-        if (err.response.data.status === 401) {
+        } else if (res.data.responseCode === 401) {
           setToast({ message: "중복된 닉네임입니다.", visible: true });
           setIsNicknameChecked(false);
         }
+        console.log("nickname중복 결과 : ", res);
+      } catch (err: any) {
+        console.log("nickNameError : ", err);
       }
     }
   };
@@ -155,13 +154,13 @@ const Signup = () => {
         if (res.data.responseCode === 200) {
           setToast({ message: "사용 가능한 이메일입니다.", visible: true });
           setIsEmailChecked(true);
-        }
-        console.log("emial중복 결과 : ", res);
-      } catch (err: any) {
-        if (err.response.data.status === 401) {
+        } else if (res.data.responseCode === 401) {
           setToast({ message: "중복된 이메일입니다.", visible: true });
           setIsNicknameChecked(false);
         }
+        console.log("emial중복 결과 : ", res);
+      } catch (err: any) {
+        console.log("emailError : ", err);
       }
     }
   };

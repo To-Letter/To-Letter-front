@@ -29,14 +29,24 @@ const MailVerify: React.FC = () => {
 
   // 이메일 인증코드 발송
   const authRequest = async () => {
-    let res: any = await getEmialAuth({ email: email });
-    if (res.status === 200) {
-      // setToast({ message: "이메일 인증코드가 발송되었습니다.", visible: true });
-      setAuthReqMessage(true);
-      setVerifyMe(true);
-      console.log("이메일 인증코드 발송 성공");
-    } else {
-      console.log("email auth error : ", res);
+    try {
+      let res: any = await getEmialAuth({ email: email });
+      console.log("emial auth ree: ", res);
+      if (res.data.responseCode === 200) {
+        setAuthReqMessage(true);
+        setVerifyMe(true);
+        console.log("이메일 인증코드 발송 성공");
+      } else if (res.data.responseCode === 401) {
+        alert("이미 인증코드를 전송 하였습니다.");
+      } else if (res.data.responseCode === 403) {
+        alert("이미 이메일 인증을 완료했습니다. 로그인을 해주세요!");
+        setModalState({
+          isOpen: true,
+          type: "login", // 로그인 타입으로 설정
+        });
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -45,22 +55,26 @@ const MailVerify: React.FC = () => {
     if (!verifyMe) {
       setToast({ message: "인증 요청 버튼을 먼저 눌러주세요.", visible: true });
     } else if (mailKey === "" || mailKey.length !== 6) {
-      setToast({
-        message: "인증 키가 제대로 입력되지 않았습니다.",
-        visible: true,
-      });
+      alert("인증 키가 제대로 입력되지 않았습니다.");
     } else {
       try {
         let res: any = await postEmailVerify({
           email: email,
           randomCode: mailKey,
         });
-        if (res.status === 200) {
+
+        if (res.data.responseCode === 200) {
           alert("회원가입 성공!");
           setModalState({
             isOpen: true,
-            type: 'login', // 로그인 타입으로 설정
-          })
+            type: "login", // 로그인 타입으로 설정
+          });
+        } else if (res.data.responseCode === 401) {
+          alert(
+            "인증 시간을 초과하였습니다. 인증 요청 버튼을 다시 눌러주세요."
+          );
+        } else if (res.data.responseCode === 403) {
+          alert("인증 코드가 불일치합니다.");
         }
         console.log("emailVerify중복 결과 : ", res);
       } catch (err) {
@@ -101,7 +115,9 @@ const MailVerify: React.FC = () => {
             )}
           </Box>
           <FormInput type="text" onChange={onChangeMailKeyHdr} />
-          {authReqMessage && "이메일 인증코드가 발송되었습니다."}
+          <EmialText>
+            {authReqMessage && "이메일 인증코드가 발송되었습니다."}
+          </EmialText>
         </FormLabel>
       </SignupContent>
       <SignupBtn onClick={submitSignup}>Signup</SignupBtn>
@@ -220,4 +236,9 @@ const SignupBtn = styled.div`
   color: #e9e9e9;
   background-color: #262523;
   cursor: pointer;
+`;
+
+const EmialText = styled.div`
+  margin-top: 10px;
+  font-size: 10px;
 `;
