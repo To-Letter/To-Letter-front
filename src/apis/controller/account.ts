@@ -79,16 +79,52 @@ export const postEmailVerify = async (emailData: {
   return response;
 };
 
-// kakao 로그인
+// kakao Login Api Part
+// 인가코드 가져오기
 export const getKakaoURL = async () => {
-  const response: any = await sendApi.get(`/users/kakao/auth`);
+  const response: any = await sendApi.get("/kakao/su/auth");
 
   return response;
 };
 
+// 인가코드 전달 및 카카오 정보로 1차 회원가입 진행
 export const postKakaoToken = async (code: { code: string }) => {
   const queryString = `?code=${encodeURIComponent(code.code)}`;
-  const response: any = await sendApi.post(`/users/kakao/token${queryString}`);
+  try {
+    const response: any = await sendApi.post(`/kakao/su/token${queryString}`);
+
+    if (response.data.responseCode === 201) {
+      // 이미 회원가입이 되있는 유저에 대한 토큰처리? 다시 물어보자
+      const accessToken = response.headers.get("authorization");
+      const refreshToken = response.headers.get("refreshtoken");
+
+      sessionStorageService.set("accessToken", accessToken);
+      sessionStorageService.set("refreshToken", refreshToken);
+    }
+
+    return response;
+  } catch (error: any) {
+    return {
+      data: {
+        responseCode: error.response.data.status,
+        responseData: error.response.data.code,
+        responseMessage: error.response.data.message,
+      },
+    };
+  }
+};
+
+// 2차 유저정보 수집후 회원가입 진행
+export const postKakaoSignup = async (kakaoSignupData: {
+  address: string;
+  email: string;
+  nickname: string;
+}) => {
+  const response: any = await sendApi.post(`/kakao/su/signup`, {
+    address: kakaoSignupData.address,
+    email: kakaoSignupData.email,
+    nickname: kakaoSignupData.nickname,
+  });
 
   return response;
 };

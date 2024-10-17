@@ -18,15 +18,42 @@ const Redirection = () => {
       try {
         let res: any = await postKakaoToken({ code: code });
         console.log("카카오 token :", res);
-        if (res.status === 200) {
-          if (res.data !== undefined || res.data !== null) {
-            console.log("data :", res.data);
-            setModalState({
+        if (res.data.responseCode === 200) {
+          // 카카오 회원가입 성공
+          navigate("/"); // Home으로 리디렉션
+          setModalState({
             isOpen: true,
-            type: 'MailVerify', // 로그인 타입으로 설정
+            type: "kakaoSignup", // 로그인 타입으로 설정
           });
-            navigate("/"); // Home으로 리디렉션
-          }
+        } else if (res.data.responseCode === 201) {
+          // 이미 카카오 회원가입 된 유저라 바로 로그인 처리
+          setModalState({
+            isOpen: false,
+            type: null,
+          });
+          navigate("/"); // Home으로 리디렉션
+        } else if (res.data.responseCode === 400) {
+          // 2차 회원가입(닉네임, 주소)이 제대로 진행이 되지 않음.
+          setModalState({
+            isOpen: true,
+            type: "kakaoSignup",
+          });
+          navigate("/"); // Home으로 리디렉션
+        } else if (res.data.responseCode === 401) {
+          // 인증실패 토큰이 이상하거나 만료됨
+          setModalState({
+            isOpen: true,
+            type: "login",
+          });
+          navigate("/"); // Home으로 리디렉션
+        } else if (res.data.responseCode === 403) {
+          // 동일한 이메일 존재
+          alert("동일한 이메일이 존재합니다!");
+          navigate("/"); // Home으로 리디렉션
+        } else if (res.data.responseCode === 404) {
+          // 카카오 토큰이 발급이 안됨
+          alert("카카오 토큰이 발급이 안됨인데 뭐라케야하나..");
+          navigate("/"); // Home으로 리디렉션
         }
       } catch (err) {
         console.error("kakao token error :", err);

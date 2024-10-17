@@ -103,7 +103,7 @@ const Signup = () => {
         password: signupForm.password,
         address: signupForm.mailboxAddress,
       });
-      if (res.status === 200) {
+      if (res.data.responseCode === 200) {
         setToast({
           message: "이메일 인증 단계로 넘어갑니다.",
           visible: true,
@@ -128,17 +128,17 @@ const Signup = () => {
         let res: any = await getNicknameConfirm({
           nickname: signupForm.nickName,
         });
-        if (res.status === 200) {
+        if (res.data.responseCode === 200) {
           setToast({ message: "사용 가능한 닉네임입니다.", visible: true });
           setIsNicknameChecked(true);
-        } else if (res.status === 401) {
-          // error 왜 401때는 그냥 콘솔에 에러만 뜨고 안뜨냐 후..
+        }
+        console.log("nickname중복 결과 : ", res);
+      } catch (err: any) {
+        console.log("ninameerror : ", err);
+        if (err.response.data.status === 401) {
           setToast({ message: "중복된 닉네임입니다.", visible: true });
           setIsNicknameChecked(false);
         }
-        console.log("nickname중복 결과 : ", res);
-      } catch (err) {
-        console.error(err);
       }
     }
   };
@@ -152,23 +152,16 @@ const Signup = () => {
         let res: any = await getEmialConfirm({
           email: signupForm.email,
         });
-        console.log("emial중복 status : ", res.status);
-
-        if (res.status === 200) {
+        if (res.data.responseCode === 200) {
           setToast({ message: "사용 가능한 이메일입니다.", visible: true });
           setIsEmailChecked(true);
-        } else if (res.status === 401) {
-          // error 왜 401때는 그냥 콘솔에 에러만 뜨고 안뜨냐 후..
-          setToast({ message: "중복된 이메일입니다.", visible: true });
-          setIsEmailChecked(false);
         }
         console.log("emial중복 결과 : ", res);
-      } catch (err) {
-        setToast({
-          message: "서버와의 통신 중 오류가 발생했습니다.",
-          visible: true,
-        });
-        console.error("catch 블록 에러:", err);
+      } catch (err: any) {
+        if (err.response.data.status === 401) {
+          setToast({ message: "중복된 이메일입니다.", visible: true });
+          setIsNicknameChecked(false);
+        }
       }
     }
   };
