@@ -89,22 +89,28 @@ const KakaoSignup: React.FC = () => {
         nickname: signupForm.nickName,
       });
       if (res.data.responseCode === 200) {
-        setToast({
-          message: "회원가입 성공!",
-          visible: true,
-        });
+        alert("회원가입 성공! 로그인해 주세요.");
         setModalState({
           isOpen: true,
           type: "login", // 로그인 모달로 이동
         });
       } else if (res.data.responseCode === 401) {
+        alert(
+          "이메일이 유저정보와 일치하지 않습니다. 이메일을 다시 압력해주세요."
+        );
+        setModalState({
+          isOpen: true,
+          type: "kakaoSignup", // 로그인 모달로 이동
+        });
+      } else if (res.data.responseCode === 403) {
         alert("같은 이메일이 회원정보에 존재합니다.");
         setModalState({
           isOpen: true,
           type: "login", // 로그인 모달로 이동
         });
       }
-    } catch (err) {
+    } catch (err: any) {
+      console.log("kakao error: " + err);
       setToast({ message: "입력란을 다시 확인해주세요.", visible: true });
     }
   };
@@ -121,14 +127,12 @@ const KakaoSignup: React.FC = () => {
         if (res.status === 200) {
           setToast({ message: "사용 가능한 닉네임입니다.", visible: true });
           setIsNicknameChecked(true);
-        }
-        console.log("nickname중복 결과 : ", res);
-      } catch (err: any) {
-        console.log("ninameerror : ", err);
-        if (err.response.data.status === 401) {
+        } else if (res.data.responseCode === 401) {
           setToast({ message: "중복된 닉네임입니다.", visible: true });
           setIsNicknameChecked(false);
         }
+      } catch (err: any) {
+        console.log("ninameerror : ", err);
       }
     }
   };

@@ -31,18 +31,20 @@ const MailVerify: React.FC = () => {
   const authRequest = async () => {
     try {
       let res: any = await getEmialAuth({ email: email });
-      console.log("emial auth ree: ", res);
       if (res.data.responseCode === 200) {
         setAuthReqMessage(true);
         setVerifyMe(true);
-        console.log("이메일 인증코드 발송 성공");
+      } else if (res.data.responseCode === 201) {
+        setAuthReqMessage(true);
+        setVerifyMe(true);
+        alert("시간 초과로 인증코드를 다시 보냈습니다.");
       } else if (res.data.responseCode === 401) {
         alert("이미 인증코드를 전송 하였습니다.");
       } else if (res.data.responseCode === 403) {
         alert("이미 이메일 인증을 완료했습니다. 로그인을 해주세요!");
         setModalState({
           isOpen: true,
-          type: "login", // 로그인 타입으로 설정
+          type: "login",
         });
       }
     } catch (err) {
@@ -67,16 +69,21 @@ const MailVerify: React.FC = () => {
           alert("회원가입 성공!");
           setModalState({
             isOpen: true,
-            type: "login", // 로그인 타입으로 설정
+            type: "login",
           });
         } else if (res.data.responseCode === 401) {
-          alert(
-            "인증 시간을 초과하였습니다. 인증 요청 버튼을 다시 눌러주세요."
-          );
+          setAuthReqMessage(true);
+          setVerifyMe(true);
+          alert("시간 초과로 인증코드를 다시 보냈습니다.");
         } else if (res.data.responseCode === 403) {
           alert("인증 코드가 불일치합니다.");
+        } else if (res.data.responseCode === 404) {
+          alert("메일이 존재하지 않습니다. 다른 메일로 시도해주세요.");
+          setModalState({
+            isOpen: true,
+            type: "signup",
+          });
         }
-        console.log("emailVerify중복 결과 : ", res);
       } catch (err) {
         console.error(err);
       }
