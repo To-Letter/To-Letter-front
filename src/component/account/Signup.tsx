@@ -111,7 +111,7 @@ const Signup = () => {
         setEmail(signupForm.email);
         setModalState({
           isOpen: true,
-          type: "MailVerify", // 로그인 타입으로 설정
+          type: "MailVerify",
         });
       }
     } catch (err) {
@@ -131,14 +131,12 @@ const Signup = () => {
         if (res.data.responseCode === 200) {
           setToast({ message: "사용 가능한 닉네임입니다.", visible: true });
           setIsNicknameChecked(true);
-        }
-        console.log("nickname중복 결과 : ", res);
-      } catch (err: any) {
-        console.log("ninameerror : ", err);
-        if (err.response.data.status === 401) {
+        } else if (res.data.responseCode === 401) {
           setToast({ message: "중복된 닉네임입니다.", visible: true });
           setIsNicknameChecked(false);
         }
+      } catch (err: any) {
+        console.log("nickNameError : ", err);
       }
     }
   };
@@ -155,13 +153,12 @@ const Signup = () => {
         if (res.data.responseCode === 200) {
           setToast({ message: "사용 가능한 이메일입니다.", visible: true });
           setIsEmailChecked(true);
-        }
-        console.log("emial중복 결과 : ", res);
-      } catch (err: any) {
-        if (err.response.data.status === 401) {
+        } else if (res.data.responseCode === 401) {
           setToast({ message: "중복된 이메일입니다.", visible: true });
           setIsNicknameChecked(false);
         }
+      } catch (err: any) {
+        console.log("emailError : ", err);
       }
     }
   };
@@ -369,19 +366,4 @@ const SignupBtn = styled.div`
   color: #e9e9e9;
   background-color: #262523;
   cursor: pointer;
-`;
-
-const SocialSignupWrap = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const FindAccountTextWrap = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  color: #e9e9e9;
 `;

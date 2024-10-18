@@ -94,7 +94,7 @@ export const postKakaoToken = async (code: { code: string }) => {
     const response: any = await sendApi.post(`/kakao/su/token${queryString}`);
 
     if (response.data.responseCode === 201) {
-      // 이미 회원가입이 되있는 유저에 대한 토큰처리? 다시 물어보자
+      // 이미 회원가입이 되있는 유저에 대한 토큰 저장 -> 로그인
       const accessToken = response.headers.get("authorization");
       const refreshToken = response.headers.get("refreshtoken");
 
