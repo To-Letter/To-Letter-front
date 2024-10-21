@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { IoIosSend } from "react-icons/io"; // 기존 보내기 버튼
-import { PiMailboxBold } from "react-icons/pi"; // 우편함 버튼
 import { IoIosMail } from "react-icons/io"; // 메일 버튼
 import { IoMdClose } from "react-icons/io";
 
@@ -73,6 +71,7 @@ const LetterPopup: React.FC<LetterPopupProps> = ({ onClose, senderName }) => {
           ref={textareaRef}
           onChange={handleChange}
           placeholder="Write your letter here..."
+          spellCheck={false}
         />
       </PopupInner>
       <FromText>From. {senderName}</FromText>
@@ -93,10 +92,54 @@ const Popup = styled.div`
   padding: 10px;
   z-index: 1000;
   width: 40vw;
-  height: 62vh;
+  height: calc(100vh - 20vh);
   max-width: 600px;
   max-height: 800px;
   display: block;
+
+  @media (max-width: 500px) {
+    width: 80vw;
+    height: 70vh;
+    background-size: cover; // 화면 크기에 맞게 이미지 크기 조절
+  }
+
+  @media (min-width: 501px) and (max-width: 800px) {
+    width: 75vw;
+    height: 70vh;
+    background-size: cover;
+  }
+
+  @media (min-width: 801px) and (max-width: 1280px) {
+    width: 70vw;
+    height: 70vh;
+    background-size: cover;
+  }
+
+  @media (min-width: 1281px) {
+    width: 50vw;
+    height: 70vh;
+    background-size: cover;
+  }
+
+  @media (max-height: 500px) {
+    height: 50vh;
+    background-size: cover;
+  }
+
+  @media (min-height: 501px) and (max-height: 800px) {
+    height: 65vh;
+    background-size: cover;
+  }
+
+  @media (min-height: 801px) and (max-height: 1280px) {
+    height: 70vh;
+    background-size: cover;
+  }
+
+  @media (min-height: 1281px) {
+    height: 85vh;
+    background-size: cover;
+  }
 `;
 
 const PopupInner = styled.div`
@@ -109,6 +152,44 @@ const PopupInner = styled.div`
   -webkit-overflow-scrolling: touch;
   margin: auto;
   box-sizing: border-box;
+
+  // width @mediaquery
+  @media (max-width: 500px) {
+    width: 95%;
+    height: 92%;
+  }
+
+  @media (min-width: 501px) and (max-width: 800px) {
+    width: 97%;
+    height: 92%;
+  }
+
+  @media (min-width: 801px) and (max-width: 1280px) {
+    width: 96%;
+    height: 92%;
+  }
+
+  @media (min-width: 1281px) {
+    width: 95%;
+    height: 92%;
+  }
+
+  // height @mediaquery
+  /* @media (max-height: 500px) {
+    height: 80%;
+  }
+
+  @media (min-height: 501px) and (max-height: 800px) {
+    height: 85%;
+  }
+
+  @media (min-height: 801px) and (max-height: 1280px) {
+    height: 92%;
+  }
+
+  @media (min-height: 1281px) {
+    height: 90%;
+  } */
 `;
 
 const StyledTextarea = styled.textarea`
@@ -123,13 +204,96 @@ const StyledTextarea = styled.textarea`
   overflow-y: auto;
   white-space: pre-wrap;
   line-height: 1.8em;
-  border-bottom: 1px solid #ccc;
+
+  // width @mediaquery
+  @media (max-width: 500px) {
+    font-size: 14px;
+    line-height: 2.31em;
+  }
+
+  @media (min-width: 501px) and (max-width: 800px) {
+    font-size: 15px;
+    line-height: 2.16em;
+  }
+
+  @media (min-width: 801px) and (max-width: 1280px) {
+    font-size: 16px;
+    line-height: 2.03em;
+  }
+
+  @media (min-width: 1281px) {
+    font-size: 16px;
+    line-height: 2.03em;
+  }
+
+  // height @mediaquery
+  /* @media (max-height: 500px) {
+    font-size: 12px;
+    line-height: 2em;
+  }
+
+  @media (min-height: 501px) and (max-height: 800px) {
+    font-size: 14px;
+    line-height: 2.2em;
+  }
+
+  @media (min-height: 801px) and (max-height: 1280px) {
+    font-size: 16px;
+    line-height: 2.03em;
+  }
+
+  @media (min-height: 1281px) {
+    font-size: 18px;
+    line-height: 2.6em;
+  } */
 `;
 
 const ToInput = styled.div`
   font-family: "Handwriting", sans-serif;
   font-size: 16px;
   padding-top: 24px;
+
+  // width @mediaquery
+  @media (max-width: 500px) {
+    font-size: 14px;
+    line-height: 2.1em;
+  }
+
+  @media (min-width: 501px) and (max-width: 800px) {
+    font-size: 16px;
+    line-height: 1.83em;
+  }
+
+  @media (min-width: 801px) and (max-width: 1280px) {
+    padding-top: 32px;
+    font-size: 16px;
+  }
+
+  @media (min-width: 1281px) {
+    font-size: 18px;
+    line-height: 1.65em;
+  }
+
+  // height @mediaquery
+  /* @media (max-height: 500px) {
+    font-size: 12px;
+    padding-top: 16px;
+  }
+
+  @media (min-height: 501px) and (max-height: 800px) {
+    font-size: 14px;
+    padding-top: 20px;
+  }
+
+  @media (min-height: 801px) and (max-height: 1280px) {
+    font-size: 18px;
+    padding-top: 24px;
+  }
+
+  @media (min-height: 1281px) {
+    font-size: 18px;
+    padding-top: 28px;
+  } */
 `;
 
 const SendButton = styled.button`
