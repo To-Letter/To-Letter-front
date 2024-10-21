@@ -97,47 +97,28 @@ const Popup = styled.div`
   max-height: 800px;
   display: block;
 
-  @media (max-width: 500px) {
-    width: 80vw;
-    height: 70vh;
-    background-size: cover; // 화면 크기에 맞게 이미지 크기 조절
-  }
-
   @media (min-width: 501px) and (max-width: 800px) {
     width: 75vw;
-    height: 70vh;
     background-size: cover;
   }
 
   @media (min-width: 801px) and (max-width: 1280px) {
     width: 70vw;
-    height: 70vh;
     background-size: cover;
   }
 
   @media (min-width: 1281px) {
     width: 50vw;
-    height: 70vh;
-    background-size: cover;
-  }
-
-  @media (max-height: 500px) {
-    height: 50vh;
     background-size: cover;
   }
 
   @media (min-height: 501px) and (max-height: 800px) {
-    height: 65vh;
+    height: 83vh;
     background-size: cover;
   }
 
   @media (min-height: 801px) and (max-height: 1280px) {
     height: 70vh;
-    background-size: cover;
-  }
-
-  @media (min-height: 1281px) {
-    height: 85vh;
     background-size: cover;
   }
 `;
@@ -154,42 +135,26 @@ const PopupInner = styled.div`
   box-sizing: border-box;
 
   // width @mediaquery
-  @media (max-width: 500px) {
-    width: 95%;
-    height: 92%;
-  }
-
   @media (min-width: 501px) and (max-width: 800px) {
-    width: 97%;
-    height: 92%;
+    width: 92%;
   }
 
   @media (min-width: 801px) and (max-width: 1280px) {
     width: 96%;
-    height: 92%;
   }
 
   @media (min-width: 1281px) {
-    width: 95%;
-    height: 92%;
+    width: 89%;
   }
 
   // height @mediaquery
-  /* @media (max-height: 500px) {
-    height: 80%;
-  }
-
   @media (min-height: 501px) and (max-height: 800px) {
-    height: 85%;
+    height: 92%;
   }
 
   @media (min-height: 801px) and (max-height: 1280px) {
     height: 92%;
   }
-
-  @media (min-height: 1281px) {
-    height: 90%;
-  } */
 `;
 
 const StyledTextarea = styled.textarea`
@@ -206,11 +171,6 @@ const StyledTextarea = styled.textarea`
   line-height: 1.8em;
 
   // width @mediaquery
-  @media (max-width: 500px) {
-    font-size: 14px;
-    line-height: 2.31em;
-  }
-
   @media (min-width: 501px) and (max-width: 800px) {
     font-size: 15px;
     line-height: 2.16em;
@@ -227,25 +187,15 @@ const StyledTextarea = styled.textarea`
   }
 
   // height @mediaquery
-  /* @media (max-height: 500px) {
-    font-size: 12px;
-    line-height: 2em;
-  }
-
   @media (min-height: 501px) and (max-height: 800px) {
     font-size: 14px;
-    line-height: 2.2em;
+    line-height: 2.13em;
   }
 
   @media (min-height: 801px) and (max-height: 1280px) {
     font-size: 16px;
     line-height: 2.03em;
   }
-
-  @media (min-height: 1281px) {
-    font-size: 18px;
-    line-height: 2.6em;
-  } */
 `;
 
 const ToInput = styled.div`
@@ -254,14 +204,9 @@ const ToInput = styled.div`
   padding-top: 24px;
 
   // width @mediaquery
-  @media (max-width: 500px) {
-    font-size: 14px;
-    line-height: 2.1em;
-  }
-
   @media (min-width: 501px) and (max-width: 800px) {
-    font-size: 16px;
-    line-height: 1.83em;
+    padding-top: 30px;
+    font-size: 15px;
   }
 
   @media (min-width: 801px) and (max-width: 1280px) {
@@ -271,29 +216,18 @@ const ToInput = styled.div`
 
   @media (min-width: 1281px) {
     font-size: 18px;
-    line-height: 1.65em;
   }
 
   // height @mediaquery
-  /* @media (max-height: 500px) {
-    font-size: 12px;
-    padding-top: 16px;
-  }
-
   @media (min-height: 501px) and (max-height: 800px) {
-    font-size: 14px;
-    padding-top: 20px;
+    font-size: 16px;
+    padding-top: 26px;
   }
 
   @media (min-height: 801px) and (max-height: 1280px) {
     font-size: 18px;
-    padding-top: 24px;
+    padding-top: 29px;
   }
-
-  @media (min-height: 1281px) {
-    font-size: 18px;
-    padding-top: 28px;
-  } */
 `;
 
 const SendButton = styled.button`
