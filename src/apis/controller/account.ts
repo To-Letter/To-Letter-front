@@ -136,3 +136,15 @@ export const getLogout = async () => {
 
   return response;
 };
+
+export const putUserInfoUpdate = async (updateData: {
+  address: string,
+  nickname: string
+}) => {
+  const response: any = await sendApi.put(`/users/update`,{
+    address: updateData.address,
+    nickname: updateData.nickname
+  } );
+
+  return response;
+};
