@@ -21,11 +21,7 @@ interface styleI {
   $disabled?: boolean
 }
 
-interface props {
-  setMenuNumber: React.Dispatch<React.SetStateAction<number>>
-}
-
-export default function MyInfo({setMenuNumber}: props) {
+export default function MyInfo() {
   const {myInfo, updateMyInfo} = useUser();
   const navigate = useNavigate();
   const [myInfoForm, setmyInfoIForm] = useState<myInfoI>({
@@ -34,7 +30,7 @@ export default function MyInfo({setMenuNumber}: props) {
     nickname: myInfo.nickname
   })
   const [openAddressModal, setOpenAddressModal] = useState<boolean>(false);
-  const setMypageState = useSetRecoilState(myPageModalState)
+  const setMypageModalState = useSetRecoilState(myPageModalState)
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: "",
     visible: false,
@@ -63,7 +59,7 @@ export default function MyInfo({setMenuNumber}: props) {
         nickname: ""
       })
 
-      setMypageState(false);
+      setMypageModalState(false);
 
       navigate("/");
     } catch (error) {
@@ -98,8 +94,8 @@ export default function MyInfo({setMenuNumber}: props) {
   },[myInfo.address, myInfo.nickname])
 
   return (
-    <LoginWrap>
-      <LoginContent>
+    <MyPageWrap>
+      <MyPageContent>
           <FormLabel>
             Email
             <FormInput type='text' name="email" value={myInfoForm.email} disabled $disabled={true}/>
@@ -133,23 +129,23 @@ export default function MyInfo({setMenuNumber}: props) {
             />
           )}
         </FormLabel>
-      </LoginContent>
-      <LoginBtn onClick={onClickUpdata}>내 정보 수정하기</LoginBtn>
-      <SocialLoginWrap>
-      <LoginBtn onClick={onClickLogout}>Logout</LoginBtn>
-      </SocialLoginWrap>
+      </MyPageContent>
+      <MyPageBtn onClick={onClickUpdata}>내 정보 수정하기</MyPageBtn>
+      <SocialMyPageWrap>
+      <MyPageBtn onClick={onClickLogout}>Logout</MyPageBtn>
+      </SocialMyPageWrap>
       {toast.visible && (
         <ToastMessage
           message={toast.message}
           onClose={() => setToast({ ...toast, visible: false })}
         />
       )}
-    </LoginWrap>
+    </MyPageWrap>
   );
 };
 
 
-const LoginWrap = styled.div`
+const MyPageWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -158,7 +154,7 @@ const LoginWrap = styled.div`
   margin: 12px 40px 20px 40px;
 `;
 
-const LoginContent = styled.div`
+const MyPageContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -212,7 +208,7 @@ const FormInput = styled.input<styleI>`
   ${({$disabled})=> $disabled && `color: #858585;`}
 `
 
-const LoginBtn = styled.div`
+const MyPageBtn = styled.div`
   width: 100%;
   border: 1px solid #e9e9e9;
   display: flex;
@@ -226,7 +222,7 @@ const LoginBtn = styled.div`
   cursor: pointer;
 `
 
-const SocialLoginWrap = styled.div`
+const SocialMyPageWrap = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;

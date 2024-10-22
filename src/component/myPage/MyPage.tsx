@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import styled from 'styled-components';
 import MyInfo from './myInfo';
 import UserDelete from './UserDelete';
+import { useSetRecoilState } from 'recoil';
+import { myPageModalState } from '../../recoil/myInfoAtom';
 
 interface styleI {
   $selected?: boolean
@@ -9,9 +11,10 @@ interface styleI {
 
 export default function MyPage() {
   const [menuNumber, setMenuNumber] = useState<number>(1);
+  const setMypageModalState = useSetRecoilState(myPageModalState);
 
   return (
-    <ModalOverlay>
+    <ModalOverlay onClick={()=> setMypageModalState(false)}>
       <ModalContent onClick={(e: { stopPropagation: () => any; }) => e.stopPropagation()}>
         <MenuWrap>
           <MenuTitle 
@@ -25,8 +28,8 @@ export default function MyPage() {
             Close Account
           </MenuTitle>
         </MenuWrap>
-        {menuNumber === 1 && <MyInfo setMenuNumber={setMenuNumber}/>}
-        {menuNumber === 2 && <UserDelete setMenuNumber={setMenuNumber}/>}
+        {menuNumber === 1 && <MyInfo/>}
+        {menuNumber === 2 && <UserDelete />}
       </ModalContent>
     </ModalOverlay>
   );
