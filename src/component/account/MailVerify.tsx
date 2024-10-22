@@ -4,6 +4,8 @@ import { postEmailVerify, getEmialAuth } from "../../apis/controller/account";
 import ToastMessage from "../ToastMessage";
 import { useRecoilState } from "recoil";
 import { accountModalState, emailState } from "../../recoil/accountAtom";
+import { loadingState } from "../../recoil/loadingAtom";
+import Timer from "./Timer";
 
 interface defaultStyleProps {
   $direction?: "row" | "column";
@@ -14,9 +16,9 @@ interface defaultStyleProps {
 const MailVerify: React.FC = () => {
   const [email] = useRecoilState(emailState);
   const [_modalState, setModalState] = useRecoilState(accountModalState);
+  const [_loading, setLoding] = useRecoilState(loadingState)
   const [verifyMe, setVerifyMe] = useState<boolean>(false);
   const [mailKey, setMailKey] = useState<string>("");
-  const [timer, setTimer] = useState<number>(300); // 10분 = 600초
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: "",
     visible: false,
@@ -29,19 +31,24 @@ const MailVerify: React.FC = () => {
 
   // 이메일 인증코드 발송
   const authRequest = async () => {
+    setLoding(true);
     try {
       let res: any = await getEmialAuth({ email: email });
       if (res.data.responseCode === 200) {
+        setLoding(false);
         setAuthReqMessage(true);
         setVerifyMe(true);
       } else if (res.data.responseCode === 201) {
+        setLoding(false);
         setAuthReqMessage(true);
         setVerifyMe(true);
-        alert("시간 초과로 인증코드를 다시 보냈습니다.");
+        setToast({ message: "시간 초과로 인증코드를 다시 보냈습니다.", visible: true });
       } else if (res.data.responseCode === 401) {
-        alert("이미 인증코드를 전송 하였습니다.");
+        setLoding(false);
+        setToast({ message: "이미 인증코드를 전송 하였습니다.", visible: true });
       } else if (res.data.responseCode === 403) {
-        alert("이미 이메일 인증을 완료했습니다. 로그인을 해주세요!");
+        setLoding(false);
+        setToast({ message: "이미 이메일 인증을 완료했습니다. 로그인을 해주세요!", visible: true });
         setModalState({
           isOpen: true,
           type: "login",
@@ -57,28 +64,33 @@ const MailVerify: React.FC = () => {
     if (!verifyMe) {
       setToast({ message: "인증 요청 버튼을 먼저 눌러주세요.", visible: true });
     } else if (mailKey === "" || mailKey.length !== 6) {
-      alert("인증 키가 제대로 입력되지 않았습니다.");
+      setToast({ message: "인증 키가 제대로 입력되지 않았습니다.", visible: true });
     } else {
       try {
+        setLoding(true);
         let res: any = await postEmailVerify({
           email: email,
           randomCode: mailKey,
         });
 
         if (res.data.responseCode === 200) {
-          alert("회원가입 성공!");
+          setLoding(false);
+          setToast({ message: "회원가입 성공!", visible: true });
           setModalState({
             isOpen: true,
             type: "login",
           });
         } else if (res.data.responseCode === 401) {
+          setLoding(false);
           setAuthReqMessage(true);
           setVerifyMe(true);
-          alert("시간 초과로 인증코드를 다시 보냈습니다.");
+          setToast({ message: "시간 초과로 인증코드를 다시 보냈습니다.", visible: true });
         } else if (res.data.responseCode === 403) {
-          alert("인증 코드가 불일치합니다.");
+          setLoding(false);
+          setToast({ message: "인증 코드가 불일치합니다.", visible: true });
         } else if (res.data.responseCode === 404) {
-          alert("메일이 존재하지 않습니다. 다른 메일로 시도해주세요.");
+          setLoding(false);
+          setToast({ message: "메일이 존재하지 않습니다. 다른 메일로 시도해주세요.", visible: true });
           setModalState({
             isOpen: true,
             type: "signup",
@@ -90,24 +102,8 @@ const MailVerify: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (verifyMe && timer > 0) {
-      interval = setInterval(() => {
-        setTimer((prevTimer) => prevTimer - 1);
-      }, 1000);
-    } else if (timer === 0) {
-      setVerifyMe(false);
-      setTimer(300); // 타이머 초기화
-    }
-    return () => clearInterval(interval);
-  }, [verifyMe, timer]);
+  
 
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
-  };
 
   return (
     <SignupWrap>
@@ -116,7 +112,7 @@ const MailVerify: React.FC = () => {
           <Box $alignItems="center" $justifyContent="space-between">
             이메일 인증
             {verifyMe ? (
-              <Timer>{formatTime(timer)}</Timer>
+              <Timer setVerifyMe={setVerifyMe}/>
             ) : (
               <Button onClick={authRequest}>인증 요청</Button>
             )}
@@ -222,15 +218,7 @@ const Button = styled.div`
   cursor: pointer;
 `;
 
-const Timer = styled.div`
-  width: 80px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #e9e9e9;
-  background-color: #262523;
-  border: 1px solid #e9e9e9;
-`;
+
 
 const SignupBtn = styled.div`
   width: 100%;
