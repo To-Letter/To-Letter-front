@@ -4,25 +4,18 @@ import { OrbitControls } from "@react-three/drei";
 import { useCallback, useState, useContext, useEffect } from "react";
 import Index from "../component/account/Index";
 import { PopupProvider } from "../context/PopupContext";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { accountModalState } from "../recoil/accountAtom";
 import sessionStorageService from "../utils/sessionStorageService";
 
 function Home() {
-  const [modalState, setModalState] = useRecoilState(accountModalState);
-
-  const chairClick = useCallback(() => {
-    setModalState({
-      isOpen: true,
-      type: 'login', // 로그인 타입으로 설정
-    });
-  }, []);
+  const modalState = useRecoilValue(accountModalState);
 
   return (
     <>
       <PopupProvider>
         <Canvas shadows>
-          <Secen loginModalOpenHdr={chairClick} />
+          <Secen />
           {
             sessionStorageService.get("accessToken") === null
             && <OrbitControls

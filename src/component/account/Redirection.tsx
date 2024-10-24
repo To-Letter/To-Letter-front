@@ -2,11 +2,11 @@ import { useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { postKakaoToken } from "../../apis/controller/account";
 import ProgressBar from "../ProgreassBar";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { accountModalState } from "../../recoil/accountAtom";
 
 const Redirection = () => {
-  const [_modalState, setModalState] = useRecoilState(accountModalState);
+  const setModalState = useSetRecoilState(accountModalState);
   const code = new URL(window.location.href).searchParams.get("code");
   const navigate = useNavigate();
 

@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
 import { postEmailVerify, getEmialAuth } from "../../apis/controller/account";
 import ToastMessage from "../ToastMessage";
-import { useRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { accountModalState, emailState } from "../../recoil/accountAtom";
 import { loadingState } from "../../recoil/loadingAtom";
 import Timer from "./Timer";
@@ -14,9 +14,9 @@ interface defaultStyleProps {
 }
 
 const MailVerify: React.FC = () => {
-  const [email] = useRecoilState(emailState);
-  const [_modalState, setModalState] = useRecoilState(accountModalState);
-  const [_loading, setLoding] = useRecoilState(loadingState)
+  const email = useRecoilValue(emailState);
+  const setModalState = useSetRecoilState(accountModalState);
+  const setLoding = useSetRecoilState(loadingState)
   const [verifyMe, setVerifyMe] = useState<boolean>(false);
   const [mailKey, setMailKey] = useState<string>("");
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
