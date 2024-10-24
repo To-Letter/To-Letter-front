@@ -48,7 +48,7 @@ const MailVerify: React.FC = () => {
         setToast({ message: "이미 인증코드를 전송 하였습니다.", visible: true });
       } else if (res.data.responseCode === 403) {
         setLoding(false);
-        setToast({ message: "이미 이메일 인증을 완료했습니다. 로그인을 해주세요!", visible: true });
+        alert("이미 이메일 인증을 완료했습니다. 로그인을 해주세요!");
         setModalState({
           isOpen: true,
           type: "login",
@@ -75,7 +75,7 @@ const MailVerify: React.FC = () => {
 
         if (res.data.responseCode === 200) {
           setLoding(false);
-          setToast({ message: "회원가입 성공!", visible: true });
+          alert("회원가입 성공!");
           setModalState({
             isOpen: true,
             type: "login",
@@ -90,7 +90,7 @@ const MailVerify: React.FC = () => {
           setToast({ message: "인증 코드가 불일치합니다.", visible: true });
         } else if (res.data.responseCode === 404) {
           setLoding(false);
-          setToast({ message: "메일이 존재하지 않습니다. 다른 메일로 시도해주세요.", visible: true });
+          alert("메일이 존재하지 않습니다. 다른 메일로 시도해주세요.");
           setModalState({
             isOpen: true,
             type: "signup",
