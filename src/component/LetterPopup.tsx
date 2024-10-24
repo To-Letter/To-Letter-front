@@ -142,21 +142,19 @@ const StyledTextarea = styled.textarea`
   resize: none;
   overflow-y: auto;
   white-space: pre-wrap;
-  line-height: 34px;
-  padding-top: 4px;
+  line-height: 34.5px;
 
 
   // height @mediaquery
   @media (min-height: 501px) and (max-height: 800px) {
-    padding-top: 4px;
     font-size: 14px;
-    line-height: 24px;
+    line-height: 24.5px;
     height: 412px;
   }
 
   @media (min-height: 801px) and (max-height: 1280px) {
     font-size: 16px;
-    line-height: 34px;
+    line-height: 34.5px;
     height: 586px;
   }
 `;
