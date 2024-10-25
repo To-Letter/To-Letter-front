@@ -1,6 +1,14 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import styled from 'styled-components';
-import AddressModal from './AddressModal';
+import React, { ChangeEvent, useEffect, useState } from "react";
+import styled from "styled-components";
+import AddressModal from "./AddressModal";
+import {
+  postLocalSignup,
+  getNicknameConfirm,
+  getEmialConfirm,
+} from "../../apis/controller/account";
+import ToastMessage from "../ToastMessage";
+import { useRecoilState } from "recoil";
+import { accountModalState, emailState } from "../../recoil/accountAtom";
 
 interface loginFormI {
   nickName: string;
@@ -9,105 +17,210 @@ interface loginFormI {
   mailboxAddress: string;
 }
 interface defaultStyleProps {
-  $direction?: 'row' | 'column'
-  $justifyContent?: string
-  $alignItems?: string
+  $direction?: "row" | "column";
+  $justifyContent?: string;
+  $alignItems?: string;
 }
 
-interface props {
-  setMenuNumber: React.Dispatch<React.SetStateAction<number>>
-}
-
-const Signup = ({setMenuNumber}: props) => {
+const Signup = () => {
+  const [_email, setEmail] = useRecoilState(emailState);
+  const [_modalState, setModalState] = useRecoilState(accountModalState);
   const [signupForm, setSignupForm] = useState<loginFormI>({
     nickName: "",
     email: "",
     password: "",
-    mailboxAddress: ""
+    mailboxAddress: "",
   });
   const [openAddressModal, setOpenAddressModal] = useState<boolean>(false);
+  const [toast, setToast] = useState<{ message: string; visible: boolean }>({
+    message: "",
+    visible: false,
+  });
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+  const [isEmailChecked, setIsEmailChecked] = useState(false);
 
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
-    setSignupForm(prev => ({
+    setSignupForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
   const onChangheAddress = (address: string) => {
-    setSignupForm(prev => ({
+    setSignupForm((prev) => ({
       ...prev,
-      mailboxAddress: address
+      mailboxAddress: address,
     }));
   };
 
   const onClickOpenModal = () => {
-    console.log("whyrano...", openAddressModal)
-    setOpenAddressModal(prev => !prev)
-  }
+    setOpenAddressModal((prev) => !prev);
+  };
 
-  useEffect(()=>{}, [openAddressModal, signupForm.mailboxAddress])
-  
+  useEffect(() => {}, [openAddressModal, signupForm.mailboxAddress]);
 
-  const onClickSignup = () => {
-    if (signupForm.email === '') {
-      alert('이메일을 입력해주세요.');
-    } else if (signupForm.password === '') {
-      alert('비밀번호를 입력해주세요.');
-    } else if (signupForm.nickName === '') {
-      alert('닉네임을 입력해주세요.');
-    } else if (signupForm.mailboxAddress === '') {
-      alert('우편함 주소를 입력해주세요.');
-    }else{
-      setMenuNumber(4)
+  // 회원가입
+  const onClickSignup = async () => {
+    const conditions = [
+      {
+        check: signupForm.nickName !== "",
+        message: "닉네임을 입력해주세요.",
+      },
+      {
+        check: signupForm.email !== "",
+        message: "이메일을 입력해주세요.",
+      },
+      {
+        check: signupForm.password !== "",
+        message: "비밀번호를 입력해주세요.",
+      },
+      {
+        check: signupForm.mailboxAddress !== "",
+        message: "우편함 주소를 입력해주세요.",
+      },
+      {
+        check: isNicknameChecked,
+        message: "닉네임 중복 체크를 해주세요.",
+      },
+      {
+        check: isEmailChecked,
+        message: "이메일 중복 체크를 해주세요.",
+      },
+    ];
+
+    for (const condition of conditions) {
+      if (!condition.check) {
+        setToast({ message: condition.message, visible: true });
+        return;
+      }
     }
-    console.log("sign data: ", signupForm);
+
+    try {
+      let res: any = await postLocalSignup({
+        nickname: signupForm.nickName,
+        email: signupForm.email,
+        loginType: "localLogin",
+        password: signupForm.password,
+        address: signupForm.mailboxAddress,
+      });
+      if (res.data.responseCode === 200) {
+        setToast({
+          message: "이메일 인증 단계로 넘어갑니다.",
+          visible: true,
+        });
+        setEmail(signupForm.email);
+        setModalState({
+          isOpen: true,
+          type: "MailVerify",
+        });
+      }
+    } catch (err) {
+      setToast({ message: "입력란을 다시 확인해주세요.", visible: true });
+    }
+  };
+
+  // 닉네임 중복확인
+  const onClickConfirmNickname = async () => {
+    if (signupForm.nickName === "") {
+      setToast({ message: "닉네임을 입력해주세요.", visible: true });
+    } else {
+      try {
+        let res: any = await getNicknameConfirm({
+          nickname: signupForm.nickName,
+        });
+        if (res.data.responseCode === 200) {
+          setToast({ message: "사용 가능한 닉네임입니다.", visible: true });
+          setIsNicknameChecked(true);
+        } else if (res.data.responseCode === 401) {
+          setToast({ message: "중복된 닉네임입니다.", visible: true });
+          setIsNicknameChecked(false);
+        }
+      } catch (err: any) {
+        console.log("nickNameError : ", err);
+      }
+    }
+  };
+
+  // 이메일 중복확인
+  const onClickConfirmEmail = async () => {
+    if (signupForm.nickName === "") {
+      setToast({ message: "이메일을 입력해주세요.", visible: true });
+    } else {
+      try {
+        let res: any = await getEmialConfirm({
+          email: signupForm.email,
+        });
+        if (res.data.responseCode === 200) {
+          setToast({ message: "사용 가능한 이메일입니다.", visible: true });
+          setIsEmailChecked(true);
+        } else if (res.data.responseCode === 401) {
+          setToast({ message: "중복된 이메일입니다.", visible: true });
+          setIsNicknameChecked(false);
+        }
+      } catch (err: any) {
+        console.log("emailError : ", err);
+      }
+    }
   };
 
   return (
     <SignupWrap>
       <SignupContent>
         <FormLabel>
-          <Box $alignItems='center' $justifyContent='space-between'>
-          NickName
-          <Button>중복 체크</Button>
+          <Box $alignItems="center" $justifyContent="space-between">
+            NickName
+            <Button onClick={onClickConfirmNickname}>중복 체크</Button>
           </Box>
-          <FormInput type='text' name="nickName" onChange={onChangeFormHdr} />
+          <FormInput type="text" name="nickName" onChange={onChangeFormHdr} />
         </FormLabel>
         <FormLabel>
-          Email
-          <FormInput type='text' name="email" onChange={onChangeFormHdr} />
+          <Box $alignItems="center" $justifyContent="space-between">
+            Email
+            <Button onClick={onClickConfirmEmail}>중복 체크</Button>
+          </Box>
+          <FormInput type="text" name="email" onChange={onChangeFormHdr} />
         </FormLabel>
         <FormLabel>
           Password
-          <FormInput type='password' name="password" onChange={onChangeFormHdr} />
+          <FormInput
+            type="password"
+            name="password"
+            onChange={onChangeFormHdr}
+          />
         </FormLabel>
         <FormLabel>
-          <Box $alignItems='center' $justifyContent='space-between'>
-            <Box $justifyContent='flex-start' $alignItems='center'>
+          <Box $alignItems="center" $justifyContent="space-between">
+            <Box $justifyContent="flex-start" $alignItems="center">
               MailboxAddress
               <MailBoxSummry>
                 ?
                 <TipBox>
-                  To Letter가 우편 배송 기간을 계산할 때 사용하는 도로명 주소 값으로, 실제 자신의 주소를 입력하지 않아도 괜찮아요!
+                  To Letter가 우편 배송 기간을 계산할 때 사용하는 도로명 주소
+                  값으로, 실제 자신의 주소를 입력하지 않아도 괜찮아요!
                 </TipBox>
               </MailBoxSummry>
             </Box>
             <Button onClick={onClickOpenModal}>주소 입력</Button>
           </Box>
-          {
-            signupForm.mailboxAddress !== '' &&
-            <FormAddressInput>
-              {signupForm.mailboxAddress} 
-            </FormAddressInput>
-          }
-          
-          {
-            openAddressModal && <AddressModal onChangheAddress={onChangheAddress} onClickOpenModal={onClickOpenModal}/>
-          }
+          {signupForm.mailboxAddress !== "" && (
+            <FormAddressInput>{signupForm.mailboxAddress}</FormAddressInput>
+          )}
+
+          {openAddressModal && (
+            <AddressModal
+              onChangheAddress={onChangheAddress}
+              onClickOpenModal={onClickOpenModal}
+            />
+          )}
         </FormLabel>
       </SignupContent>
       <SignupBtn onClick={onClickSignup}>Signup</SignupBtn>
+      {toast.visible && (
+        <ToastMessage
+          message={toast.message}
+          onClose={() => setToast({ ...toast, visible: false })}
+        />
+      )}
     </SignupWrap>
   );
 };
@@ -116,11 +229,11 @@ export default Signup;
 
 export const Box = styled.div<defaultStyleProps>`
   display: flex;
-  flex-direction: ${({$direction}) => $direction};
-  justify-content: ${({$justifyContent}) => $justifyContent};
-  align-items: ${({$alignItems}) => $alignItems};
+  flex-direction: ${({ $direction }) => $direction};
+  justify-content: ${({ $justifyContent }) => $justifyContent};
+  align-items: ${({ $alignItems }) => $alignItems};
   position: relative;
-`
+`;
 
 const MailBoxSummry = styled.div`
   margin-left: 8px;
@@ -143,7 +256,7 @@ const MailBoxSummry = styled.div`
 const TipBox = styled.div`
   display: none;
   position: absolute;
-  bottom: -88px; 
+  bottom: -88px;
   left: 50%;
   transform: translateX(-50%);
   background-color: #333;
@@ -207,7 +320,7 @@ const FormInput = styled.input`
     color: #ffffff;
   }
   &:-webkit-autofill,
-  &:-webkit-autofill:hover, 
+  &:-webkit-autofill:hover,
   &:-webkit-autofill:focus {
     border: none;
     -webkit-text-fill-color: #ffffff !important;
@@ -253,19 +366,4 @@ const SignupBtn = styled.div`
   color: #e9e9e9;
   background-color: #262523;
   cursor: pointer;
-`;
-
-const SocialSignupWrap = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const FindAccountTextWrap = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  color: #e9e9e9;
 `;

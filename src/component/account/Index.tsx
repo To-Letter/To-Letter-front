@@ -1,37 +1,51 @@
 // Modal.tsx
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import Login from './Login';
-import Signup from './Signup';
-import KakaoSignup from './KakaoSignup';
-import MailVerify from './MailVerify';
+import React, { useState, useContext } from "react";
+import styled from "styled-components";
+import Login from "./Login";
+import Signup from "./Signup";
+import KakaoSignup from "./KakaoSignup";
+import MailVerify from "./MailVerify";
+import { accountModalState } from "../../recoil/accountAtom";
+import { useRecoilState } from "recoil";
 
 interface styleI {
-  $selected?: boolean
+  $selected?: boolean;
 }
 
-const Index: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const [menuNumber, setMenuNumber] = useState<number>(1);
+const Index: React.FC = () => {
+  const [modalState, setModalState] = useRecoilState(accountModalState);
 
   return (
-    <ModalOverlay onClick={onClose}>
+    <ModalOverlay>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <MenuWrap>
-          <MenuTitle 
-          $selected={menuNumber === 1}
-          onClick={()=>setMenuNumber(1)}>
+          <MenuTitle
+            $selected={modalState.type === 'login'}
+            onClick={() => {
+              setModalState({
+                isOpen: true,
+                type: 'login', // 로그인 타입으로 설정
+              });
+            }}
+          >
             Login
           </MenuTitle>
-          <MenuTitle 
-          $selected={menuNumber !== 1}
-          onClick={()=>setMenuNumber(2)}>
+          <MenuTitle
+            $selected={modalState.type !== 'login'}
+            onClick={() => {
+              setModalState({
+                isOpen: true,
+                type: 'signup', // 로그인 타입으로 설정
+              });
+            }}
+          >
             Signup
           </MenuTitle>
         </MenuWrap>
-        {menuNumber === 1 && <Login setMenuNumber={setMenuNumber}/>}
-        {menuNumber === 2 && <Signup setMenuNumber={setMenuNumber}/>}
-        {menuNumber === 3 && <KakaoSignup/>}
-        {menuNumber === 4 && <MailVerify />}
+        {modalState.type === 'login' && <Login />}
+        {modalState.type === 'signup' && <Signup />}
+        {modalState.type === 'kakaoSignup' && <KakaoSignup />}
+        {modalState.type === 'MailVerify' && <MailVerify />}
       </ModalContent>
     </ModalOverlay>
   );
@@ -65,7 +79,7 @@ const MenuWrap = styled.div`
   align-items: center;
   margin-bottom: 16px;
   margin: 32px 40px 8px 40px;
-`
+`;
 
 const MenuTitle = styled.div<styleI>`
   margin-right: 20px;
@@ -74,6 +88,6 @@ const MenuTitle = styled.div<styleI>`
   cursor: pointer;
   color: white;
   padding: 0 2px 4px 2px;
-  
-  ${({$selected})=> $selected && `border-bottom: 2px solid white;`}
-`
+
+  ${({ $selected }) => $selected && `border-bottom: 2px solid white;`}
+`;
