@@ -141,9 +141,18 @@ const StyledTextarea = styled.textarea`
   outline: none;
   resize: none;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.4);
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #9f9696;
+    border-radius: 6px;
+  }
   white-space: pre-wrap;
   line-height: 34.5px;
-
 
   // height @mediaquery
   @media (min-height: 501px) and (max-height: 800px) {
@@ -165,7 +174,7 @@ const ToInput = styled.div`
 
   // height @mediaquery
   @media (min-height: 501px) and (max-height: 800px) {
-  font-size: 16px;
+    font-size: 16px;
   }
 
   @media (min-height: 801px) and (max-height: 1280px) {
