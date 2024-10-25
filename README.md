@@ -1,4 +1,4 @@
-# 우편처럼 보내는 편지, TO Letter
+# 온라인을 통해 만나는 아날로그한 편지, TO. Letter
 + 
 + 
 + 
@@ -15,11 +15,11 @@
 ### 2. 개발 환경     
 + front: react, typescript
 + 버전 및 이슈관리 : Github, Github Issues, Github Project
-+ 서비스 배포 환경
-+ 협업 툴: [Github Wiki](https://github.com/To-Letter/To-Letter-front/wiki/To-Letter-Wiki)
++ 서비스 배포 환경 : -
++ 협업 툴: [Github Wiki](https://github.com/To-Letter/To-Letter-front/wiki)
 
 ### 3. 사용 기술
-+ threeJs
++ threeJs, recoil, styled-components
 
 <br/>
 
