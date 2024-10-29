@@ -6,7 +6,7 @@ import {
   getNicknameConfirm,
   postKakaoSignup,
 } from "../../apis/controller/account";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { accountModalState, emailState } from "../../recoil/accountAtom";
 
 interface kakaoLoginFormI {
@@ -33,7 +33,7 @@ const KakaoSignup: React.FC = () => {
     visible: false,
   });
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
-  const [_modalState, setModalState] = useRecoilState(accountModalState);
+  const setModalState = useSetRecoilState(accountModalState);
 
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
     setSignupForm((prev) => ({

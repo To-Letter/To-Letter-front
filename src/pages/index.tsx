@@ -1,31 +1,23 @@
 import { Canvas } from "@react-three/fiber";
 import Secen from "../component/Secen";
 import { OrbitControls } from "@react-three/drei";
-import { useCallback, useState, useContext, useEffect } from "react";
 import Index from "../component/account/Index";
 import { PopupProvider } from "../context/PopupContext";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { accountModalState } from "../recoil/accountAtom";
 import sessionStorageService from "../utils/sessionStorageService";
 import { myPageModalState } from "../recoil/myInfoAtom";
 import MyPage from "../component/myPage/MyPage";
 
 function Home() {
-  const [modalState, setModalState] = useRecoilState(accountModalState);
-  const [mypageModalState, setMyPageModalState] = useRecoilState(myPageModalState)
-
-  const chairClick = useCallback(() => {
-    setModalState({
-      isOpen: true,
-      type: 'login', // 로그인 타입으로 설정
-    });
-  }, []);
+  const modalState = useRecoilValue(accountModalState);
+  const mypageModalState = useRecoilValue(myPageModalState);
 
   return (
     <>
       <PopupProvider>
         <Canvas shadows>
-          <Secen loginModalOpenHdr={chairClick} />
+          <Secen />
           {
             sessionStorageService.get("accessToken") === null
             && <OrbitControls
