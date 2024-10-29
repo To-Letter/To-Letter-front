@@ -1,15 +1,17 @@
 import { Canvas } from "@react-three/fiber";
 import Secen from "../component/Secen";
 import { OrbitControls } from "@react-three/drei";
-import { useCallback, useState, useContext, useEffect } from "react";
 import Index from "../component/account/Index";
 import { PopupProvider } from "../context/PopupContext";
 import { useRecoilValue } from "recoil";
 import { accountModalState } from "../recoil/accountAtom";
 import sessionStorageService from "../utils/sessionStorageService";
+import { myPageModalState } from "../recoil/myInfoAtom";
+import MyPage from "../component/myPage/MyPage";
 
 function Home() {
   const modalState = useRecoilValue(accountModalState);
+  const mypageModalState = useRecoilValue(myPageModalState);
 
   return (
     <>
@@ -42,6 +44,7 @@ function Home() {
           }
         </Canvas>
         {modalState.isOpen && <Index/>}
+        {mypageModalState && <MyPage/>}
       </PopupProvider>
     </>
   );

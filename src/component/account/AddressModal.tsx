@@ -170,6 +170,7 @@ export const Text = styled.div<defaultStyleProps>`
   font-weight: ${({fontWeight}) => fontWeight};
   color: ${({color}) => color};
   margin: ${({margin}) => margin};
+  text-align: start;
 `
 
 const ModalContent = styled.div`

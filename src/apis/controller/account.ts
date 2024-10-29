@@ -70,10 +70,12 @@ export const getEmialAuth = async (email: { email: string }) => {
 export const postEmailVerify = async (emailData: {
   email: string;
   randomCode: string;
+  authType: string;
 }) => {
   const response: any = await sendApi.post(`/users/email/verify`, {
     email: emailData.email,
     randomCode: emailData.randomCode,
+    authType: emailData.authType
   });
 
   return response;
@@ -133,6 +135,18 @@ export const getLogout = async () => {
   const response: any = await sendApi.get(`/users/logout`);
 
   sessionStorageService.delete();
+
+  return response;
+};
+
+export const putUserInfoUpdate = async (updateData: {
+  address: string,
+  nickname: string
+}) => {
+  const response: any = await sendApi.put(`/users/update`,{
+    address: updateData.address,
+    nickname: updateData.nickname
+  } );
 
   return response;
 };
