@@ -7,9 +7,12 @@ import { PopupProvider } from "../context/PopupContext";
 import { useRecoilState } from "recoil";
 import { accountModalState } from "../recoil/accountAtom";
 import sessionStorageService from "../utils/sessionStorageService";
+import { myPageModalState } from "../recoil/myInfoAtom";
+import MyPage from "../component/myPage/MyPage";
 
 function Home() {
   const [modalState, setModalState] = useRecoilState(accountModalState);
+  const [mypageModalState, setMyPageModalState] = useRecoilState(myPageModalState)
 
   const chairClick = useCallback(() => {
     setModalState({
@@ -49,6 +52,7 @@ function Home() {
           }
         </Canvas>
         {modalState.isOpen && <Index/>}
+        {mypageModalState && <MyPage/>}
       </PopupProvider>
     </>
   );

@@ -1,12 +1,23 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { useLoader } from "@react-three/fiber";
+import { ThreeEvent, useLoader } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import * as THREE from "three";
+import { useSetRecoilState } from "recoil";
+import { myPageModalState } from "../../recoil/myInfoAtom";
+import sessionStorageService from "../../utils/sessionStorageService";
 
 const Bed = () => {
   // 모델 선언
   const bedglb = useLoader(GLTFLoader, "/models/bed.glb");
   const bedRef = useRef<THREE.Mesh>(null);
+  // 마이페이지 모달
+  const setMyPageModalState = useSetRecoilState(myPageModalState)
+
+  const onClickBed = () => {
+    if(sessionStorageService.get("accessToken") !== null){
+      setMyPageModalState(true);
+    }
+  }
 
   useEffect(() => {
     // 침대 모델 조정
@@ -34,6 +45,7 @@ const Bed = () => {
         rotation-y={-Math.PI / 2}
         scale={0.04}
         position={[-11.59, -4.955, 0.241]}
+        onClick={onClickBed}
       >
         <primitive object={bedglb.scene} />
       </mesh>

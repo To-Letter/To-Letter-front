@@ -4,6 +4,7 @@ import { postEmailVerify, getEmialAuth } from "../../apis/controller/account";
 import ToastMessage from "../ToastMessage";
 import { useRecoilState } from "recoil";
 import { accountModalState, emailState } from "../../recoil/accountAtom";
+import { emailVerifyAuthType } from "../../constants/emailVerify";
 import { loadingState } from "../../recoil/loadingAtom";
 import Timer from "./Timer";
 
@@ -71,6 +72,7 @@ const MailVerify: React.FC = () => {
         let res: any = await postEmailVerify({
           email: email,
           randomCode: mailKey,
+          authType: emailVerifyAuthType.signup
         });
 
         if (res.data.responseCode === 200) {
