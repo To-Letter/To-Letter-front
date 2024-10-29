@@ -20,16 +20,21 @@ export default function MyPage() {
           <MenuTitle 
           $selected={menuNumber === 1}
           onClick={()=>setMenuNumber(1)}>
-            My Infomation
+            My Info
           </MenuTitle>
           <MenuTitle 
-          $selected={menuNumber !== 1}
+          $selected={menuNumber === 2}
           onClick={()=>setMenuNumber(2)}>
-            Close Account
+            Account
+          </MenuTitle>
+          <MenuTitle 
+          $selected={menuNumber === 3}
+          onClick={()=>setMenuNumber(3)}>
+            End Letter
           </MenuTitle>
         </MenuWrap>
         {menuNumber === 1 && <MyInfo/>}
-        {menuNumber === 2 && <UserDelete />}
+        {menuNumber === 3 && <UserDelete />}
       </ModalContent>
     </ModalOverlay>
   );
