@@ -2,24 +2,58 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { IoIosMail } from "react-icons/io"; // 메일 버튼
 import { IoMdClose } from "react-icons/io";
+import ToastMessage from "../ToastMessage";
+import { sendLetter } from "../../apis/controller/letter";
+import { useUser } from "../../hook/useUser";
 
 interface LetterPopupProps {
   onClose: () => void;
   senderName: string;
 }
 
+interface LetterFormProps {
+  contents: string;
+  saveLetterCheck: boolean;
+  toUserNickname: string;
+}
+
 const LetterPopup: React.FC<LetterPopupProps> = ({ onClose, senderName }) => {
-  const [content, setContent] = useState("");
   const popupRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { myInfo, updateMyInfo } = useUser();
+  const [toast, setToast] = useState<{ message: string; visible: boolean }>({
+    message: "",
+    visible: false,
+  });
+  const [letterForm, setLetterForm] = useState<LetterFormProps>({
+    contents: "",
+    saveLetterCheck: false,
+    toUserNickname: myInfo.nickname,
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
-  };
-
-  const handleSubmit = () => {
-    console.log("Contents:", content);
+  const handleSubmit = async () => {
+    if (letterForm.contents === "") {
+      setToast({
+        message: "편지 내용을 입력해주세요.",
+        visible: true,
+      });
+    }
+    try {
+      let res: any = await sendLetter({
+        contents: letterForm.contents,
+        saveLetterCheck: letterForm.saveLetterCheck,
+        toUserNickname: letterForm.toUserNickname,
+      });
+      console.log("letter send : ", res);
+    } catch (error) {
+      console.error("sendLetter Error:", error);
+      setToast({
+        message: "편지 send api error",
+        visible: true,
+      });
+    }
+    console.log("Contents:", letterForm.contents);
     onClose();
   };
 
@@ -27,6 +61,14 @@ const LetterPopup: React.FC<LetterPopupProps> = ({ onClose, senderName }) => {
     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
       onClose();
     }
+  };
+
+  const onChangeContents = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const contents = event.target.value;
+    setLetterForm((prev) => ({
+      ...prev,
+      contents: contents,
+    }));
   };
 
   useEffect(() => {
@@ -67,9 +109,9 @@ const LetterPopup: React.FC<LetterPopupProps> = ({ onClose, senderName }) => {
       <PopupInner ref={innerRef}>
         <ToInput>To.</ToInput>
         <StyledTextarea
-          value={content}
+          value={letterForm.contents}
           ref={textareaRef}
-          onChange={handleChange}
+          onChange={onChangeContents}
           placeholder="Write your letter here..."
           spellCheck={false}
         />
@@ -78,6 +120,12 @@ const LetterPopup: React.FC<LetterPopupProps> = ({ onClose, senderName }) => {
       <SendButton onClick={handleSubmit}>
         <IoIosMail />
       </SendButton>
+      {toast.visible && (
+        <ToastMessage
+          message={toast.message}
+          onClose={() => setToast({ ...toast, visible: false })}
+        />
+      )}
     </Popup>
   );
 };
