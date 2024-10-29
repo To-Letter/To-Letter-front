@@ -25,10 +25,12 @@ axiosInterceptor.interceptors.response.use(
     return response;
   },
   async (error) => {
-    if (error.response.data.code === 1003 || error.response.data.code === 1002) {
+    if (error.response?.data.code === 1003 || error.response?.data.code === 1002) {
       alert('로그인 유지 시간이 만료되었습니다. 재로그인 해주세요.')
       sessionStorageService.delete();
       window.location.href = '/'
+    }else{
+      alert('토큰 만료/빈 토큰 외 에러, 차후 에러 페이지 이동 예정')
     }
   }
 );
