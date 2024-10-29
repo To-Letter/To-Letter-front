@@ -12,7 +12,7 @@ axiosInterceptor.interceptors.response.use(
     try {
       const accessToken = response.headers?.get("authorization");
       const refreshToken = response.headers?.get("refreshtoken");
-      console.log("intercepter: ", accessToken, refreshToken);
+   
     if(accessToken !== undefined && refreshToken !== undefined){
       sessionStorageService.set("accessToken", accessToken);
       sessionStorageService.set("refreshToken", refreshToken);
@@ -25,14 +25,10 @@ axiosInterceptor.interceptors.response.use(
     return response;
   },
   async (error) => {
-    try {
-      if (error.response.data.code === 1003 && error.response.data.code === 1002) {
-        alert('로그인 유지 시간이 만료되었습니다. 재로그인 해주세요.')
-        sessionStorageService.delete();
-        window.location.href = '/'
-      }
-    } catch (error) {
-      console.error("axiosInterceptor error")
+    if (error.response.data.code === 1003 || error.response.data.code === 1002) {
+      alert('로그인 유지 시간이 만료되었습니다. 재로그인 해주세요.')
+      sessionStorageService.delete();
+      window.location.href = '/'
     }
   }
 );
