@@ -5,6 +5,7 @@ interface myInfoI {
   address: string
   email: string
   nickname: string
+  loginType: string
 }
 
 // 로딩 상태를 관리하는 Recoil atom
@@ -19,6 +20,7 @@ export const myInfoState = atom<myInfoI>({
     isLogin: false,
     address: "",
     email: "",
-    nickname: ""
+    nickname: "",
+    loginType: "",
   }
 })
