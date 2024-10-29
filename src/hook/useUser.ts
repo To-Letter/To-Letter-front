@@ -34,13 +34,11 @@ export const useUser = () => {
         try {
           const result = await getMypage(); // 백엔드에서 유저 정보를 가져옴
           if(result.data.responseCode === 200){
-            console.log("\n네 정보 불러오기!", result.data.responseData)
             setMyInfo({
               isLogin: true, // 로그인 상태로 업데이트
               address: result.data.responseData.address,
               email: result.data.responseData.email,
-              nickname: result.data.responseData.nickname,
-              loginType: result.data.responseData.loginType
+              nickname: result.data.responseData.nickname
             });
           }else{
             alert('오류가 발생했습니다!');
