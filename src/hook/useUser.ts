@@ -58,7 +58,7 @@ export const useUser = () => {
     };
 
     fetchMyInfo();
-  }, [myInfo.isLogin, setMyInfo]);
+  }, [myInfo.isLogin, setMyInfo, myInfo.address, myInfo.nickname]);
 
   return {
     myInfo,

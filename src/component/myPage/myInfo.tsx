@@ -2,10 +2,10 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useUser } from '../../hook/useUser';
-import { Box, Button, FormAddressInput, MailBoxSummry, TipBox } from '../account/Signup';
+import { Box, FormAddressInput, MailBoxSummry, TipBox } from '../account/Signup';
 import AddressModal from '../account/AddressModal';
 import { useNavigate } from 'react-router-dom';
-import { getLogout, putUserInfoUpdate } from '../../apis/controller/account';
+import { getLogout, getNicknameConfirm, patchUserInfoUpdate } from '../../apis/controller/account';
 import { useSetRecoilState } from 'recoil';
 import { myPageModalState } from '../../recoil/myInfoAtom';
 import ToastMessage from '../ToastMessage';
@@ -23,13 +23,14 @@ interface styleI {
 
 export default function MyInfo() {
   const {myInfo,resetMyInfo, updateMyInfo} = useUser();
-  
+
   const navigate = useNavigate();
   const [myInfoForm, setmyInfoIForm] = useState<myInfoI>({
     email: myInfo.email,
     address: myInfo.address,
     nickname: myInfo.nickname
   })
+  const [nicknameCheck, setNicknameCheck] = useState<boolean>(false);
   const [openAddressModal, setOpenAddressModal] = useState<boolean>(false);
   const setMypageModalState = useSetRecoilState(myPageModalState)
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
@@ -40,15 +41,31 @@ export default function MyInfo() {
 
 
   const onClickUpdata = async () => {
-    const res = await putUserInfoUpdate({address: myInfoForm.address, nickname: myInfoForm.nickname});
-    if(res.data.responseCode === 200){
-      updateMyInfo({
-        address: myInfo.address,
-        nickname: myInfo.nickname
-      })
-      setToast({ message: "정상적으로 변경되었습니다.", visible: true });
+    if(myInfo.nickname !== myInfoForm.nickname){
+      if(nicknameCheck){
+          const res = await patchUserInfoUpdate({address: myInfoForm.address, nickname: myInfoForm.nickname});
+          if(res.data.responseCode === 200){
+          updateMyInfo({
+            address: myInfoForm.address,
+            nickname: myInfoForm.nickname
+          })
+          setToast({ message: "정상적으로 변경되었습니다.", visible: true });
+        }
+      }else{
+        setToast({ message: "닉네임 중복 체크를 진행해주세요.", visible: true });
+      }
+    }else{
+      const res = await patchUserInfoUpdate({address: myInfoForm.address, nickname: myInfoForm.nickname});
+      if(res.data.responseCode === 200){
+        updateMyInfo({
+          address: myInfoForm.address,
+          nickname: myInfoForm.nickname
+        })
+        setToast({ message: "정상적으로 변경되었습니다.", visible: true });
+      }
     }
   }
+
 
   const onClickLogout = async () => {
     try {
@@ -81,7 +98,28 @@ export default function MyInfo() {
     }))
   }
 
+  // 닉네임 중복확인
+  const onClickConfirmNickname = async () => {
+    if (myInfo.nickname !== myInfoForm.nickname) {
+      try {
+        let res: any = await getNicknameConfirm({
+          nickname: myInfoForm.nickname,
+        });
+        if (res.data.responseCode === 200) {
+          setToast({ message: "사용 가능한 닉네임입니다.", visible: true });
+          setNicknameCheck(true);
+        } else if (res.data.responseCode === 401) {
+          setToast({ message: "중복된 닉네임입니다.", visible: true });
+          setNicknameCheck(false);
+        }
+      } catch (err: any) {
+        console.log("nickNameError : ", err);
+      }
+    }
+  };
+
   useEffect(()=>{
+    console.log("useEffect", myInfo)
     setmyInfoIForm({
       email: myInfo.email,
       address: myInfo.address,
@@ -97,7 +135,10 @@ export default function MyInfo() {
             <FormInput type='text' name="email" value={myInfoForm.email} disabled $disabled={true}/>
           </FormLabel>
           <FormLabel>
-            nickname
+            <Box $alignItems="center" $justifyContent="space-between">
+              nickname
+              <Button onClick={onClickConfirmNickname} $disabled={myInfo.nickname===myInfoForm.nickname}>중복 체크</Button>
+            </Box>
             <FormInput type='text' name="nickname" value={myInfoForm.nickname} onChange={onChangeFormHdr} />
           </FormLabel>
           <FormLabel>
@@ -191,7 +232,7 @@ const FormInput = styled.input<styleI>`
     color: #ffffff;
   }
   &:-webkit-autofill,
-  &:-webkit-autofill:hover, 
+  &:-webkit-autofill:hover,
   &:-webkit-autofill:focus {
     border: none;
     -webkit-text-fill-color: #ffffff !important;
@@ -224,3 +265,25 @@ const SocialMyPageWrap = styled.div`
   justify-content: space-between;
   align-items: center;
 `
+const Button = styled.div<styleI>`
+  width: 80px;
+  border-radius: 1px;
+  border: 1px solid #e9e9e9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 0;
+  color: #e9e9e9;
+  background-color: #262523;
+  cursor: pointer;
+  ${({ $disabled }) =>{
+    if($disabled === true){
+      return`
+        color: #858585;
+        border: 1px solid #858585;
+        cursor: default;
+      ` 
+    }
+  }}
+  `
+;
