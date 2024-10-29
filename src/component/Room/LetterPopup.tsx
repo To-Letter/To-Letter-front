@@ -8,11 +8,6 @@ import { useUser } from "../../hook/useUser";
 import { useSetRecoilState } from "recoil";
 import { letterPopupState } from "../../recoil/letterPopupAtom";
 
-interface LetterPopupProps {
-  onClose: () => void;
-  senderName: string;
-}
-
 interface LetterFormProps {
   contents: string;
   saveLetterCheck: boolean;
@@ -31,10 +26,9 @@ const LetterPopup: React.FC = () => {
   const [letterForm, setLetterForm] = useState<LetterFormProps>({
     contents: "",
     saveLetterCheck: false,
-    toUserNickname: myInfo.nickname,
+    toUserNickname: "",
   });
   const setLetterPopupModal = useSetRecoilState(letterPopupState);
-
 
   const handleSubmit = async () => {
     if (letterForm.contents === "") {
@@ -50,6 +44,11 @@ const LetterPopup: React.FC = () => {
         toUserNickname: letterForm.toUserNickname,
       });
       console.log("letter send : ", res);
+      if (res.response.data === 200) {
+        console.log("letter 전송 완료");
+      } else if (res.response.data === 401) {
+        console.log("유저가 존재하지 않음");
+      }
     } catch (error) {
       console.error("sendLetter Error:", error);
       setToast({
@@ -75,7 +74,25 @@ const LetterPopup: React.FC = () => {
     }));
   };
 
+  const onChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const toUserNickname = event.target.value;
+    setLetterForm((prev) => ({
+      ...prev,
+      toUserNickname: toUserNickname,
+    }));
+  };
+
+  const handleNicknameKeyPress = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === "Enter" && textareaRef.current) {
+      event.preventDefault();
+      textareaRef.current.focus();
+    }
+  };
+
   useEffect(() => {
+    console.log("my info : ", myInfo);
     const handleWheel = (event: WheelEvent) => {
       if (textareaRef.current) {
         event.preventDefault();
@@ -107,11 +124,19 @@ const LetterPopup: React.FC = () => {
 
   return (
     <Popup ref={popupRef}>
-      <CloseButton onClick={()=> setLetterPopupModal(false)}>
+      <CloseButton onClick={() => setLetterPopupModal(false)}>
         <IoMdClose />
       </CloseButton>
       <PopupInner ref={innerRef}>
-        <ToInput>To.</ToInput>
+        <ToInputWrapper>
+          <ToInput>To.</ToInput>
+          <ToNickName
+            value={letterForm.toUserNickname}
+            onChange={onChangeNickname}
+            onKeyDown={handleNicknameKeyPress}
+            placeholder="받는이의 닉네임을 써주세요."
+          />
+        </ToInputWrapper>
         <StyledTextarea
           value={letterForm.contents}
           ref={textareaRef}
@@ -220,6 +245,11 @@ const StyledTextarea = styled.textarea`
   }
 `;
 
+const ToInputWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const ToInput = styled.div`
   font-family: "Handwriting", sans-serif;
   font-size: 16px;
@@ -232,6 +262,15 @@ const ToInput = styled.div`
   @media (min-height: 801px) and (max-height: 1280px) {
     font-size: 18px;
   }
+`;
+
+const ToNickName = styled.input`
+  font-family: "Handwriting", sans-serif;
+  font-size: 16px;
+  width: 210px;
+  border: none;
+  background: none;
+  outline: none;
 `;
 
 const SendButton = styled.button`

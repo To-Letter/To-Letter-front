@@ -6,7 +6,7 @@ export const sendLetter = async (sendLetterData: {
   saveLetterCheck: boolean;
   toUserNickname: string;
 }) => {
-  const response: any = await sendApi.post(`/letter/sned`, {
+  const response: any = await sendApi.post(`/letter/send`, {
     contents: sendLetterData.contents,
     saveLetterCheck: sendLetterData.saveLetterCheck,
     toUserNickname: sendLetterData.toUserNickname,
