@@ -4,6 +4,8 @@ import MyInfo from './myInfo';
 import UserDelete from './UserDelete';
 import { useSetRecoilState } from 'recoil';
 import { myPageModalState } from '../../recoil/myInfoAtom';
+import { useUser } from '../../hook/useUser';
+import ChangeAccount from './ChangeAccount';
 
 interface styleI {
   $selected?: boolean
@@ -12,6 +14,8 @@ interface styleI {
 export default function MyPage() {
   const [menuNumber, setMenuNumber] = useState<number>(1);
   const setMypageModalState = useSetRecoilState(myPageModalState);
+  const {myInfo} = useUser();
+ 
 
   return (
     <ModalOverlay onClick={()=> setMypageModalState(false)}>
@@ -22,11 +26,15 @@ export default function MyPage() {
           onClick={()=>setMenuNumber(1)}>
             My Info
           </MenuTitle>
-          <MenuTitle 
-          $selected={menuNumber === 2}
-          onClick={()=>setMenuNumber(2)}>
-            Account
-          </MenuTitle>
+          {
+            myInfo.loginType === 'localLogin' &&
+            <MenuTitle 
+            $selected={menuNumber === 2}
+            onClick={()=>setMenuNumber(2)}>
+              Account
+            </MenuTitle>
+          }
+          
           <MenuTitle 
           $selected={menuNumber === 3}
           onClick={()=>setMenuNumber(3)}>
@@ -34,6 +42,7 @@ export default function MyPage() {
           </MenuTitle>
         </MenuWrap>
         {menuNumber === 1 && <MyInfo/>}
+        {menuNumber === 2 && <ChangeAccount/>}
         {menuNumber === 3 && <UserDelete />}
       </ModalContent>
     </ModalOverlay>

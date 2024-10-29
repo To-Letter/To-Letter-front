@@ -58,7 +58,7 @@ export const getEmialConfirm = async (email: { email: string }) => {
   return response;
 };
 
-// 이메일 인증코드 발송
+// 회원가입을 위한 이메일 인증코드 발송
 export const getEmialAuth = async (email: { email: string }) => {
   const queryString = `?toEmail=${encodeURIComponent(email.email)}`;
   const response: any = await sendApi.get(`/users/email/auth${queryString}`);
@@ -77,6 +77,14 @@ export const postEmailVerify = async (emailData: {
     randomCode: emailData.randomCode,
     authType: emailData.authType
   });
+
+  return response;
+};
+
+// 비밀번호 변경을 위한 이메일 인증코드 발송
+export const getFindMailAuth = async (email: string) => {
+  const queryString = `?email=${encodeURIComponent(email)}`;
+  const response: any = await sendApi.get(`/users/find/sendEmail${queryString}`);
 
   return response;
 };
@@ -146,6 +154,19 @@ export const patchUserInfoUpdate = async (updateData: {
   const response: any = await sendApi.patch(`/users/update`,{
     address: updateData.address,
     nickname: updateData.nickname
+  } );
+
+  return response;
+};
+
+
+export const patchPasswordUpdate = async ({changePassword, email}: {
+  changePassword: string,
+  email: string
+}) => {
+  const response: any = await sendApi.patch(`/users/find/updatePW`,{
+    changePassword: changePassword,
+    email: email
   } );
 
   return response;

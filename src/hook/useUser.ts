@@ -9,6 +9,7 @@ interface MyInfoI {
   address: string;
   email: string;
   nickname: string;
+  loginType: "localLogin"|"kakaoLogin"
 }
 
 export const useUser = () => {
