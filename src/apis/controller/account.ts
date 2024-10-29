@@ -70,10 +70,12 @@ export const getEmialAuth = async (email: { email: string }) => {
 export const postEmailVerify = async (emailData: {
   email: string;
   randomCode: string;
+  authType: string;
 }) => {
   const response: any = await sendApi.post(`/users/email/verify`, {
     email: emailData.email,
     randomCode: emailData.randomCode,
+    authType: emailData.authType
   });
 
   return response;

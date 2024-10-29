@@ -38,7 +38,8 @@ export const useUser = () => {
               isLogin: true, // 로그인 상태로 업데이트
               address: result.data.responseData.address,
               email: result.data.responseData.email,
-              nickname: result.data.responseData.nickname
+              nickname: result.data.responseData.nickname,
+              loginType: result.data.responseData.loginType
             });
           }else{
             alert('오류가 발생했습니다!');
