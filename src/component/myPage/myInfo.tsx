@@ -22,7 +22,8 @@ interface styleI {
 }
 
 export default function MyInfo() {
-  const {myInfo, updateMyInfo} = useUser();
+  const {myInfo,resetMyInfo, updateMyInfo} = useUser();
+  
   const navigate = useNavigate();
   const [myInfoForm, setmyInfoIForm] = useState<myInfoI>({
     email: myInfo.email,
@@ -52,12 +53,7 @@ export default function MyInfo() {
   const onClickLogout = async () => {
     try {
       await getLogout();
-      updateMyInfo({
-        isLogin: false,
-        address: "",
-        email: "",
-        nickname: ""
-      })
+      resetMyInfo();
 
       setMypageModalState(false);
 
