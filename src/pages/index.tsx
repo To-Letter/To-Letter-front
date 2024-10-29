@@ -4,15 +4,18 @@ import { OrbitControls } from "@react-three/drei";
 import { useCallback, useState, useContext, useEffect } from "react";
 import Index from "../component/account/Index";
 import { PopupProvider } from "../context/PopupContext";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { accountModalState } from "../recoil/accountAtom";
 import sessionStorageService from "../utils/sessionStorageService";
 import { myPageModalState } from "../recoil/myInfoAtom";
 import MyPage from "../component/myPage/MyPage";
+import { letterPopupState } from "../recoil/letterPopupAtom";
+import LetterPopup from "../component/Room/LetterPopup";
 
 function Home() {
   const [modalState, setModalState] = useRecoilState(accountModalState);
   const [mypageModalState, setMyPageModalState] = useRecoilState(myPageModalState)
+  const letterPopupModal = useRecoilValue(letterPopupState)
 
   const chairClick = useCallback(() => {
     setModalState({
@@ -53,6 +56,7 @@ function Home() {
         </Canvas>
         {modalState.isOpen && <Index/>}
         {mypageModalState && <MyPage/>}
+        {letterPopupModal && <LetterPopup/>}
       </PopupProvider>
     </>
   );

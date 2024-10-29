@@ -5,6 +5,8 @@ import { IoMdClose } from "react-icons/io";
 import ToastMessage from "../ToastMessage";
 import { sendLetter } from "../../apis/controller/letter";
 import { useUser } from "../../hook/useUser";
+import { useSetRecoilState } from "recoil";
+import { letterPopupState } from "../../recoil/letterPopupAtom";
 
 interface LetterPopupProps {
   onClose: () => void;
@@ -17,7 +19,7 @@ interface LetterFormProps {
   toUserNickname: string;
 }
 
-const LetterPopup: React.FC<LetterPopupProps> = ({ onClose, senderName }) => {
+const LetterPopup: React.FC = () => {
   const popupRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -31,6 +33,8 @@ const LetterPopup: React.FC<LetterPopupProps> = ({ onClose, senderName }) => {
     saveLetterCheck: false,
     toUserNickname: myInfo.nickname,
   });
+  const setLetterPopupModal = useSetRecoilState(letterPopupState);
+
 
   const handleSubmit = async () => {
     if (letterForm.contents === "") {
@@ -54,12 +58,12 @@ const LetterPopup: React.FC<LetterPopupProps> = ({ onClose, senderName }) => {
       });
     }
     console.log("Contents:", letterForm.contents);
-    onClose();
+    setLetterPopupModal(false);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-      onClose();
+      setLetterPopupModal(false);
     }
   };
 
@@ -103,7 +107,7 @@ const LetterPopup: React.FC<LetterPopupProps> = ({ onClose, senderName }) => {
 
   return (
     <Popup ref={popupRef}>
-      <CloseButton onClick={onClose}>
+      <CloseButton onClick={()=> setLetterPopupModal(false)}>
         <IoMdClose />
       </CloseButton>
       <PopupInner ref={innerRef}>
@@ -116,7 +120,7 @@ const LetterPopup: React.FC<LetterPopupProps> = ({ onClose, senderName }) => {
           spellCheck={false}
         />
       </PopupInner>
-      <FromText>From. {senderName}</FromText>
+      <FromText>From. {myInfo.nickname}</FromText>
       <SendButton onClick={handleSubmit}>
         <IoIosMail />
       </SendButton>
