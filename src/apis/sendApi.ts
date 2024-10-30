@@ -38,10 +38,21 @@ export const sendApi = {
     );
   },
 
-  delete: (url: string) => {
+  patch: (url: string, req: object = {}) => {
+    return axiosInterceptor.patch(
+      AUTH_KEY.apiUrl + url,
+      req,
+      authorization()
+    );
+  },
+
+  delete: (url: string, req: object = {}) => {
     return axiosInterceptor.delete(
       AUTH_KEY.apiUrl + url,
-      authorization()
+      {
+        ...authorization(),
+        data: req,
+      }
     );
   },
 };

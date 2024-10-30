@@ -1,11 +1,11 @@
 import { atom } from 'recoil';
 
 interface myInfoI {
-  isLogin: boolean
-  address: string
-  email: string
-  nickname: string
-  loginType: string
+  isLogin: boolean;
+  address: string;
+  email: string;
+  nickname: string;
+  loginType: "localLogin"|"kakaoLogin"|""
 }
 
 // 로딩 상태를 관리하는 Recoil atom

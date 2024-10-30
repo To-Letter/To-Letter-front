@@ -3,6 +3,7 @@ import Home from "./pages";
 import Redirection from "./component/account/Redirection";
 import { RecoilRoot } from "recoil";
 import LoadingSpinner from "./component/LoadingSpinner";
+import DeleteRedirection from "./component/myPage/DeleteRedirection";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/users/kakao" element={<Redirection />} />
+          <Route path="/users/deleteKakao" element={<DeleteRedirection />} />
         </Routes>
       </BrowserRouter>
     </RecoilRoot>

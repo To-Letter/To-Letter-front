@@ -58,7 +58,7 @@ export const getEmialConfirm = async (email: { email: string }) => {
   return response;
 };
 
-// 이메일 인증코드 발송
+// 회원가입을 위한 이메일 인증코드 발송
 export const getEmialAuth = async (email: { email: string }) => {
   const queryString = `?toEmail=${encodeURIComponent(email.email)}`;
   const response: any = await sendApi.get(`/users/email/auth${queryString}`);
@@ -66,7 +66,14 @@ export const getEmialAuth = async (email: { email: string }) => {
   return response;
 };
 
-// 이메일 인증 요청
+
+/**
+ * 이메일 인증 요청(회원가입, 비밀번호 업데이트)
+ * @param email: string;
+ * @param randomCode: string;
+ * @param authType: string;
+ * @returns 
+ */
 export const postEmailVerify = async (emailData: {
   email: string;
   randomCode: string;
@@ -81,15 +88,35 @@ export const postEmailVerify = async (emailData: {
   return response;
 };
 
-// kakao Login Api Part
-// 인가코드 가져오기
+/**
+ * 비밀번호 변경을 위한 이메일 인증코드 발송
+ * @param email: 이메일 값
+ * @returns 결과
+ */
+export const getFindMailAuth = async (email: string) => {
+  const queryString = `?email=${encodeURIComponent(email)}`;
+  const response: any = await sendApi.get(`/users/find/sendEmail${queryString}`);
+
+  return response;
+};
+
+
+/**
+ * kakao Login Api Part - 인가코드 가져오기
+ * @returns 결과
+ */
 export const getKakaoURL = async () => {
   const response: any = await sendApi.get("/kakao/su/auth");
 
   return response;
 };
 
-// 인가코드 전달 및 카카오 정보로 1차 회원가입 진행
+
+/**
+ * 인가코드 전달 및 카카오 정보로 1차 회원가입 진행
+ * @param code: 전달 받은 코드 값
+ * @returns 결과
+ */
 export const postKakaoToken = async (code: { code: string }) => {
   const queryString = `?code=${encodeURIComponent(code.code)}`;
   try {
@@ -116,7 +143,14 @@ export const postKakaoToken = async (code: { code: string }) => {
   }
 };
 
-// 2차 유저정보 수집후 회원가입 진행
+
+/**
+ * 2차 유저정보 수집후 회원가입 진행
+ * @param address: 주소 값;
+ * @param email: 이메일 값;
+ * @param nickname: 닉넥임; 
+ * @returns 결과
+ */
 export const postKakaoSignup = async (kakaoSignupData: {
   address: string;
   email: string;
@@ -131,6 +165,10 @@ export const postKakaoSignup = async (kakaoSignupData: {
   return response;
 };
 
+/**
+ * 로그아웃 처리
+ * @returns 결과
+ */
 export const getLogout = async () => {
   const response: any = await sendApi.get(`/users/logout`);
 
@@ -139,14 +177,81 @@ export const getLogout = async () => {
   return response;
 };
 
-export const putUserInfoUpdate = async (updateData: {
+/**
+ * 유저 정보 업데이트
+ * @param address-주소 값
+ * @param nickname-닉네임
+ * @returns 결과
+ */
+export const patchUserInfoUpdate = async (updateData: {
   address: string,
   nickname: string
 }) => {
-  const response: any = await sendApi.put(`/users/update`,{
+  const response: any = await sendApi.patch(`/users/update`,{
     address: updateData.address,
     nickname: updateData.nickname
   } );
 
+  return response;
+};
+
+
+// 비밀번호 변경
+export const patchPasswordUpdate = async ({changePassword, email}: {
+  changePassword: string,
+  email: string
+}) => {
+  const response: any = await sendApi.patch(`/users/find/updatePW`,{
+    changePassword: changePassword,
+    email: email
+  } );
+
+  return response;
+};
+
+/**
+ * 로컬 회원 탈퇴
+ * @param email 로그인 이메일
+ * @param passworf 비밀번호
+ * @returns 결과값 200 성공/그외 실패
+ */
+export const deleteLocalUser = async (
+  {email, password}:
+  {
+    email: string,
+    password: string
+  }
+)=>{
+  const response: any = await sendApi.delete(`/users/delete`, {
+    email: email,
+    password: password
+  });
+  if (response.data.responseCode === 200) {
+    sessionStorageService.delete();
+  }
+  return response;
+}
+
+/**
+ * kakao 회원 탈퇴를 위한 인가코드 가져오기
+ * @returns 결과
+ */
+export const getKakaoDeleteURL = async () => {
+  const response: any = await sendApi.get("/kakao/su/auth/delete");
+
+  return response;
+};
+
+/**
+ * 인가코드 전달 받아  회원 탈퇴 진행
+ * @param code: 전달 받은 코드 값
+ * @returns 결과
+ */
+export const deleteKakaoUser = async ({code}: { code: string }) => {
+  const queryString = `?code=${encodeURIComponent(code)}`;
+  const response: any = await sendApi.delete(`/kakao/delete${queryString}`);
+  if (response.data.responseCode === 200) {
+    sessionStorageService.delete();
+  }
   return response;
 };

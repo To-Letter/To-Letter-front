@@ -13,7 +13,8 @@ const Bed = () => {
   // 마이페이지 모달
   const setMyPageModalState = useSetRecoilState(myPageModalState)
 
-  const onClickBed = () => {
+  const onClickBed = (event: ThreeEvent<MouseEvent>) => {
+    event.stopPropagation(); // 이벤트 전파 방지
     if(sessionStorageService.get("accessToken") !== null){
       setMyPageModalState(true);
     }

@@ -1,4 +1,4 @@
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil';
 import { useState, useEffect } from 'react';
 import { myInfoState } from '../recoil/myInfoAtom';
 import { loadingState } from '../recoil/loadingAtom';
@@ -9,10 +9,12 @@ interface MyInfoI {
   address: string;
   email: string;
   nickname: string;
+  loginType: "localLogin"|"kakaoLogin"
 }
 
 export const useUser = () => {
   const [myInfo, setMyInfo] = useRecoilState(myInfoState);
+  const resetMyInfoState = useResetRecoilState(myInfoState);
   const setIsLoading = useSetRecoilState(loadingState)
   const [error, setError] = useState<string | null>(null);
 
@@ -26,6 +28,10 @@ export const useUser = () => {
       ...updatedInfo
     }));
   };
+
+  const resetMyInfo = ()=>{
+    resetMyInfoState();
+  }
 
   useEffect(() => {
     setIsLoading(true);
@@ -53,10 +59,11 @@ export const useUser = () => {
     };
 
     fetchMyInfo();
-  }, [myInfo.isLogin, setMyInfo]);
+  }, [myInfo.isLogin, setMyInfo, myInfo.address, myInfo.nickname]);
 
   return {
     myInfo,
+    resetMyInfo,
     updateMyInfo,
     error
   };
