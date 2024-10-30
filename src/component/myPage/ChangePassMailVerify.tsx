@@ -98,7 +98,7 @@ export default function ChangePassMailVerify({setCheck}: props) {
       <Content>
         <FormLabel>
           <Box $alignItems="center" $justifyContent="space-between">
-            이메일 인증
+            비밀번호 변경을 위한 이메일 인증
             {verifyMe ? (
               <Timer setVerifyMe={setVerifyMe}/>
             ) : (
