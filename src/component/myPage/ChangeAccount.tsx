@@ -6,7 +6,7 @@ import ChangePassMailVerify from './ChangePassMailVerify';
 import ChangePassword from './ChangePassword';
 
 export default function ChangeAccount() {
-  const [check, setCheck] = useState<boolean>(true);
+  const [check, setCheck] = useState<boolean>(false);
 
   
   return (

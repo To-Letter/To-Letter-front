@@ -119,7 +119,6 @@ export default function MyInfo() {
   };
 
   useEffect(()=>{
-    console.log("useEffect", myInfo)
     setmyInfoIForm({
       email: myInfo.email,
       address: myInfo.address,

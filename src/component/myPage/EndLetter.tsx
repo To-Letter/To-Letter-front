@@ -1,35 +1,42 @@
 import React, { useMemo, useState } from 'react'
 import styled from 'styled-components';
+import { useUser } from '../../hook/useUser';
+import LocalUserDelete from './LocalUserDelete';
+import KakaoUserDelete from './KakaoUserDelete';
 
-export default function UserDelete() {
-  const [onClickCloseAccount, setOnClickCloseAccount] = useState<boolean>(false);
-
-  const message = useMemo(() => {
-    if(!onClickCloseAccount){
-      return {
-        message: "이제 편지는 안쓸래요!",
-        button: "버튼을 눌러 회원 탈퇴"
-      }
-    }else{
-      return {
-        message: `회원 탈퇴시에도\n상대방에게 보낸 편지는\n그대로 남게 되며\n삭제된 계정의 편지는\n복구 되지 않습니다.`,
-        button: "계정 삭제"
-      }
-    }
-  },[onClickCloseAccount]);
+export default function EndLetter() {
+  const [isClickCloseAccount, setIsClickCloseAccount] = useState<boolean>(false);
+  const {myInfo} = useUser();
 
   const onClickButton = () => {
-    if(onClickCloseAccount){
-      console.log("회원 삭제")
+    if(isClickCloseAccount){
+      if(myInfo.loginType === 'localLogin'){
+        
+      } 
     }else{
-      setOnClickCloseAccount(true);
+      setIsClickCloseAccount(true);
     }
   }
 
   return (
     <UserDeleteWrap>
-        <Text>{message.message}</Text>
-        <Button onClick={onClickButton}>{message.button}</Button>
+      {
+        !isClickCloseAccount && 
+        <>
+          <Text>이제 편지는 안쓸래요!</Text>
+          <Button onClick={onClickButton}>버튼을 눌러 회원 탈퇴</Button>
+        </>
+      }
+      {
+        isClickCloseAccount 
+        && myInfo.loginType === "localLogin"
+        &&<LocalUserDelete/>
+      }
+      {
+        isClickCloseAccount 
+        && myInfo.loginType === "kakaoLogin"
+        &&<KakaoUserDelete/>
+      }
     </UserDeleteWrap>
   )
 }
@@ -43,6 +50,7 @@ const UserDeleteWrap = styled.div`
   width: calc(100% - 80px);;
   margin: 12px 40px 20px 40px;
 `;
+
 
 
 const Text = styled.div`

@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import styled from 'styled-components';
 import MyInfo from './myInfo';
-import UserDelete from './UserDelete';
 import { useSetRecoilState } from 'recoil';
 import { myPageModalState } from '../../recoil/myInfoAtom';
 import { useUser } from '../../hook/useUser';
 import ChangeAccount from './ChangeAccount';
+import EndLetter from './EndLetter';
 
 interface styleI {
   $selected?: boolean
@@ -43,7 +43,7 @@ export default function MyPage() {
         </MenuWrap>
         {menuNumber === 1 && <MyInfo/>}
         {menuNumber === 2 && <ChangeAccount/>}
-        {menuNumber === 3 && <UserDelete />}
+        {menuNumber === 3 && <EndLetter />}
       </ModalContent>
     </ModalOverlay>
   );

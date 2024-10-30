@@ -46,10 +46,13 @@ export const sendApi = {
     );
   },
 
-  delete: (url: string) => {
+  delete: (url: string, req: object = {}) => {
     return axiosInterceptor.delete(
       AUTH_KEY.apiUrl + url,
-      authorization()
+      {
+        ...authorization(),
+        data: req,
+      }
     );
   },
 };
