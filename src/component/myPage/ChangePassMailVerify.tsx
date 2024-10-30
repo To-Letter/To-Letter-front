@@ -96,9 +96,10 @@ export default function ChangePassMailVerify({setCheck}: props) {
   return (
     <>
       <Content>
+        <Text>비밀번호 변경</Text>
         <FormLabel>
           <Box $alignItems="center" $justifyContent="space-between">
-            비밀번호 변경을 위한 이메일 인증
+            이메일 인증
             {verifyMe ? (
               <Timer setVerifyMe={setVerifyMe}/>
             ) : (
@@ -130,15 +131,12 @@ export const Box = styled.div<defaultStyleProps>`
   position: relative;
 `;
 
-export const SignupWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  width: calc(100% - 80px);
-  margin: 12px 40px 20px 40px;
-`;
-
+const Text = styled.div`
+  font-size: 20px;
+  color: #cecece;
+  line-height: 24px;
+  text-align: center; /* 텍스트 가운데 정렬 */
+`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
