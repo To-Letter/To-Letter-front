@@ -2,34 +2,97 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { IoIosMail } from "react-icons/io"; // 메일 버튼
 import { IoMdClose } from "react-icons/io";
+import ToastMessage from "../ToastMessage";
+import { sendLetter } from "../../apis/controller/letter";
+import { useUser } from "../../hook/useUser";
+import { useSetRecoilState } from "recoil";
+import { letterPopupState } from "../../recoil/letterPopupAtom";
 
-interface LetterPopupProps {
-  onClose: () => void;
-  senderName: string;
+interface LetterFormProps {
+  contents: string;
+  saveLetterCheck: boolean;
+  toUserNickname: string;
 }
 
-const LetterPopup: React.FC<LetterPopupProps> = ({ onClose, senderName }) => {
-  const [content, setContent] = useState("");
+const LetterPopup: React.FC = () => {
   const popupRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { myInfo, updateMyInfo } = useUser();
+  const [toast, setToast] = useState<{ message: string; visible: boolean }>({
+    message: "",
+    visible: false,
+  });
+  const [letterForm, setLetterForm] = useState<LetterFormProps>({
+    contents: "",
+    saveLetterCheck: false,
+    toUserNickname: "",
+  });
+  const setLetterPopupModal = useSetRecoilState(letterPopupState);
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
-  };
-
-  const handleSubmit = () => {
-    console.log("Contents:", content);
-    onClose();
+  const handleSubmit = async () => {
+    if (letterForm.contents === "") {
+      setToast({
+        message: "편지 내용을 입력해주세요.",
+        visible: true,
+      });
+    }
+    try {
+      let res: any = await sendLetter({
+        contents: letterForm.contents,
+        saveLetterCheck: letterForm.saveLetterCheck,
+        toUserNickname: letterForm.toUserNickname,
+      });
+      console.log("letter send : ", res);
+      if (res.response.data === 200) {
+        console.log("letter 전송 완료");
+      } else if (res.response.data === 401) {
+        console.log("유저가 존재하지 않음");
+      }
+    } catch (error) {
+      console.error("sendLetter Error:", error);
+      setToast({
+        message: "편지 send api error",
+        visible: true,
+      });
+    }
+    console.log("Contents:", letterForm.contents);
+    setLetterPopupModal(false);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-      onClose();
+      setLetterPopupModal(false);
+    }
+  };
+
+  const onChangeContents = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const contents = event.target.value;
+    setLetterForm((prev) => ({
+      ...prev,
+      contents: contents,
+    }));
+  };
+
+  const onChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const toUserNickname = event.target.value;
+    setLetterForm((prev) => ({
+      ...prev,
+      toUserNickname: toUserNickname,
+    }));
+  };
+
+  const handleNicknameKeyPress = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === "Enter" && textareaRef.current) {
+      event.preventDefault();
+      textareaRef.current.focus();
     }
   };
 
   useEffect(() => {
+    console.log("my info : ", myInfo);
     const handleWheel = (event: WheelEvent) => {
       if (textareaRef.current) {
         event.preventDefault();
@@ -61,23 +124,37 @@ const LetterPopup: React.FC<LetterPopupProps> = ({ onClose, senderName }) => {
 
   return (
     <Popup ref={popupRef}>
-      <CloseButton onClick={onClose}>
+      <CloseButton onClick={() => setLetterPopupModal(false)}>
         <IoMdClose />
       </CloseButton>
       <PopupInner ref={innerRef}>
-        <ToInput>To.</ToInput>
+        <ToInputWrapper>
+          <ToInput>To.</ToInput>
+          <ToNickName
+            value={letterForm.toUserNickname}
+            onChange={onChangeNickname}
+            onKeyDown={handleNicknameKeyPress}
+            placeholder="받는이의 닉네임을 써주세요."
+          />
+        </ToInputWrapper>
         <StyledTextarea
-          value={content}
+          value={letterForm.contents}
           ref={textareaRef}
-          onChange={handleChange}
+          onChange={onChangeContents}
           placeholder="Write your letter here..."
           spellCheck={false}
         />
       </PopupInner>
-      <FromText>From. {senderName}</FromText>
+      <FromText>From. {myInfo.nickname}</FromText>
       <SendButton onClick={handleSubmit}>
         <IoIosMail />
       </SendButton>
+      {toast.visible && (
+        <ToastMessage
+          message={toast.message}
+          onClose={() => setToast({ ...toast, visible: false })}
+        />
+      )}
     </Popup>
   );
 };
@@ -168,6 +245,11 @@ const StyledTextarea = styled.textarea`
   }
 `;
 
+const ToInputWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const ToInput = styled.div`
   font-family: "Handwriting", sans-serif;
   font-size: 16px;
@@ -180,6 +262,15 @@ const ToInput = styled.div`
   @media (min-height: 801px) and (max-height: 1280px) {
     font-size: 18px;
   }
+`;
+
+const ToNickName = styled.input`
+  font-family: "Handwriting", sans-serif;
+  font-size: 16px;
+  width: 210px;
+  border: none;
+  background: none;
+  outline: none;
 `;
 
 const SendButton = styled.button`
