@@ -1,7 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import Secen from "../component/Secen";
 import { OrbitControls } from "@react-three/drei";
-import { useCallback, useState, useContext, useEffect } from "react";
 import Index from "../component/account/Index";
 import { PopupProvider } from "../context/PopupContext";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -28,7 +27,7 @@ function Home() {
     <>
       <PopupProvider>
         <Canvas shadows>
-          <Secen loginModalOpenHdr={chairClick} />
+          <Secen />
           {
             sessionStorageService.get("accessToken") === null
             && <OrbitControls
