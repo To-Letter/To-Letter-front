@@ -48,7 +48,7 @@ export default function ChangePassword() {
   };
 
   const submitChangePass = async () => {
-    if(checkSamePass){
+    if(checkSamePass && firstPass.length!==0 && secondPass.length !==0){
       setLoding(true);
       const res:any = await patchPasswordUpdate({
         changePassword: firstPass,
@@ -64,7 +64,7 @@ export default function ChangePassword() {
         alert('등록된 유저가 없습니다.');
       }
     }else{
-      setToast({ message: "두 비밀번호가 동일하지 않습니다.", visible: true });
+      setToast({ message: "두 비밀번호가 동일하지 않거나 변경 비밀번호가 입력되지 않았습니다.", visible: true });
     }
     
   }
