@@ -46,7 +46,7 @@ const LetterPopup: React.FC = () => {
       console.log("letter send : ", res);
       if (res.response.data === 200) {
         console.log("letter 전송 완료");
-      } else if (res.response.data === 401) {
+      } else if (res.response.data === 403) {
         console.log("유저가 존재하지 않음");
       }
     } catch (error) {
