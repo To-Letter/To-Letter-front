@@ -7,7 +7,7 @@ import {
   getEmialConfirm,
 } from "../../apis/controller/account";
 import ToastMessage from "../ToastMessage";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { accountModalState, emailState } from "../../recoil/accountAtom";
 
 interface loginFormI {
@@ -23,8 +23,8 @@ interface defaultStyleProps {
 }
 
 const Signup = () => {
-  const [_email, setEmail] = useRecoilState(emailState);
-  const [_modalState, setModalState] = useRecoilState(accountModalState);
+  const setEmail = useSetRecoilState(emailState);
+  const setModalState = useSetRecoilState(accountModalState);
   const [signupForm, setSignupForm] = useState<loginFormI>({
     nickName: "",
     email: "",

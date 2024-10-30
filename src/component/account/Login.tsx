@@ -1,9 +1,11 @@
 import React, { ChangeEvent, useState } from "react";
 import styled from "styled-components";
 import { getKakaoURL, postLocalLogin } from "../../apis/controller/account";
-import { useRecoilState, useResetRecoilState } from "recoil";
+import { useResetRecoilState,useSetRecoilState } from "recoil";
 import { accountModalState, emailState } from "../../recoil/accountAtom";
 import { myInfoState } from "../../recoil/myInfoAtom";
+import { loadingState } from "../../recoil/loadingAtom";
+
 
 interface loginFormI {
   email: string;
@@ -11,8 +13,9 @@ interface loginFormI {
 }
 
 const Login = () => {
-  const [_email, setEmail] = useRecoilState(emailState);
-  const [_modalState, setModalState] = useRecoilState(accountModalState);
+  const setEmail = useSetRecoilState(emailState);
+  const setLoadingState = useSetRecoilState(loadingState)
+  const setModalState= useSetRecoilState(accountModalState);
   const [loginForm, setLoginForm] = useState<loginFormI>({
     email: "",
     password: "",
@@ -66,6 +69,7 @@ const Login = () => {
   const onClickKakaoLogin = async () => {
     //기존에 저장되어있는 유저 정보 삭제
     resetMyInfo();
+    setLoadingState(true);
     try {
       let res: any = await getKakaoURL();
       if (res.data.responseCode === 200) {
