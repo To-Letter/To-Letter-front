@@ -54,12 +54,12 @@ const Login = () => {
           isOpen: true,
           type: "MailVerify",
         })
-      }else if(res.data.responseCode === 400) {
+      }else if(res.data.responseCode === 401 || res.data.responseCode === 400) {
         // 걍 틀림
-        alert("이메일 혹은 비밀번호를 잘 못 입력하셨습니다.");
+        alert("이메일 혹은 비밀번호를 잘못입력하셨습니다.");
       }
     } catch (error) {
-      alert("이메일 혹은 비밀번호를 잘 못 입력하셨습니다.");
+      alert("이메일 혹은 비밀번호를 잘못입력하셨습니다.");
     }
   };
 
