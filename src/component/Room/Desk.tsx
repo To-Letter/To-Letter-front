@@ -1,15 +1,13 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useLoader, useThree, ThreeEvent } from "@react-three/fiber";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
 import Calender from "./Calender";
 import Bookshelf from "./Bookshelf";
-import { Html } from "@react-three/drei";
-import LetterPopup from "./LetterPopup";
 import sessionStorageService from "../../utils/sessionStorageService";
 import { useSetRecoilState } from "recoil";
-import { letterPopupState } from "../../recoil/letterPopupAtom";
+import { toUserNicknameModalState } from "../../recoil/toUserNicknameAtom";
 
 // 연필통 색상 수정
 const meshColors: { [key: string]: string } = {
@@ -42,7 +40,7 @@ const Desk = () => {
   const deskRef = useRef<THREE.Mesh>(null);
   const pencilRef = useRef<THREE.Mesh>(null);
   const { gl } = useThree();
-  const setLetterPopupModal = useSetRecoilState(letterPopupState);
+  const setToUserNicknameModal = useSetRecoilState(toUserNicknameModalState);
 
   // 모델 수정
   useEffect(() => {
@@ -94,9 +92,9 @@ const Desk = () => {
 
   const handleClick = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation(); // 이벤트 전파 방지
-    if(sessionStorageService.get("accessToken") !== null){
-      console.log("로그인 되어있어요!")
-      setLetterPopupModal(true);
+    if (sessionStorageService.get("accessToken") !== null) {
+      console.log("로그인 되어있어요!");
+      setToUserNicknameModal(true);
     }
   };
 
