@@ -3,19 +3,21 @@ import Secen from "../component/Secen";
 import { OrbitControls } from "@react-three/drei";
 import Index from "../component/account/Index";
 import { PopupProvider } from "../context/PopupContext";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { accountModalState } from "../recoil/accountAtom";
 import sessionStorageService from "../utils/sessionStorageService";
 import { myPageModalState } from "../recoil/myInfoAtom";
 import MyPage from "../component/myPage/MyPage";
 import { letterPopupState } from "../recoil/letterPopupAtom";
-import LetterPopup from "../component/Room/LetterPopup";
+import LetterPopup from "../component/letter/LetterPopup";
+import { toUserNicknameModalState } from "../recoil/toUserNicknameAtom";
+import ToUserModal from "../component/letter/ToUserModal";
 
 function Home() {
-  const [modalState, setModalState] = useRecoilState(accountModalState);
-  const [mypageModalState, setMyPageModalState] =
-    useRecoilState(myPageModalState);
+  const modalState = useRecoilValue(accountModalState);
+  const mypageModalState = useRecoilValue(myPageModalState);
   const letterPopupModal = useRecoilValue(letterPopupState);
+  const toUserNicknameModal = useRecoilValue(toUserNicknameModalState);
 
   return (
     <>
@@ -48,6 +50,7 @@ function Home() {
         {modalState.isOpen && <Index />}
         {mypageModalState && <MyPage />}
         {letterPopupModal && <LetterPopup />}
+        {toUserNicknameModal && <ToUserModal />}
       </PopupProvider>
     </>
   );

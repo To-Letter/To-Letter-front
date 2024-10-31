@@ -5,8 +5,9 @@ import { IoMdClose } from "react-icons/io";
 import ToastMessage from "../ToastMessage";
 import { sendLetter } from "../../apis/controller/letter";
 import { useUser } from "../../hook/useUser";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { letterPopupState } from "../../recoil/letterPopupAtom";
+import { toUserNicknameState } from "../../recoil/toUserNicknameAtom";
 
 interface LetterFormProps {
   contents: string;
@@ -29,6 +30,7 @@ const LetterPopup: React.FC = () => {
     toUserNickname: "",
   });
   const setLetterPopupModal = useSetRecoilState(letterPopupState);
+  const toUserNickname = useRecoilValue(toUserNicknameState);
 
   const handleSubmit = async () => {
     if (letterForm.contents === "") {
@@ -129,12 +131,11 @@ const LetterPopup: React.FC = () => {
       </CloseButton>
       <PopupInner ref={innerRef}>
         <ToInputWrapper>
-          <ToInput>To.</ToInput>
+          <ToInput>To. {toUserNickname}</ToInput>
           <ToNickName
             value={letterForm.toUserNickname}
             onChange={onChangeNickname}
             onKeyDown={handleNicknameKeyPress}
-            placeholder="받는이의 닉네임을 써주세요."
           />
         </ToInputWrapper>
         <StyledTextarea
