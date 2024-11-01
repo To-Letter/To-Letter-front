@@ -18,7 +18,7 @@ export default function MyPage() {
  
 
   return (
-    <ModalOverlay onClick={()=> setMypageModalState(false)}>
+    <ModalOverlay>
       <ModalContent onClick={(e: { stopPropagation: () => any; }) => e.stopPropagation()}>
         <MenuWrap>
           <MenuTitle 
@@ -40,6 +40,7 @@ export default function MyPage() {
           onClick={()=>setMenuNumber(3)}>
             End Letter
           </MenuTitle>
+          <Exit onClick={()=> setMypageModalState(false)}>X</Exit>
         </MenuWrap>
         {menuNumber === 1 && <MyInfo/>}
         {menuNumber === 2 && <ChangeAccount/>}
@@ -67,6 +68,7 @@ const ModalContent = styled.div`
   width: 400px;
   max-width: 100%;
   box-shadow: 1px 1px 1px #0000005c;
+  position: relative;
 `;
 
 
@@ -88,3 +90,14 @@ padding: 0 2px 4px 2px;
 
 ${({$selected})=> $selected && `border-bottom: 2px solid white;`}
 `;
+
+const Exit = styled.div`
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  padding: 4px 12px;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  cursor:pointer;
+`
