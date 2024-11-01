@@ -206,6 +206,9 @@ export const patchPasswordUpdate = async ({changePassword, email}: {
     email: email
   } );
 
+  if (response.data.responseCode === 200) {
+    sessionStorageService.delete();
+  }
   return response;
 };
 

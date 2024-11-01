@@ -6,6 +6,8 @@ import { useResetRecoilState, useSetRecoilState } from 'recoil';
 import {patchPasswordUpdate } from '../../apis/controller/account';
 import { useUser } from '../../hook/useUser';
 import { myPageModalState } from '../../recoil/myInfoAtom';
+import { accountModalState } from '../../recoil/accountAtom';
+import { useNavigate } from 'react-router-dom';
 
 interface defaultStyleProps {
   $direction?: "row" | "column";
@@ -28,6 +30,8 @@ export default function ChangePassword() {
     message: "",
     visible: false,
   });
+  const setAccountModal = useSetRecoilState(accountModalState)
+  const navigate = useNavigate();
 
   const onChangeFistPass = (e: ChangeEvent<HTMLInputElement>) => {
     setFirstPass(e.target.value);
@@ -56,8 +60,13 @@ export default function ChangePassword() {
       })
       if (res.data.responseCode === 200) {
         setLoding(false);
-        alert('비밀번호 변경 성공!')
-        offMypage()
+        alert('비밀번호 변경 성공!');
+        offMypage();
+        setAccountModal({
+          isOpen:true,
+          type:"login"
+        })
+        navigate('/');
       } else {
         console.log("res", res)
         setLoding(false);
