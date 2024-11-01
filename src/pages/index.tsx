@@ -8,16 +8,21 @@ import { accountModalState } from "../recoil/accountAtom";
 import sessionStorageService from "../utils/sessionStorageService";
 import { myPageModalState } from "../recoil/myInfoAtom";
 import MyPage from "../component/myPage/MyPage";
-import { letterPopupState } from "../recoil/letterPopupAtom";
+import {
+  letterPopupState,
+  sendLetterModalState,
+} from "../recoil/letterPopupAtom";
 import LetterPopup from "../component/letter/LetterPopup";
 import { toUserNicknameModalState } from "../recoil/toUserNicknameAtom";
 import ToUserModal from "../component/letter/ToUserModal";
+import SendLetterModal from "../component/letter/SendLetterModal";
 
 function Home() {
   const modalState = useRecoilValue(accountModalState);
   const mypageModalState = useRecoilValue(myPageModalState);
   const letterPopupModal = useRecoilValue(letterPopupState);
   const toUserNicknameModal = useRecoilValue(toUserNicknameModalState);
+  const sendLetterModal = useRecoilValue(sendLetterModalState);
 
   return (
     <>
@@ -49,8 +54,9 @@ function Home() {
         </Canvas>
         {modalState.isOpen && <Index />}
         {mypageModalState && <MyPage />}
-        {letterPopupModal && <LetterPopup />}
         {toUserNicknameModal && <ToUserModal />}
+        {letterPopupModal && <LetterPopup />}
+        {sendLetterModal && <SendLetterModal />}
       </PopupProvider>
     </>
   );

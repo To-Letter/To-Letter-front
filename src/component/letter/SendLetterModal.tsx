@@ -1,8 +1,17 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import ToastMessage from "../ToastMessage";
-import { useSetRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
 import { loadingState } from "../../recoil/loadingAtom";
+import {
+  letterContentState,
+  sendLetterModalState,
+} from "../../recoil/letterPopupAtom";
+import { sendLetter } from "../../apis/controller/letter";
+import {
+  toUserNicknameState,
+  toUserNicknameModalState,
+} from "../../recoil/toUserNicknameAtom";
 
 interface defaultStyleProps {
   $direction?: "row" | "column";
@@ -12,15 +21,48 @@ interface defaultStyleProps {
 
 const SendLetterModal: React.FC = () => {
   const setLoding = useSetRecoilState(loadingState);
+  const setSendLetterModal = useSetRecoilState(sendLetterModalState);
+  const setToUserNicknameModal = useSetRecoilState(toUserNicknameModalState);
+  const [letterContent, setLetterContent] = useRecoilState(letterContentState);
+  const toUserNickname = useRecoilValue(toUserNicknameState);
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: "",
     visible: false,
   });
-
   const [checked, setChecked] = useState(false);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
+  };
+
+  const letterSend = async () => {
+    if (letterContent === "") {
+      setToast({
+        message: "편지 내용을 입력해주세요.",
+        visible: true,
+      });
+    }
+    setLoding(true);
+    try {
+      let res: any = await sendLetter({
+        contents: letterContent,
+        saveLetterCheck: checked,
+        toUserNickname: toUserNickname,
+      });
+      if (res.data.responseCode === 200) {
+        setSendLetterModal(false);
+        setLetterContent(""); // 내용 초기화
+        setLoding(false);
+        alert("편지 보내기를 완료하였습니다!");
+      } else if (res.data.responseCode === 403) {
+        setSendLetterModal(false);
+        setToUserNicknameModal(true);
+        setLoding(false);
+        alert("존재하지 않는 유저입니다. 다시 닉네임을 확인해주세요.");
+      }
+    } catch (error) {
+      console.error("sendLetter Error:", error);
+    }
   };
 
   return (
@@ -52,7 +94,7 @@ const SendLetterModal: React.FC = () => {
             </ContentLabel>
           </SendLetterModalContent>
           <BtnWrap>
-            <SendBtn>예</SendBtn>
+            <SendBtn onClick={letterSend}>예</SendBtn>
             <SendBtn>아니요</SendBtn>
           </BtnWrap>
           {toast.visible && (

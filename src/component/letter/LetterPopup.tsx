@@ -3,17 +3,14 @@ import styled from "styled-components";
 import { IoIosMail } from "react-icons/io"; // 메일 버튼
 import { IoMdClose } from "react-icons/io";
 import ToastMessage from "../ToastMessage";
-import { sendLetter } from "../../apis/controller/letter";
 import { useUser } from "../../hook/useUser";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { letterPopupState } from "../../recoil/letterPopupAtom";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  letterContentState,
+  letterPopupState,
+  sendLetterModalState,
+} from "../../recoil/letterPopupAtom";
 import { toUserNicknameState } from "../../recoil/toUserNicknameAtom";
-
-interface LetterFormProps {
-  contents: string;
-  saveLetterCheck: boolean;
-  toUserNickname: string;
-}
 
 const LetterPopup: React.FC = () => {
   const popupRef = useRef<HTMLDivElement>(null);
@@ -24,43 +21,11 @@ const LetterPopup: React.FC = () => {
     message: "",
     visible: false,
   });
-  const [letterForm, setLetterForm] = useState<LetterFormProps>({
-    contents: "",
-    saveLetterCheck: false,
-    toUserNickname: "",
-  });
   const setLetterPopupModal = useSetRecoilState(letterPopupState);
-  const toUserNickname = useRecoilValue(toUserNicknameState);
+  const setSendLetterModal = useSetRecoilState(sendLetterModalState);
 
-  const handleSubmit = async () => {
-    if (letterForm.contents === "") {
-      setToast({
-        message: "편지 내용을 입력해주세요.",
-        visible: true,
-      });
-    }
-    try {
-      let res: any = await sendLetter({
-        contents: letterForm.contents,
-        saveLetterCheck: letterForm.saveLetterCheck,
-        toUserNickname: letterForm.toUserNickname,
-      });
-      console.log("letter send : ", res);
-      if (res.response.data === 200) {
-        console.log("letter 전송 완료");
-      } else if (res.response.data === 403) {
-        console.log("유저가 존재하지 않음");
-      }
-    } catch (error) {
-      console.error("sendLetter Error:", error);
-      setToast({
-        message: "편지 send api error",
-        visible: true,
-      });
-    }
-    console.log("Contents:", letterForm.contents);
-    setLetterPopupModal(false);
-  };
+  const toUserNickname = useRecoilValue(toUserNicknameState);
+  const [letterContent, setLetterContent] = useRecoilState(letterContentState);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
@@ -70,10 +35,16 @@ const LetterPopup: React.FC = () => {
 
   const onChangeContents = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const contents = event.target.value;
-    setLetterForm((prev) => ({
-      ...prev,
-      contents: contents,
-    }));
+    setLetterContent(contents);
+  };
+
+  const moveSendLetterModal = () => {
+    if (letterContent !== "") {
+      setLetterPopupModal(false); // 편지 다 쓰면 편지지는 false
+      setSendLetterModal(true); // 마지막 확인 모달창은 true
+    } else {
+      setToast({ message: "편지에 내용을 써주세요.", visible: true });
+    }
   };
 
   useEffect(() => {
@@ -117,7 +88,7 @@ const LetterPopup: React.FC = () => {
           <ToInput>{`To. ${toUserNickname}`}</ToInput>
         </ToInputWrapper>
         <StyledTextarea
-          value={letterForm.contents}
+          value={letterContent}
           ref={textareaRef}
           onChange={onChangeContents}
           placeholder="Write your letter here..."
@@ -125,7 +96,7 @@ const LetterPopup: React.FC = () => {
         />
       </PopupInner>
       <FromText>From. {myInfo.nickname}</FromText>
-      <SendButton onClick={handleSubmit}>
+      <SendButton onClick={moveSendLetterModal}>
         <IoIosMail />
       </SendButton>
       {toast.visible && (
@@ -241,15 +212,6 @@ const ToInput = styled.div`
   @media (min-height: 801px) and (max-height: 1280px) {
     font-size: 18px;
   }
-`;
-
-const ToNickName = styled.input`
-  font-family: "Handwriting", sans-serif;
-  font-size: 16px;
-  width: 210px;
-  border: none;
-  background: none;
-  outline: none;
 `;
 
 const SendButton = styled.button`
