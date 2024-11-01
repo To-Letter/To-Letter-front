@@ -76,23 +76,6 @@ const LetterPopup: React.FC = () => {
     }));
   };
 
-  const onChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const toUserNickname = event.target.value;
-    setLetterForm((prev) => ({
-      ...prev,
-      toUserNickname: toUserNickname,
-    }));
-  };
-
-  const handleNicknameKeyPress = (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
-    if (event.key === "Enter" && textareaRef.current) {
-      event.preventDefault();
-      textareaRef.current.focus();
-    }
-  };
-
   useEffect(() => {
     console.log("my info : ", myInfo);
     const handleWheel = (event: WheelEvent) => {
@@ -131,12 +114,7 @@ const LetterPopup: React.FC = () => {
       </CloseButton>
       <PopupInner ref={innerRef}>
         <ToInputWrapper>
-          <ToInput>To. {toUserNickname}</ToInput>
-          <ToNickName
-            value={letterForm.toUserNickname}
-            onChange={onChangeNickname}
-            onKeyDown={handleNicknameKeyPress}
-          />
+          <ToInput>{`To. ${toUserNickname}`}</ToInput>
         </ToInputWrapper>
         <StyledTextarea
           value={letterForm.contents}
