@@ -35,12 +35,18 @@ const Index: React.FC = () => {
             onClick={() => {
               setModalState({
                 isOpen: true,
-                type: 'signup', // 로그인 타입으로 설정
+                type: 'signup', // 회원가입 타입으로 설정
               });
             }}
           >
             Signup
           </MenuTitle>
+          <Exit onClick={()=> {
+            setModalState({
+              isOpen: false,
+              type: null, // 모달 끄기
+            });
+          }}>X</Exit>
         </MenuWrap>
         {modalState.type === 'login' && <Login />}
         {modalState.type === 'signup' && <Signup />}
@@ -71,6 +77,7 @@ const ModalContent = styled.div`
   width: 400px;
   max-width: 100%;
   box-shadow: 1px 1px 1px #0000005c;
+  position: relative;
 `;
 
 const MenuWrap = styled.div`
@@ -91,3 +98,14 @@ const MenuTitle = styled.div<styleI>`
 
   ${({ $selected }) => $selected && `border-bottom: 2px solid white;`}
 `;
+
+const Exit = styled.div`
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  padding: 4px 12px;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  cursor:pointer;
+`
