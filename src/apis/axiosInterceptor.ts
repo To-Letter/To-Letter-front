@@ -30,7 +30,8 @@ axiosInterceptor.interceptors.response.use(
       sessionStorageService.delete();
       window.location.href = '/'
     }else{
-      alert('토큰 만료/빈 토큰 외 에러, 차후 에러 페이지 이동 예정')
+      alert('에러가 발생하였습니다.')
+      window.location.href = '/error'
     }
   }
 );
