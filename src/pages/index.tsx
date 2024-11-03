@@ -1,31 +1,36 @@
 import { Canvas } from "@react-three/fiber";
 import Secen from "../component/Secen";
 import { OrbitControls } from "@react-three/drei";
-import { useCallback, useState, useContext, useEffect } from "react";
 import Index from "../component/account/Index";
 import { PopupProvider } from "../context/PopupContext";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { accountModalState } from "../recoil/accountAtom";
 import sessionStorageService from "../utils/sessionStorageService";
+import { myPageModalState } from "../recoil/myInfoAtom";
+import MyPage from "../component/myPage/MyPage";
+import {
+  letterPopupState,
+  sendLetterModalState,
+} from "../recoil/letterPopupAtom";
+import LetterPopup from "../component/letter/LetterPopup";
+import { toUserNicknameModalState } from "../recoil/toUserNicknameAtom";
+import ToUserModal from "../component/letter/ToUserModal";
+import SendLetterModal from "../component/letter/SendLetterModal";
 
 function Home() {
-  const [modalState, setModalState] = useRecoilState(accountModalState);
-
-  const chairClick = useCallback(() => {
-    setModalState({
-      isOpen: true,
-      type: 'login', // 로그인 타입으로 설정
-    });
-  }, []);
+  const modalState = useRecoilValue(accountModalState);
+  const mypageModalState = useRecoilValue(myPageModalState);
+  const letterPopupModal = useRecoilValue(letterPopupState);
+  const toUserNicknameModal = useRecoilValue(toUserNicknameModalState);
+  const sendLetterModal = useRecoilValue(sendLetterModalState);
 
   return (
     <>
       <PopupProvider>
         <Canvas shadows>
-          <Secen loginModalOpenHdr={chairClick} />
-          {
-            sessionStorageService.get("accessToken") === null
-            && <OrbitControls
+          <Secen />
+          {sessionStorageService.get("accessToken") === null && (
+            <OrbitControls
               minPolarAngle={Math.PI / 2.5} // under
               maxPolarAngle={1.396} // 약 80도
               minAzimuthAngle={-Math.PI / 4} // left
@@ -34,10 +39,9 @@ function Home() {
               minDistance={3} // 최소 확대 거리
               maxDistance={3} // 최대 축소 거리
             />
-          }
-          {
-            sessionStorageService.get("accessToken") !== null
-            && <OrbitControls
+          )}
+          {sessionStorageService.get("accessToken") !== null && (
+            <OrbitControls
               minPolarAngle={Math.PI / 2.8} // under
               maxPolarAngle={1.396} // 약 80도
               minAzimuthAngle={-Math.PI / 4} // left
@@ -46,9 +50,13 @@ function Home() {
               minDistance={2} // 최소 확대 거리
               maxDistance={2} // 최대 축소 거리
             />
-          }
+          )}
         </Canvas>
-        {modalState.isOpen && <Index/>}
+        {modalState.isOpen && <Index />}
+        {mypageModalState && <MyPage />}
+        {toUserNicknameModal && <ToUserModal />}
+        {letterPopupModal && <LetterPopup />}
+        {sendLetterModal && <SendLetterModal />}
       </PopupProvider>
     </>
   );

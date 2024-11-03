@@ -7,7 +7,7 @@ import {
   getEmialConfirm,
 } from "../../apis/controller/account";
 import ToastMessage from "../ToastMessage";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { accountModalState, emailState } from "../../recoil/accountAtom";
 
 interface loginFormI {
@@ -23,8 +23,8 @@ interface defaultStyleProps {
 }
 
 const Signup = () => {
-  const [_email, setEmail] = useRecoilState(emailState);
-  const [_modalState, setModalState] = useRecoilState(accountModalState);
+  const setEmail = useSetRecoilState(emailState);
+  const setModalState = useSetRecoilState(accountModalState);
   const [signupForm, setSignupForm] = useState<loginFormI>({
     nickName: "",
     email: "",
@@ -235,7 +235,7 @@ export const Box = styled.div<defaultStyleProps>`
   position: relative;
 `;
 
-const MailBoxSummry = styled.div`
+export const MailBoxSummry = styled.div`
   margin-left: 8px;
   border-radius: 50%;
   border: 1px solid white;
@@ -253,7 +253,7 @@ const MailBoxSummry = styled.div`
   }
 `;
 
-const TipBox = styled.div`
+export const TipBox = styled.div`
   display: none;
   position: absolute;
   bottom: -88px;
@@ -331,7 +331,7 @@ const FormInput = styled.input`
   }
 `;
 
-const FormAddressInput = styled.div`
+export const FormAddressInput = styled.div`
   border: none;
   background-color: transparent;
   border-bottom: 1px solid white;
@@ -342,7 +342,7 @@ const FormAddressInput = styled.div`
   color: #ffffff;
 `;
 
-const Button = styled.div`
+export const Button = styled.div`
   width: 80px;
   border-radius: 1px;
   border: 1px solid #e9e9e9;

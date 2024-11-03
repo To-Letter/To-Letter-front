@@ -1,12 +1,12 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
-import styled from "styled-components";
-import { postEmailVerify, getEmialAuth } from "../../apis/controller/account";
-import ToastMessage from "../ToastMessage";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { accountModalState, emailState } from "../../recoil/accountAtom";
-import { emailVerifyAuthType } from "../../constants/emailVerify";
-import { loadingState } from "../../recoil/loadingAtom";
-import Timer from "./Timer";
+import React, { ChangeEvent, useState } from 'react'
+import styled from 'styled-components';
+import Timer from '../account/Timer';
+import ToastMessage from '../ToastMessage';
+import { loadingState } from '../../recoil/loadingAtom';
+import { useSetRecoilState } from 'recoil';
+import { getFindMailAuth, postEmailVerify } from '../../apis/controller/account';
+import { useUser } from '../../hook/useUser';
+import { emailVerifyAuthType } from '../../constants/emailVerify';
 
 interface defaultStyleProps {
   $direction?: "row" | "column";
@@ -14,54 +14,25 @@ interface defaultStyleProps {
   $alignItems?: string;
 }
 
-const MailVerify: React.FC = () => {
-  const email = useRecoilValue(emailState);
-  const setModalState = useSetRecoilState(accountModalState);
+interface props {
+  setCheck: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export default function ChangePassMailVerify({setCheck}: props) {
   const setLoding = useSetRecoilState(loadingState)
-  const [verifyMe, setVerifyMe] = useState<boolean>(false);
-  const [mailKey, setMailKey] = useState<string>("");
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: "",
     visible: false,
   });
-  const [authReqMessage, setAuthReqMessage] = useState<boolean>(false);
+  const [mailKey, setMailKey] = useState<string>("");
+  const [verifyMe, setVerifyMe] = useState<boolean>(false);
+  const {myInfo} = useUser();
 
   const onChangeMailKeyHdr = (e: ChangeEvent<HTMLInputElement>) => {
     setMailKey(e.target.value);
   };
 
-  // 이메일 인증코드 발송
-  const authRequest = async () => {
-    setLoding(true);
-    try {
-      let res: any = await getEmialAuth({ email: email });
-      if (res.data.responseCode === 200) {
-        setLoding(false);
-        setAuthReqMessage(true);
-        setVerifyMe(true);
-      } else if (res.data.responseCode === 201) {
-        setLoding(false);
-        setAuthReqMessage(true);
-        setVerifyMe(true);
-        setToast({ message: "시간 초과로 인증코드를 다시 보냈습니다.", visible: true });
-      } else if (res.data.responseCode === 401) {
-        setLoding(false);
-        setToast({ message: "이미 인증코드를 전송 하였습니다.", visible: true });
-      } else if (res.data.responseCode === 403) {
-        setLoding(false);
-        alert("이미 이메일 인증을 완료했습니다. 로그인을 해주세요!");
-        setModalState({
-          isOpen: true,
-          type: "login",
-        });
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  // 이메일 인증 요청
-  const submitSignup = async () => {
+  const onClickMailVerify = async () => {
     if (!verifyMe) {
       setToast({ message: "인증 요청 버튼을 먼저 눌러주세요.", visible: true });
     } else if (mailKey === "" || mailKey.length !== 6) {
@@ -70,46 +41,62 @@ const MailVerify: React.FC = () => {
       try {
         setLoding(true);
         let res: any = await postEmailVerify({
-          email: email,
+          email: myInfo.email,
           randomCode: mailKey,
-          authType: emailVerifyAuthType.signup
+          authType: emailVerifyAuthType.updatePass
         });
 
-        if (res.data.responseCode === 200) {
+        if (res.data.responseCode === 201) {
           setLoding(false);
-          alert("회원가입 성공!");
-          setModalState({
-            isOpen: true,
-            type: "login",
-          });
+          setCheck(true);
+          setToast({ message: "이메일 확인 성공!", visible: true });
         } else if (res.data.responseCode === 401) {
           setLoding(false);
-          setAuthReqMessage(true);
           setVerifyMe(true);
-          setToast({ message: "시간 초과로 인증코드를 다시 보냈습니다.", visible: true });
+          setToast({ message: "시간 초과로 인증에 실패했습니다.", visible: true });
         } else if (res.data.responseCode === 403) {
           setLoding(false);
           setToast({ message: "인증 코드가 불일치합니다.", visible: true });
         } else if (res.data.responseCode === 404) {
           setLoding(false);
-          alert("메일이 존재하지 않습니다. 다른 메일로 시도해주세요.");
-          setModalState({
-            isOpen: true,
-            type: "signup",
-          });
+          setToast({ message: "메일이 존재하지 않습니다. 다른 메일로 시도해주세요.", visible: true });
         }
       } catch (err) {
         console.error(err);
       }
     }
+  }
+  
+   // 이메일 인증코드 발송
+   const authRequest = async () => {
+    setLoding(true);
+    try {
+      let res: any = await getFindMailAuth(myInfo.email);
+      if (res.data.responseCode === 200) {
+        setLoding(false);
+        setVerifyMe(true);
+        setToast({ message: "인증 코드를 전송하였습니다.", visible: true });
+      } else if (res.data.responseCode === 201) {
+        setLoding(false);
+        setVerifyMe(true);
+        setToast({ message: "시간 초과로 인증코드를 다시 보냈습니다.", visible: true });
+      } else if (res.data.responseCode === 401) {
+        setLoding(false);
+        setToast({ message: "등록된 이메일이 없습니다. 다시 시도해주세요.", visible: true });
+      } else if (res.data.responseCode === 403) {
+        setLoding(false);
+        setVerifyMe(true);
+        setToast({ message: "이미 메일이 전송되었습니다. 메일함을 확인해주세요.", visible: true });
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  
-
-
   return (
-    <SignupWrap>
-      <SignupContent>
+    <>
+      <Content>
+        <Text>비밀번호 변경</Text>
         <FormLabel>
           <Box $alignItems="center" $justifyContent="space-between">
             이메일 인증
@@ -121,22 +108,20 @@ const MailVerify: React.FC = () => {
           </Box>
           <FormInput type="text" onChange={onChangeMailKeyHdr} />
           <EmialText>
-            {authReqMessage && "이메일 인증코드가 발송되었습니다."}
+            {verifyMe && "이메일 인증코드가 발송되었습니다."}
           </EmialText>
         </FormLabel>
-      </SignupContent>
-      <SignupBtn onClick={submitSignup}>Signup</SignupBtn>
-      {toast.visible && (
+      </Content>
+      <ChangeBtn onClick={onClickMailVerify}>인증 코드 확인</ChangeBtn>
+        {toast.visible && (
         <ToastMessage
           message={toast.message}
           onClose={() => setToast({ ...toast, visible: false })}
         />
       )}
-    </SignupWrap>
-  );
-};
-
-export default MailVerify;
+    </>
+  )
+}
 
 export const Box = styled.div<defaultStyleProps>`
   display: flex;
@@ -146,16 +131,13 @@ export const Box = styled.div<defaultStyleProps>`
   position: relative;
 `;
 
-const SignupWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  width: calc(100% - 80px);
-  margin: 12px 40px 20px 40px;
-`;
-
-const SignupContent = styled.div`
+const Text = styled.div`
+  font-size: 20px;
+  color: #cecece;
+  line-height: 24px;
+  text-align: center; /* 텍스트 가운데 정렬 */
+`
+export const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -164,7 +146,7 @@ const SignupContent = styled.div`
   width: 100%;
 `;
 
-const FormLabel = styled.label`
+export const FormLabel = styled.label`
   display: flex;
   flex-direction: column;
   margin: 8px 0;
@@ -172,7 +154,7 @@ const FormLabel = styled.label`
   color: #cecece;
 `;
 
-const FormInput = styled.input`
+export const FormInput = styled.input`
   border: none;
   background-color: transparent;
   border-bottom: 1px solid white;
@@ -207,7 +189,7 @@ const FormInput = styled.input`
   }
 `;
 
-const Button = styled.div`
+export const Button = styled.div`
   width: 80px;
   border-radius: 1px;
   border: 1px solid #e9e9e9;
@@ -222,7 +204,7 @@ const Button = styled.div`
 
 
 
-const SignupBtn = styled.div`
+export const ChangeBtn = styled.div`
   width: 100%;
   border: 1px solid #e9e9e9;
   display: flex;
@@ -235,7 +217,7 @@ const SignupBtn = styled.div`
   cursor: pointer;
 `;
 
-const EmialText = styled.div`
+export const EmialText = styled.div`
   margin-top: 10px;
   font-size: 10px;
 `;
