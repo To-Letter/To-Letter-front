@@ -4,6 +4,7 @@ import Redirection from "./component/account/Redirection";
 import { RecoilRoot } from "recoil";
 import LoadingSpinner from "./component/LoadingSpinner";
 import DeleteRedirection from "./component/myPage/DeleteRedirection";
+import ErrorPage from "./pages/errorPage";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/error" element={<ErrorPage />} />
           <Route path="/users/kakao" element={<Redirection />} />
           <Route path="/users/deleteKakao" element={<DeleteRedirection />} />
         </Routes>
