@@ -1,78 +1,85 @@
-
-
-import React, { useRef, useEffect, useState } from "react";
-import { useLoader } from "@react-three/fiber";
-import { Group, MeshStandardMaterial, Object3DEventMap } from "three";
+import React, { useEffect, useState } from "react";
+import { useThree } from "@react-three/fiber";
+import { Group, MeshStandardMaterial } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import * as THREE from "three";
-import { treePosition } from "../../constants/seasonTree";
 import { seasonFile } from "../../constants/seasonTree";
+import { useSetRecoilState } from "recoil";
+import { loadingState } from "../../recoil/loadingAtom";
 
-
+// 메쉬 색상 설정
 const meshColors: { [key: string]: string } = {
-  //나무 가지
-  yamaboushi_tan_6000_a_aut1_1: "#493414",
-  // 나뭇잎 1
-  yamaboushi_tan_6000_a_aut1_2: "#ff6100",
-  // 나뭇잎 2
-  yamaboushi_tan_6000_a_aut1_3: "#f86b0d",
-  // 나뭇잎 3
-  yamaboushi_tan_6000_a_aut1_4: "#ff9100",
+  1: "#493414",
+  2: "#ff9100",
+  3: "#f86b0d",
+  4: "#ff6100",
 };
 
-
 const Autumn = () => {
-  const [treeClones, setTreeClones] = useState<Group<Object3DEventMap>[]>([]);
+  const { scene } = useThree();
+  const [treeModel, setTreeModel] = useState<Group | null>(null);
+  const isLoading = useSetRecoilState(loadingState)
 
-  const treeglb = useLoader(GLTFLoader, seasonFile.autumn.modelPath);
-
-  const woodTexture = useLoader(
-    THREE.TextureLoader,
-    seasonFile.spring.texturePath
+  const woodTexture = new THREE.TextureLoader().load(
+    seasonFile.spring.texturePath,
+    (texture) => (texture.flipY = false)
   );
-  woodTexture.flipY = false;
-
 
   useEffect(() => {
-  
-    treeglb.scene.traverse((child) => {
-      if ((child as THREE.Mesh).isMesh) {
-        const mesh = child as THREE.Mesh;
-        let meshColor = meshColors[mesh.name]
-        if(meshColor === "#493414") {
-          mesh.material = new THREE.MeshStandardMaterial({
-            color: meshColor,
-            map: woodTexture,
-          });
-        }else{
-          mesh.material = new THREE.MeshStandardMaterial({
-            color: meshColor,
-          });
-        }
-        mesh.castShadow = true; // 그림자 생성
-        mesh.receiveShadow = true; // 그림자 수신
+
+    // GLTFLoader 및 DRACOLoader 설정
+    const loader = new GLTFLoader();
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath("/draco/"); // 경로를 실제 디코더 파일 경로로 설정
+    loader.setDRACOLoader(dracoLoader);
+
+    if(treeModel===null){
+      isLoading(true);
+    }
+    loader.load(
+      seasonFile.autumn.modelPath,
+      (gltf) => {
+        gltf.scene.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh) {
+            const mesh = child as THREE.Mesh;
+            const parts = mesh.name.split("_");
+            const meshNumber = parseInt(parts[parts.length - 1], 10);
+            const meshColor = meshColors[meshNumber];
+
+            if (meshColor) {
+              if (meshColor === "#493414") {
+                mesh.material = new MeshStandardMaterial({
+                  color: meshColor,
+                  map: woodTexture,
+                });
+              } else {
+                mesh.material = new MeshStandardMaterial({
+                  color: meshColor,
+                });
+              }
+              mesh.castShadow = true;
+              mesh.receiveShadow = true;
+            }
+          }
+        });
+        isLoading(false);
+        setTreeModel(gltf.scene);
+      },
+      undefined,
+      (error) => {
+        console.error("An error occurred while loading the model:", error);
       }
-    });
-
-    //나무 복제
-    setTreeClones(treePosition.map(() => {
-      const clone = treeglb.scene.clone();
-      return clone;
-    }));
-
-  }, [treeglb, woodTexture]);
-
+    );
+  }, [woodTexture]);
 
   return (
     <>
-    {treeClones.map((model, idx)=>(
-      <group 
-        key={`treeGroup${idx}`} 
-        scale={seasonFile.autumn.scale} 
-        position={[treePosition[idx][0], treePosition[idx][1], treePosition[idx][2]]}>
-        <primitive key={`treePrimitive${idx}`} object={model} />
-      </group>
-    ))}
+      {treeModel && (
+        <group scale={seasonFile.autumn.scale} position={[37, -25, -66]}>
+          <primitive object={treeModel} />
+        </group>
+      )}
     </>
   );
 };

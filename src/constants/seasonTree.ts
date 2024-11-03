@@ -203,10 +203,27 @@ export const seasonFile: seasonFilesI = {
     color: "#2a3f01",
     floorColor:"#205e24"
   },
+  //기존
+  // autumn: {
+  //   modelPath: "/models/springTree.glb",
+  //   texturePath: "/images/scenery/treeTexture1.png",
+  //   scale: 0.0035,
+  //   color: "#925115",
+  //   floorColor:"#a7a323"
+  // },
+  //단일 트리 용량 줄임
+  // autumn: {
+  //   modelPath: "/models/tree.glb",
+  //   texturePath: "/images/scenery/treeTexture1.png",
+  //   scale: 0.072,
+  //   color: "#925115",
+  //   floorColor:"#a7a323"
+  // },
+  //전체 용량 줄임
   autumn: {
-    modelPath: "/models/springTree.glb",
+    modelPath: "/models/treeCollection.glb",
     texturePath: "/images/scenery/treeTexture1.png",
-    scale: 0.0035,
+    scale: 0.072,
     color: "#925115",
     floorColor:"#a7a323"
   },
