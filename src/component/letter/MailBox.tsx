@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { IoIosMail, IoMdSearch } from "react-icons/io"; // 메일 버튼
+import useDebounce from "../../hook/useDebounce";
 
 interface Mail {
   sender: string;
@@ -111,10 +112,12 @@ const Mailbox: React.FC = () => {
   ]);
   const [tab, setTab] = useState("received"); // "received" or "send"
   const [isSearchVisible, setSearchVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 300); // 300ms delay
 
   useEffect(() => {
     fetchMails(tab);
-  }, [tab]);
+  }, [tab, debouncedSearchTerm]);
 
   const fetchMails = async (type: string) => {
     // 여기에 API 호출 코드를 작성해줘
@@ -123,11 +126,26 @@ const Mailbox: React.FC = () => {
     // const data = await response.json();
     // setMails(data);
 
+    // 검색어 필터링
     if (type === "received") {
-      setMails(receiveMails);
+      const filteredMails = receiveMails.filter(
+        (mail) =>
+          mail.subject.includes(debouncedSearchTerm) ||
+          mail.sender.includes(debouncedSearchTerm)
+      );
+      setMails(filteredMails);
     } else if (type === "send") {
-      setMails(sendMails);
+      const filteredMails = sendMails.filter(
+        (mail) =>
+          mail.subject.includes(debouncedSearchTerm) ||
+          mail.sender.includes(debouncedSearchTerm)
+      );
+      setMails(filteredMails);
     }
+  };
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
   };
 
   const toggleSearch = () => {
@@ -155,11 +173,17 @@ const Mailbox: React.FC = () => {
             >
               보낸 편지함
             </Tab>
-            {/* <SearchButton onClick={toggleSearch}>
+            <SearchButton onClick={toggleSearch}>
               <IoMdSearch />
-            </SearchButton> */}
+            </SearchButton>
           </Header>
-          {/* {isSearchVisible && <SearchBar placeholder="메일 검색" />} */}
+          {isSearchVisible && (
+            <SearchBar
+              placeholder="메일 검색"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+          )}
           <MailList>
             {mails.map((mail, index) => (
               <MailItem key={index}>
@@ -254,13 +278,15 @@ const SearchButton = styled.button`
 `;
 
 const SearchBar = styled.input`
-  width: 100%;
+  width: 99%;
   height: 10px;
   padding: 10px 0px;
-  margin-bottom: 20px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 16px;
+  &:focus {
+    outline: none;
+  }
 `;
 
 const ComposeButton = styled.button`
