@@ -6,12 +6,11 @@ import {
   getNicknameConfirm,
   postKakaoSignup,
 } from "../../apis/controller/account";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { accountModalState, emailState } from "../../recoil/accountAtom";
 
 interface kakaoLoginFormI {
   nickName: string;
-  email: string;
   mailboxAddress: string;
 }
 interface defaultStyleProps {
@@ -22,9 +21,9 @@ interface defaultStyleProps {
 }
 
 const KakaoSignup: React.FC = () => {
+  const emailValue = useRecoilValue(emailState);
   const [signupForm, setSignupForm] = useState<kakaoLoginFormI>({
     nickName: "",
-    email: "",
     mailboxAddress: "",
   });
   const [openAddressModal, setOpenAddressModal] = useState<boolean>(false);
@@ -34,6 +33,7 @@ const KakaoSignup: React.FC = () => {
   });
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
   const setModalState = useSetRecoilState(accountModalState);
+
 
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
     setSignupForm((prev) => ({
@@ -62,10 +62,6 @@ const KakaoSignup: React.FC = () => {
         message: "닉네임을 입력해주세요.",
       },
       {
-        check: signupForm.email !== "",
-        message: "이메일을 입력해주세요.",
-      },
-      {
         check: signupForm.mailboxAddress !== "",
         message: "우편함 주소를 입력해주세요.",
       },
@@ -85,7 +81,7 @@ const KakaoSignup: React.FC = () => {
     try {
       let res: any = await postKakaoSignup({
         address: signupForm.mailboxAddress,
-        email: signupForm.email,
+        email: emailValue,
         nickname: signupForm.nickName,
       });
       if (res.data.responseCode === 200) {
@@ -152,9 +148,8 @@ const KakaoSignup: React.FC = () => {
           <FormInput
             type="text"
             name="email"
-            // value={"wodbs5602@naver.com"}
-            onChange={onChangeFormHdr}
-            // disabled
+            value={emailValue}
+            disabled
           />
         </FormLabel>
         <FormLabel>
