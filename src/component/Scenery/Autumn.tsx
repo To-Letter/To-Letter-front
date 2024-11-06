@@ -13,13 +13,12 @@ const meshColors: { [key: string]: string } = {
   //나무 가지
   yamaboushi_tan_6000_a_aut1_1: "#493414",
   // 나뭇잎 1
-  yamaboushi_tan_6000_a_aut1_2: "#ff6100",
+  yamaboushi_tan_6000_a_aut1_2: "#ff9100",
   // 나뭇잎 2
   yamaboushi_tan_6000_a_aut1_3: "#f86b0d",
   // 나뭇잎 3
-  yamaboushi_tan_6000_a_aut1_4: "#ff9100",
+  yamaboushi_tan_6000_a_aut1_4: "#ff6100",
 };
-
 
 const Autumn = () => {
   const [treeClones, setTreeClones] = useState<Group<Object3DEventMap>[]>([]);
