@@ -221,7 +221,7 @@ export const seasonFile: seasonFilesI = {
   // },
   //전체 용량 줄임
   autumn: {
-    modelPath: "/models/treeCollection.glb",
+    modelPath: "/models/treeCollectionCompression.glb",
     texturePath: "/images/scenery/treeTexture1.png",
     scale: 0.072,
     color: "#925115",
