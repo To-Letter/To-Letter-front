@@ -2,6 +2,10 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useLoader } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import * as THREE from "three";
+import { ThreeEvent } from "@react-three/fiber";
+import sessionStorageService from "../../utils/sessionStorageService";
+import { receiveLetterBoxModalState } from "../../recoil/letterPopupAtom";
+import { useSetRecoilState } from "recoil";
 
 interface BookSettings {
   color: string;
@@ -20,6 +24,10 @@ const Books = () => {
   // 모델 선언
   const booksglb = useLoader(GLTFLoader, "/models/books.glb");
   const booksRef = useRef<THREE.Mesh>(null);
+
+  const setReceiveLetterBoxModal = useSetRecoilState(
+    receiveLetterBoxModalState
+  );
 
   useEffect(() => {
     // 40의 책중 쓸 노드
@@ -70,7 +78,8 @@ const Books = () => {
         mesh.castShadow = true; // 그림자 생성
         mesh.receiveShadow = true; // 그림자 수신
         if (!booksNode2.includes(mesh.name)) {
-          mesh.visible = false;
+          mesh.position.set(9999, 9999, 9999);
+          mesh.visible = true;
         } else {
           // 서랍장 밑 책 5권
           const settings = bookSettings[mesh.name];
@@ -95,6 +104,8 @@ const Books = () => {
           mesh.rotation.z = -Math.PI / 2;
           mesh.scale.x = 0.7;
           mesh.scale.z = 0.7;
+          // 클릭 이벤트 적용
+          mesh.userData = { onClick: setReceiveLetterBoxModalClick };
         }
         if (mesh.name === "Node2") {
           mesh.material = new THREE.MeshStandardMaterial({
@@ -105,6 +116,8 @@ const Books = () => {
           mesh.rotation.z = -Math.PI / 2;
           mesh.scale.x = 0.7;
           mesh.scale.z = 0.7;
+          // 클릭 이벤트 적용
+          mesh.userData = { onClick: setReceiveLetterBoxModalClick };
         }
         if (mesh.name === "Node11") {
           mesh.material = new THREE.MeshStandardMaterial({
@@ -114,6 +127,8 @@ const Books = () => {
           mesh.rotation.z = -Math.PI / 2;
           mesh.scale.x = 0.7;
           mesh.scale.z = 0.7;
+          // 클릭 이벤트 적용
+          mesh.userData = { onClick: setReceiveLetterBoxModalClick };
         }
       }
     });
@@ -130,6 +145,14 @@ const Books = () => {
     },
   ];
 
+  const setReceiveLetterBoxModalClick = (event: ThreeEvent<MouseEvent>) => {
+    event.stopPropagation(); // 이벤트 전파 방지
+    if (sessionStorageService.get("accessToken") !== null) {
+      console.log("로그인 되어있어요!");
+      setReceiveLetterBoxModal(true);
+    }
+  };
+
   return (
     <>
       {/* 책 */}
@@ -140,6 +163,7 @@ const Books = () => {
       {bookPages.map((page, index) => (
         <mesh
           key={index}
+          onClick={setReceiveLetterBoxModalClick}
           position={page.position}
           rotation={page.rotation}
           castShadow

@@ -11,11 +11,13 @@ import MyPage from "../component/myPage/MyPage";
 import {
   letterPopupState,
   sendLetterModalState,
+  receiveLetterBoxModalState,
 } from "../recoil/letterPopupAtom";
 import LetterPopup from "../component/letter/LetterPopup";
 import { toUserNicknameModalState } from "../recoil/toUserNicknameAtom";
 import ToUserModal from "../component/letter/ToUserModal";
 import SendLetterModal from "../component/letter/SendLetterModal";
+import Mailbox from "./../component/letter/MailBox";
 
 function Home() {
   const modalState = useRecoilValue(accountModalState);
@@ -23,6 +25,7 @@ function Home() {
   const letterPopupModal = useRecoilValue(letterPopupState);
   const toUserNicknameModal = useRecoilValue(toUserNicknameModalState);
   const sendLetterModal = useRecoilValue(sendLetterModalState);
+  const receiveLetterBoxModal = useRecoilValue(receiveLetterBoxModalState);
 
   return (
     <>
@@ -57,6 +60,7 @@ function Home() {
         {toUserNicknameModal && <ToUserModal />}
         {letterPopupModal && <LetterPopup />}
         {sendLetterModal && <SendLetterModal />}
+        {receiveLetterBoxModal && <Mailbox />}
       </PopupProvider>
     </>
   );

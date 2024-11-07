@@ -90,7 +90,7 @@ const Desk = () => {
     gl.domElement.style.cursor = "auto";
   };
 
-  const handleClick = (event: ThreeEvent<MouseEvent>) => {
+  const toUserNicknameModalClick = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation(); // 이벤트 전파 방지
     if (sessionStorageService.get("accessToken") !== null) {
       console.log("로그인 되어있어요!");
@@ -117,7 +117,7 @@ const Desk = () => {
         position={[2.3, -1.74, -2.7]}
         onPointerOver={handlePointerOver}
         onPointerOut={handlePointerOut}
-        onClick={handleClick}
+        onClick={toUserNicknameModalClick}
       >
         <primitive object={pencilglb.scene} />
       </mesh>

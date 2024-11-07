@@ -14,3 +14,9 @@ export const sendLetter = async (sendLetterData: {
 
   return response;
 };
+
+export const getLetter = async () => {
+  const response: any = await sendApi.get(`/letter/receive`);
+
+  return response;
+};
