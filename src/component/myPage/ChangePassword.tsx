@@ -67,7 +67,19 @@ export default function ChangePassword() {
           type:"login"
         })
         navigate('/');
-      } else {
+      } else if(res.data.responseCode === 400) {
+        setLoding(false);
+        alert('기존 비밀번호와 동일합니다.');
+      }  else if(res.data.responseCode === 401) {
+        setLoding(false);
+        alert('등록된 유저가 아닙니다.');
+      } else if(res.data.responseCode === 403) {
+        setLoding(false);
+        alert('2차 인증이 정상적으로 진행되지 않았습니다.');
+      } else if(res.data.responseCode === 404) {
+        setLoding(false);
+        alert('등록된 이메일로 검증이 진행되지 않았습니다. 이메일 인증을 먼저 진행해주세요.');
+      }else {
         console.log("res", res)
         setLoding(false);
         alert('등록된 유저가 없습니다.');
