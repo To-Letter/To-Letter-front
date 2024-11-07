@@ -111,7 +111,6 @@ const Mailbox: React.FC = () => {
     // ...더 많은 메일 데이터
   ]);
   const [tab, setTab] = useState("received"); // "received" or "send"
-  const [isSearchVisible, setSearchVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 300); // 300ms delay
 
@@ -148,10 +147,6 @@ const Mailbox: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
-  const toggleSearch = () => {
-    setSearchVisible(!isSearchVisible);
-  };
-
   const handleTabChange = (newTab: string) => {
     setTab(newTab);
   };
@@ -173,17 +168,12 @@ const Mailbox: React.FC = () => {
             >
               보낸 편지함
             </Tab>
-            <SearchButton onClick={toggleSearch}>
-              <IoMdSearch />
-            </SearchButton>
           </Header>
-          {isSearchVisible && (
-            <SearchBar
-              placeholder="메일 검색"
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-          )}
+          <SearchBar
+            placeholder="메일 검색"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
           <MailList>
             {mails.map((mail, index) => (
               <MailItem key={index}>
@@ -227,7 +217,7 @@ const ModalContent = styled.div`
   max-width: 100%;
   box-shadow: 1px 1px 1px #0000005c;
   position: relative;
-  padding-top: 20px;
+  padding: 20px;
 `;
 
 const MailboxWrap = styled.div`
@@ -263,39 +253,40 @@ const Tab = styled.button<{ active: boolean }>`
   }
 `;
 
-const SearchButton = styled.button`
-  background: none;
-  border: none;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
+const SearchWrap = styled.div`
+  width: 100%;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  &:hover {
-    color: #ddd;
-  }
+  padding: 0 20px;
+  margin-top: 10px;
 `;
 
 const SearchBar = styled.input`
-  width: 99%;
+  width: 100%;
   height: 10px;
-  padding: 10px 0px;
-  border: 1px solid #ddd;
+  padding: 12px 0px;
+  margin-top: 6px;
+  border: 1px solid #ffffff;
   border-radius: 4px;
   font-size: 16px;
+  color: white;
+  background-color: #ffffff;
   &:focus {
     outline: none;
+  }
+  &::placeholder {
+    color: #848484;
   }
 `;
 
 const ComposeButton = styled.button`
   position: absolute;
-  bottom: 13px;
-  right: 13px;
+  bottom: -6px;
+  left: 386px;
   width: 50px;
   height: 50px;
-  background-color: #007bff;
+  background-color: #595858;
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -306,7 +297,7 @@ const ComposeButton = styled.button`
   justify-content: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   &:hover {
-    background-color: #0056b3;
+    background-color: #505050;
   }
 `;
 
@@ -330,7 +321,9 @@ const MailList = styled.div`
 const MailItem = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 10px;
   border-bottom: 1px solid #ddd;
 `;
 
@@ -340,7 +333,7 @@ const MailItemColumnWrap = styled.div`
   align-items: start;
   width: 100%;
   height: 100%;
-  position: relative; /* 추가: 자식의 위치를 기준으로 삼기 위해 */
+  position: relative;
 `;
 
 const MailItemRowWrap = styled.div`
@@ -350,7 +343,8 @@ const MailItemRowWrap = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 100%;
-  position: relative; /* 추가: 자식의 위치를 기준으로 삼기 위해 */
+  position: relative;
+  margin-bottom: 5px;
 `;
 
 const Sender = styled.div`
@@ -359,7 +353,6 @@ const Sender = styled.div`
 
 const Subject = styled.div`
   flex: 1;
-  margin-left: 10px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
