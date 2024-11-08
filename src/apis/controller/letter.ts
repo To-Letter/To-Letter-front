@@ -1,6 +1,6 @@
 import sendApi from "../sendApi";
-import sessionStorageService from "../../utils/sessionStorageService";
 
+// 편지 보내기
 export const sendLetter = async (sendLetterData: {
   contents: string;
   saveLetterCheck: boolean;
@@ -11,6 +11,20 @@ export const sendLetter = async (sendLetterData: {
     saveLetterCheck: sendLetterData.saveLetterCheck,
     toUserNickname: sendLetterData.toUserNickname,
   });
+
+  return response;
+};
+
+// 받은 편지함
+export const getReceiveLetter = async () => {
+  const response: any = await sendApi.get(`/letter/receive`);
+
+  return response;
+};
+
+// 보낸 편지함
+export const getSendLetter = async () => {
+  const response: any = await sendApi.get(`/letter/sent`);
 
   return response;
 };

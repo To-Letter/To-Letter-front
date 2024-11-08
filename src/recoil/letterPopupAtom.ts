@@ -11,6 +11,11 @@ export const sendLetterModalState = atom<boolean>({
   default: false, // 초기값 false
 });
 
+export const receiveLetterBoxModalState = atom<boolean>({
+  key: "receiveLetterBoxModalState", // 고유 키
+  default: false, // 초기값 false
+});
+
 export const letterContentState = atom<string>({
   key: "letterContentState", // 고유 키
   default: "", // 초기값 false
