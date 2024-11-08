@@ -95,7 +95,7 @@ const SendLetterModal: React.FC = () => {
           </SendLetterModalContent>
           <BtnWrap>
             <SendBtn onClick={letterSend}>예</SendBtn>
-            <SendBtn>아니요</SendBtn>
+            <SendBtn onClick={() => setSendLetterModal(false)}>아니요</SendBtn>
           </BtnWrap>
           {toast.visible && (
             <ToastMessage

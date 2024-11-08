@@ -77,6 +77,7 @@ const ToUserModal: React.FC = () => {
                   </NicknameSummry>
                 </Box>
                 <Button onClick={authToUseNickname}>확인 요청</Button>
+                <Exit onClick={() => setToUserNicknameModal(false)}>X</Exit>
               </Box>
               <FormInput type="text" onChange={onChangeToUserNicknameHdr} />
               <InstructionText>
@@ -187,6 +188,17 @@ const FormLabel = styled.label`
   margin: 8px 0;
   width: 100%;
   color: #cecece;
+`;
+
+const Exit = styled.div`
+  position: absolute;
+  right: -39px;
+  top: -35px;
+  padding: 4px 12px;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
 `;
 
 const FormInput = styled.input`

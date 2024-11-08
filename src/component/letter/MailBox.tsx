@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { IoIosMail, IoMdSearch } from "react-icons/io"; // 메일 버튼
+import { IoIosMail } from "react-icons/io"; // 메일 버튼
 import useDebounce from "../../hook/useDebounce";
-import ErrorPage from "../../pages/errorPage";
-import { getLetter } from "../../apis/controller/letter";
+import sessionStorageService from "../../utils/sessionStorageService";
+import { getReceiveLetter, getSendLetter } from "../../apis/controller/letter";
+import { receiveLetterBoxModalState } from "../../recoil/letterPopupAtom";
+import { useSetRecoilState } from "recoil";
+import { toUserNicknameModalState } from "../../recoil/toUserNicknameAtom";
 
 interface Mail {
   id: number;
@@ -13,23 +16,32 @@ interface Mail {
 }
 
 const Mailbox: React.FC = () => {
-  // test mail data
   const [mails, setMails] = useState<Mail[]>([]);
   const [receiveMails, setReceiveMails] = useState<Mail[]>([]);
-
   const [sendMails, setSendMails] = useState<Mail[]>([]);
+
   const [tab, setTab] = useState("received"); // "received" or "send"
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 300); // 300ms delay
 
+  const setReceiveLetterBoxModal = useSetRecoilState(
+    receiveLetterBoxModalState
+  );
+  const setToUserNicknameModal = useSetRecoilState(toUserNicknameModalState);
+
+  useEffect(() => {
+    getAllReceiveLetter();
+    getAllSendLetter();
+  }, []);
   useEffect(() => {
     searchFilter(tab);
-    getAllReceiveLetter();
-  }, [tab, debouncedSearchTerm, receiveMails]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab, debouncedSearchTerm, receiveMails, sendMails]);
 
+  // 받은 편지함
   const getAllReceiveLetter = async () => {
     try {
-      const res = await getLetter();
+      const res = await getReceiveLetter();
       const listLetter = res.data.responseData.listLetter;
       const formattedMails = listLetter.map((letter: any) => ({
         id: letter.id,
@@ -38,6 +50,23 @@ const Mailbox: React.FC = () => {
         timeReceived: letter.arrivedAt,
       }));
       setReceiveMails(formattedMails);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 보낸 편지함
+  const getAllSendLetter = async () => {
+    try {
+      const res = await getSendLetter();
+      const listLetter = res.data.responseData.listLetter;
+      const formattedMails = listLetter.map((letter: any) => ({
+        id: letter.id,
+        sender: letter.fromUserNickname,
+        subject: letter.contents,
+        timeReceived: letter.arrivedAt,
+      }));
+      setSendMails(formattedMails);
     } catch (err) {
       console.log(err);
     }
@@ -70,6 +99,16 @@ const Mailbox: React.FC = () => {
     setTab(newTab);
   };
 
+  const toUserNicknameModalClick = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.stopPropagation(); // 이벤트 전파 방지
+    if (sessionStorageService.get("accessToken") !== null) {
+      setReceiveLetterBoxModal(false);
+      setToUserNicknameModal(true);
+    }
+  };
+
   return (
     <ModalOverlay>
       <ModalContent>
@@ -87,6 +126,7 @@ const Mailbox: React.FC = () => {
             >
               보낸 편지함
             </Tab>
+            <Exit onClick={() => setReceiveLetterBoxModal(false)}>X</Exit>
           </Header>
           <SearchBar
             placeholder="메일 검색"
@@ -106,9 +146,9 @@ const Mailbox: React.FC = () => {
               </MailItem>
             ))}
           </MailList>
-          <ComposeButton>
+          <LetterWriteButton onClick={toUserNicknameModalClick}>
             <IoIosMail />
-          </ComposeButton>
+          </LetterWriteButton>
         </MailboxWrap>
       </ModalContent>
     </ModalOverlay>
@@ -145,7 +185,7 @@ const MailboxWrap = styled.div`
   align-items: center;
   width: 100%;
   height: 100%;
-  position: relative; /* 추가: 자식의 위치를 기준으로 삼기 위해 */
+  position: relative;
 `;
 
 const Header = styled.div`
@@ -172,6 +212,17 @@ const Tab = styled.button<{ $active: boolean }>`
   }
 `;
 
+const Exit = styled.div`
+  position: absolute;
+  right: -14px;
+  top: -14px;
+  padding: 4px 12px;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+`;
+
 const SearchBar = styled.input`
   width: 100%;
   height: 10px;
@@ -180,7 +231,7 @@ const SearchBar = styled.input`
   border: 1px solid #ffffff;
   border-radius: 4px;
   font-size: 16px;
-  color: white;
+  color: #000000;
   background-color: #ffffff;
   &:focus {
     outline: none;
@@ -190,7 +241,7 @@ const SearchBar = styled.input`
   }
 `;
 
-const ComposeButton = styled.button`
+const LetterWriteButton = styled.button`
   position: absolute;
   bottom: -6px;
   left: 386px;
