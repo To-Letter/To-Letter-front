@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { IoIosMail } from "react-icons/io"; // 메일 버튼
 import useDebounce from "../../hook/useDebounce";
 import sessionStorageService from "../../utils/sessionStorageService";
 import { getReceiveLetter, getSendLetter } from "../../apis/controller/letter";
-import { receiveLetterBoxModalState } from "../../recoil/letterPopupAtom";
+import {
+  individualLetterState,
+  receiveLetterBoxModalState,
+} from "../../recoil/letterPopupAtom";
 import { useSetRecoilState } from "recoil";
 import { toUserNicknameModalState } from "../../recoil/toUserNicknameAtom";
 
@@ -28,6 +31,9 @@ const Mailbox: React.FC = () => {
     receiveLetterBoxModalState
   );
   const setToUserNicknameModal = useSetRecoilState(toUserNicknameModalState);
+  const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
+
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getAllReceiveLetter();
@@ -37,6 +43,22 @@ const Mailbox: React.FC = () => {
     searchFilter(tab);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, debouncedSearchTerm, receiveMails, sendMails]);
+
+  // 모달 외부 클릭 감지 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setReceiveLetterBoxModal(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setReceiveLetterBoxModal]);
 
   // 받은 편지함
   const getAllReceiveLetter = async () => {
@@ -72,8 +94,8 @@ const Mailbox: React.FC = () => {
     }
   };
 
+  // 검색어 필터링
   const searchFilter = (type: string) => {
-    // 검색어 필터링
     if (type === "received") {
       const filteredMails = receiveMails.filter(
         (mail) =>
@@ -99,6 +121,7 @@ const Mailbox: React.FC = () => {
     setTab(newTab);
   };
 
+  // 편지 쓰기 모달창 이동 이벤트
   const toUserNicknameModalClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -109,9 +132,22 @@ const Mailbox: React.FC = () => {
     }
   };
 
+  // 메일 아이템 클릭 이벤트(개별 편지 팝업창)
+  const handleMailItemClick = (mail: Mail) => {
+    console.log("개별 메일 확인: ", mail);
+    setIndividualLetterInfo({
+      isOpen: true,
+      id: mail.id,
+      toUserNickname: mail.sender,
+      letterContent: mail.subject,
+      fromUserNickname: mail.sender,
+    });
+    setReceiveLetterBoxModal(false);
+  };
+
   return (
     <ModalOverlay>
-      <ModalContent>
+      <ModalContent ref={modalRef}>
         <MailboxWrap>
           <Header>
             <Tab
@@ -134,8 +170,8 @@ const Mailbox: React.FC = () => {
             onChange={handleSearchChange}
           />
           <MailList>
-            {mails.map((mail, index) => (
-              <MailItem key={index}>
+            {mails.map((mail) => (
+              <MailItem key={mail.id} onClick={() => handleMailItemClick(mail)}>
                 <MailItemColumnWrap>
                   <MailItemRowWrap>
                     <Sender>{mail.sender}</Sender>
@@ -286,6 +322,7 @@ const MailItem = styled.div`
   padding-bottom: 10px;
   padding-right: 10px;
   border-bottom: 1px solid #ddd;
+  cursor: pointer;
 `;
 
 const MailItemColumnWrap = styled.div`
