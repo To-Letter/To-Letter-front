@@ -10,6 +10,7 @@ import Bed from "./Bed";
 import Drawer from "./Drawer";
 import Lamp from "./Lamp";
 import Books from "./Books";
+import TrashBin from "./TrashBin";
 
 // 타입 지정
 interface WallProps {
@@ -82,6 +83,9 @@ const Room = () => {
 
       {/* 책 */}
       <Books />
+
+      {/* 쓰레기통 */}
+      <TrashBin/>
 
       {/* 게시물 */}
       <Photo
