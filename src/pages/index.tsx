@@ -20,6 +20,8 @@ import ToUserModal from "../component/letter/ToUserModal";
 import SendLetterModal from "../component/letter/SendLetterModal";
 import Mailbox from "./../component/letter/MailBox";
 import IndividualLetterPopup from "../component/letter/IndividualLetterPopup";
+import { shareLetterState } from "../recoil/shareLetterAtom";
+import ShareLetterBtn from "../component/ShareLetterBtn";
 import { deleteLetterPopupState } from "../recoil/deleteLetterPopupAtom";
 import DeleteLetterModal from "../component/letter/DeleteLetterModal";
 
@@ -31,6 +33,7 @@ function Home() {
   const sendLetterModal = useRecoilValue(sendLetterModalState);
   const receiveLetterBoxModal = useRecoilValue(receiveLetterBoxModalState);
   const individualLetterPopup = useRecoilValue(individualLetterState);
+  const shareLetterRecoilValue = useRecoilValue(shareLetterState);
   const deleteLetterPopup = useRecoilValue(deleteLetterPopupState)
 
   return (
@@ -68,6 +71,7 @@ function Home() {
         {sendLetterModal && <SendLetterModal />}
         {receiveLetterBoxModal && <Mailbox />}
         {individualLetterPopup.isOpen && <IndividualLetterPopup />}
+        {shareLetterRecoilValue && <ShareLetterBtn />}
         {deleteLetterPopup&&<DeleteLetterModal/>}
       </PopupProvider>
     </>
