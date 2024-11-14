@@ -8,27 +8,76 @@ const ShareLetterBtn: React.FC = () => {
     useRecoilState(shareLetterState);
 
   useEffect(() => {
-    // if (!window.Kakao.isInitialized()) {
-    //   window.Kakao.init("YOUR_KAKAO_APP_KEY");
-    // }
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.cleanup();
+      window.Kakao.init("7df766006a2913dd75b028486db00859");
+    }
   }, []);
 
   const shareToKakao = () => {
-    window.Kakao.Link.sendDefault({
+    window.Kakao.Share.sendDefault({
       objectType: "feed",
       content: {
-        title: "To.Letter",
-        description: "To.Letter로 편지를 보내보세요!",
-        imageUrl: "https://example.com/your-image.jpg",
+        title: "오늘의 디저트",
+        description: "아메리카노, 빵, 케익",
+        imageUrl:
+          "https://mud-kage.kakao.com/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg",
         link: {
-          webUrl: "https://ji-ny.github.io/mbti_test/",
+          mobileWebUrl: "https://developers.kakao.com",
+          webUrl: "https://developers.kakao.com",
         },
+      },
+      itemContent: {
+        profileText: "Kakao",
+        profileImageUrl:
+          "https://mud-kage.kakao.com/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png",
+        titleImageUrl:
+          "https://mud-kage.kakao.com/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png",
+        titleImageText: "Cheese cake",
+        titleImageCategory: "Cake",
+        items: [
+          {
+            item: "Cake1",
+            itemOp: "1000원",
+          },
+          {
+            item: "Cake2",
+            itemOp: "2000원",
+          },
+          {
+            item: "Cake3",
+            itemOp: "3000원",
+          },
+          {
+            item: "Cake4",
+            itemOp: "4000원",
+          },
+          {
+            item: "Cake5",
+            itemOp: "5000원",
+          },
+        ],
+        sum: "총 결제금액",
+        sumOp: "15000원",
+      },
+      social: {
+        likeCount: 10,
+        commentCount: 20,
+        sharedCount: 30,
       },
       buttons: [
         {
-          title: "웹으로 보기",
+          title: "웹으로 이동",
           link: {
-            webUrl: "https://ji-ny.github.io/mbti_test/",
+            mobileWebUrl: "https://developers.kakao.com",
+            webUrl: "https://developers.kakao.com",
+          },
+        },
+        {
+          title: "앱으로 이동",
+          link: {
+            mobileWebUrl: "https://developers.kakao.com",
+            webUrl: "https://developers.kakao.com",
           },
         },
       ],
@@ -83,17 +132,21 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContent = styled.div`
+  position: relative;
   background: #000000a6;
   border-radius: 2px;
   width: 400px;
   max-width: 100%;
   box-shadow: 1px 1px 1px #0000005c;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `;
 
 const Exit = styled.div`
   position: absolute;
-  right: 356px;
-  top: 284px;
+  top: 3px;
+  right: 3px;
   padding: 4px 12px;
   font-size: 20px;
   font-weight: bold;
@@ -166,16 +219,6 @@ const CopyButton = styled.button`
   background-color: #646262;
   color: white;
   border: none;
-  cursor: pointer;
-`;
-
-const CloseButton = styled.button`
-  margin-top: 20px;
-  padding: 8px 16px;
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 4px;
   cursor: pointer;
 `;
 
