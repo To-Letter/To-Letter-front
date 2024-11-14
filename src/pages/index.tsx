@@ -20,6 +20,8 @@ import ToUserModal from "../component/letter/ToUserModal";
 import SendLetterModal from "../component/letter/SendLetterModal";
 import Mailbox from "./../component/letter/MailBox";
 import IndividualLetterPopup from "../component/letter/IndividualLetterPopup";
+import { shareLetterState } from "../recoil/shareLetterAtom";
+import ShareLetterBtn from "../component/ShareLetterBtn";
 
 function Home() {
   const modalState = useRecoilValue(accountModalState);
@@ -29,6 +31,7 @@ function Home() {
   const sendLetterModal = useRecoilValue(sendLetterModalState);
   const receiveLetterBoxModal = useRecoilValue(receiveLetterBoxModalState);
   const individualLetterPopup = useRecoilValue(individualLetterState);
+  const shareLetterRecoilValue = useRecoilValue(shareLetterState);
 
   return (
     <>
@@ -65,6 +68,7 @@ function Home() {
         {sendLetterModal && <SendLetterModal />}
         {receiveLetterBoxModal && <Mailbox />}
         {individualLetterPopup.isOpen && <IndividualLetterPopup />}
+        {shareLetterRecoilValue && <ShareLetterBtn />}
       </PopupProvider>
     </>
   );

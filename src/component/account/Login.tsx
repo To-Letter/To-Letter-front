@@ -1,11 +1,11 @@
 import React, { ChangeEvent, useState } from "react";
 import styled from "styled-components";
 import { getKakaoURL, postLocalLogin } from "../../apis/controller/account";
-import { useResetRecoilState,useSetRecoilState } from "recoil";
+import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { accountModalState, emailState } from "../../recoil/accountAtom";
 import { myInfoState } from "../../recoil/myInfoAtom";
 import { loadingState } from "../../recoil/loadingAtom";
-
+import ShareLetterBtn from "../ShareLetterBtn";
 
 interface loginFormI {
   email: string;
@@ -14,13 +14,13 @@ interface loginFormI {
 
 const Login = () => {
   const setEmail = useSetRecoilState(emailState);
-  const setLoadingState = useSetRecoilState(loadingState)
-  const setModalState= useSetRecoilState(accountModalState);
+  const setLoadingState = useSetRecoilState(loadingState);
+  const setModalState = useSetRecoilState(accountModalState);
   const [loginForm, setLoginForm] = useState<loginFormI>({
     email: "",
     password: "",
   });
-  const resetMyInfo = useResetRecoilState(myInfoState)
+  const resetMyInfo = useResetRecoilState(myInfoState);
 
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
     setLoginForm((prev) => ({
@@ -48,16 +48,19 @@ const Login = () => {
         setModalState({
           isOpen: false,
           type: null, // 로그인 타입으로 설정
-        })
-      }else if(res.data.responseCode === 403) {
+        });
+      } else if (res.data.responseCode === 403) {
         // 이메일 인증 미완료 계정
         setEmail(loginForm.email);
         alert("이메일 인증이 되지않은 계정입니다.");
         setModalState({
           isOpen: true,
           type: "MailVerify",
-        })
-      }else if(res.data.responseCode === 401 || res.data.responseCode === 400) {
+        });
+      } else if (
+        res.data.responseCode === 401 ||
+        res.data.responseCode === 400
+      ) {
         // 걍 틀림
         alert("이메일 혹은 비밀번호를 잘못입력하셨습니다.");
       }
@@ -101,6 +104,7 @@ const Login = () => {
       <SocialLoginWrap>
         <LoginBtn onClick={onClickKakaoLogin}>카카오톡 로그인</LoginBtn>
         {/* <SocialLoginBtn>google 로그인</SocialLoginBtn> */}
+        <ShareLetterBtn />
       </SocialLoginWrap>
       <FindAccountTextWrap>can't login?</FindAccountTextWrap>
     </LoginWrap>

@@ -2,6 +2,9 @@ import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
 import Popup from "./Popup";
 import { usePopup } from "../../context/PopupContext";
+import { useSetRecoilState } from "recoil";
+import { shareLetterState } from "../../recoil/shareLetterAtom";
+import sessionStorageService from "../../utils/sessionStorageService";
 
 const Photo = ({
   position,
@@ -16,13 +19,25 @@ const Photo = ({
 }) => {
   const texture = useLoader(TextureLoader, imageUrl);
   const { activePopup, setActivePopup } = usePopup();
+  const setShareLetterRecoil = useSetRecoilState(shareLetterState);
 
   const handleClick = () => {
-    setActivePopup(popupId);
+    if (
+      popupId === "photo1" &&
+      sessionStorageService.get("accessToken") !== null
+    ) {
+      setShareLetterRecoil(true);
+    } else {
+      setActivePopup(popupId);
+    }
   };
 
   const handleClose = () => {
-    setActivePopup(null);
+    if (popupId === "photo1") {
+      setShareLetterRecoil(false);
+    } else {
+      setActivePopup(null);
+    }
   };
 
   return (
