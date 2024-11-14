@@ -16,7 +16,7 @@ const LetterPopup: React.FC = () => {
   const popupRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const { myInfo, updateMyInfo } = useUser();
+  const { myInfo } = useUser();
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: "",
     visible: false,

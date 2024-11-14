@@ -2,37 +2,75 @@ import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { shareLetterState } from "../recoil/shareLetterAtom";
+import { useUser } from "../hook/useUser";
+import sessionStorageService from "../utils/sessionStorageService";
 
 const ShareLetterBtn: React.FC = () => {
   const [shareLetterRecoil, setShareLetterRecoil] =
     useRecoilState(shareLetterState);
+  const { myInfo } = useUser();
 
   useEffect(() => {
-    // if (!window.Kakao.isInitialized()) {
-    //   window.Kakao.init("YOUR_KAKAO_APP_KEY");
-    // }
+    if (window.Kakao && !window.Kakao.isInitialized()) {
+      window.Kakao.cleanup();
+      window.Kakao.init("7df766006a2913dd75b028486db00859");
+    }
   }, []);
 
-  const shareToKakao = () => {
-    window.Kakao.Link.sendDefault({
-      objectType: "feed",
-      content: {
-        title: "To.Letter",
-        description: "To.Letter로 편지를 보내보세요!",
-        imageUrl: "https://example.com/your-image.jpg",
-        link: {
-          webUrl: "https://ji-ny.github.io/mbti_test/",
-        },
-      },
-      buttons: [
-        {
-          title: "웹으로 보기",
-          link: {
-            webUrl: "https://ji-ny.github.io/mbti_test/",
-          },
-        },
-      ],
+  const kakaoImageUploding = (): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const imagePath = "/images/kakao_share_image.png"; // 로컬 이미지 경로
+      fetch(imagePath)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const file = new File([blob], "kakao_share_image.png", {
+            type: "image/png",
+          });
+          window.Kakao.Share.uploadImage({
+            file: [file],
+          })
+            .then(function (response: any) {
+              resolve(response.infos.original.url);
+            })
+            .catch(function (error: any) {
+              reject(error);
+            });
+        })
+        .catch((error) => {
+          reject(error);
+        });
     });
+  };
+
+  const shareToKakao = async () => {
+    try {
+      if (sessionStorageService.get("accessToken") !== null) {
+        const imageUrl = await kakaoImageUploding();
+        window.Kakao.Share.sendDefault({
+          objectType: "feed",
+          content: {
+            title: "To.Letter",
+            description: `${myInfo.nickname}님에게 편지를 보내보세요!`,
+            imageUrl: imageUrl, // 업로드된 이미지 URL 사용
+            link: {
+              mobileWebUrl: "https://developers.kakao.com",
+              webUrl: "https://developers.kakao.com",
+            },
+          },
+          buttons: [
+            {
+              title: "웹으로 이동",
+              link: {
+                mobileWebUrl: "https://developers.kakao.com",
+                webUrl: "https://developers.kakao.com",
+              },
+            },
+          ],
+        });
+      }
+    } catch (error) {
+      console.error("카카오톡 공유 중 오류가 발생했습니다:", error);
+    }
   };
 
   const copyUrlToClipboard = () => {
@@ -83,17 +121,21 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContent = styled.div`
+  position: relative;
   background: #000000a6;
   border-radius: 2px;
   width: 400px;
   max-width: 100%;
   box-shadow: 1px 1px 1px #0000005c;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `;
 
 const Exit = styled.div`
   position: absolute;
-  right: 356px;
-  top: 284px;
+  top: 3px;
+  right: 3px;
   padding: 4px 12px;
   font-size: 20px;
   font-weight: bold;
@@ -166,16 +208,6 @@ const CopyButton = styled.button`
   background-color: #646262;
   color: white;
   border: none;
-  cursor: pointer;
-`;
-
-const CloseButton = styled.button`
-  margin-top: 20px;
-  padding: 8px 16px;
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 4px;
   cursor: pointer;
 `;
 
