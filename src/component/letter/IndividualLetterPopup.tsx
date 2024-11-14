@@ -3,8 +3,9 @@ import styled from "styled-components";
 import { IoMdClose } from "react-icons/io";
 import { useRecoilState } from "recoil";
 import { individualLetterState } from "../../recoil/letterPopupAtom";
+import { FaTrash } from "react-icons/fa";
 
-const IndividualLetterPopup: React.FC = () => {
+const IndividualLetterPopup = () => {
   const popupRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -20,9 +21,22 @@ const IndividualLetterPopup: React.FC = () => {
         toUserNickname: "",
         letterContent: "",
         fromUserNickname: "",
+        onDelete: false
       });
     }
   };
+
+  const onClickDeleteLetter = () => {
+    alert('편지 삭제')
+    setIndividualLetterInfo({
+      isOpen: false,
+      id: -9999,
+      toUserNickname: "",
+      letterContent: "",
+      fromUserNickname: "",
+      onDelete: false
+    });
+  }
 
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
@@ -64,6 +78,7 @@ const IndividualLetterPopup: React.FC = () => {
             toUserNickname: "",
             letterContent: "",
             fromUserNickname: "",
+            onDelete: false
           })
         }
       >
@@ -84,6 +99,13 @@ const IndividualLetterPopup: React.FC = () => {
         />
       </PopupInner>
       <FromText>From. {individualLetterInfo.fromUserNickname}</FromText>
+      {
+        individualLetterInfo.onDelete &&
+        <DeleteButton onClick={onClickDeleteLetter}>
+          <FaTrash />
+        </DeleteButton>
+      }
+      
     </Popup>
   );
 };
@@ -193,7 +215,7 @@ const ToInput = styled.div`
   }
 `;
 
-const SendButton = styled.button`
+const DeleteButton = styled.button`
   position: absolute;
   bottom: 20px;
   right: 20px;
@@ -204,7 +226,7 @@ const SendButton = styled.button`
   padding: 0;
 
   &:hover {
-    color: #0056b3;
+    color: #5f0202;
   }
 `;
 
