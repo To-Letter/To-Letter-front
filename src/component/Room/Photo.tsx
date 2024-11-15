@@ -33,7 +33,10 @@ const Photo = ({
   };
 
   const handleClose = () => {
-    if (popupId === "photo1") {
+    if (
+      popupId === "photo1" &&
+      sessionStorageService.get("accessToken") !== null
+    ) {
       setShareLetterRecoil(false);
     } else {
       setActivePopup(null);

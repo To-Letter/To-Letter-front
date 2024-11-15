@@ -5,7 +5,6 @@ import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { accountModalState, emailState } from "../../recoil/accountAtom";
 import { myInfoState } from "../../recoil/myInfoAtom";
 import { loadingState } from "../../recoil/loadingAtom";
-import ShareLetterBtn from "../ShareLetterBtn";
 
 interface loginFormI {
   email: string;
@@ -104,7 +103,6 @@ const Login = () => {
       <SocialLoginWrap>
         <LoginBtn onClick={onClickKakaoLogin}>카카오톡 로그인</LoginBtn>
         {/* <SocialLoginBtn>google 로그인</SocialLoginBtn> */}
-        <ShareLetterBtn />
       </SocialLoginWrap>
       <FindAccountTextWrap>can't login?</FindAccountTextWrap>
     </LoginWrap>
