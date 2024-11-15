@@ -17,60 +17,26 @@ const ShareLetterBtn: React.FC = () => {
     }
   }, []);
 
-  const kakaoImageUploding = (): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const imagePath = "/images/kakao_share_image.png"; // 로컬 이미지 경로
-      fetch(imagePath)
-        .then((response) => response.blob())
-        .then((blob) => {
-          const file = new File([blob], "kakao_share_image.png", {
-            type: "image/png",
-          });
-          window.Kakao.Share.uploadImage({
-            file: [file],
-          })
-            .then(function (response: any) {
-              resolve(response.infos.original.url);
-            })
-            .catch(function (error: any) {
-              reject(error);
-            });
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  };
-
-  const shareToKakao = async () => {
-    try {
-      if (sessionStorageService.get("accessToken") !== null) {
-        const imageUrl = await kakaoImageUploding();
-        window.Kakao.Share.sendDefault({
-          objectType: "feed",
-          content: {
-            title: "To.Letter",
-            description: `${myInfo.nickname}님에게 편지를 보내보세요!`,
-            imageUrl: imageUrl, // 업로드된 이미지 URL 사용
-            link: {
-              mobileWebUrl: "https://developers.kakao.com",
-              webUrl: "https://developers.kakao.com",
-            },
+  const shareToKakao = () => {
+    window.Kakao.Link.sendDefault({
+      objectType: "feed",
+      content: {
+        title: "To.Letter",
+        description: "To.Letter로 편지를 보내보세요!",
+        imageUrl: "https://example.com/your-image.jpg",
+        link: {
+          webUrl: "https://ji-ny.github.io/mbti_test/",
+        },
+      },
+      buttons: [
+        {
+          title: "웹으로 보기",
+          link: {
+            webUrl: "https://ji-ny.github.io/mbti_test/",
           },
-          buttons: [
-            {
-              title: "웹으로 이동",
-              link: {
-                mobileWebUrl: "https://developers.kakao.com",
-                webUrl: "https://developers.kakao.com",
-              },
-            },
-          ],
-        });
-      }
-    } catch (error) {
-      console.error("카카오톡 공유 중 오류가 발생했습니다:", error);
-    }
+        },
+      ],
+    });
   };
 
   const copyUrlToClipboard = () => {
