@@ -73,6 +73,21 @@ const ShareLetterBtn: React.FC = () => {
     }
   };
 
+  // TODO: 트위터 공유하기
+  const twitterShare = () => {
+    const url = `${window.location.href}`;
+    const text = `To.Letter ${myInfo.nickname}님에게 편지를 보내보세요!`;
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      text
+    )}&url=${encodeURIComponent(url)}`;
+    window.open(twitterUrl);
+  };
+
+  function shareFacebook() {
+    var sendUrl = window.location.href; // 전달할 URL
+    window.open("http://www.facebook.com/sharer/sharer.php?u=" + sendUrl);
+  }
+
   const copyUrlToClipboard = () => {
     const url = window.location.href;
     navigator.clipboard.writeText(url).then(() => {
@@ -89,10 +104,21 @@ const ShareLetterBtn: React.FC = () => {
               <Exit onClick={() => setShareLetterRecoil(false)}>X</Exit>
               <SnsButtonsWrap>
                 <SnsButtons>
-                  <KakaoShareButton onClick={shareToKakao}>
+                  <ShareButton onClick={shareToKakao}>
                     <KakaoIconImg src="/images/kakao_icon.png" alt="카카오톡" />
                     <KakaoTextDiv>카카오톡</KakaoTextDiv>
-                  </KakaoShareButton>
+                  </ShareButton>
+                  <ShareButton onClick={twitterShare}>
+                    <KakaoIconImg src="/images/x_icon.jpg" alt="X" />
+                    <KakaoTextDiv>X</KakaoTextDiv>
+                  </ShareButton>
+                  <ShareButton onClick={shareFacebook}>
+                    <KakaoIconImg
+                      src="/images/facebook_icon.png"
+                      alt="페이스북"
+                    />
+                    <KakaoTextDiv>페이스북</KakaoTextDiv>
+                  </ShareButton>
                 </SnsButtons>
               </SnsButtonsWrap>
               <UrlSection>
@@ -154,7 +180,7 @@ const ShareModalWrap = styled.div`
 
 const SnsButtons = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
 `;
 
@@ -164,13 +190,14 @@ const SnsButtonsWrap = styled.div`
   width: 100%;
 `;
 
-const KakaoShareButton = styled.button`
+const ShareButton = styled.button`
   display: flex;
   align-items: center;
   flex-direction: column;
   border: none;
   background-color: transparent;
   padding: 0;
+  margin-right: 20px;
   cursor: pointer;
 `;
 
