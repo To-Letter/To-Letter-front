@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { IoMdClose } from "react-icons/io";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { individualLetterState } from "../../recoil/letterPopupAtom";
 import { FaTrash } from "react-icons/fa";
+import { loadingState } from "../../recoil/loadingAtom";
 
 const IndividualLetterPopup = () => {
   const popupRef = useRef<HTMLDivElement>(null);
@@ -12,7 +13,9 @@ const IndividualLetterPopup = () => {
   const [individualLetterInfo, setIndividualLetterInfo] = useRecoilState(
     individualLetterState
   );
-
+  const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
+  const setLoadingState = useSetRecoilState(loadingState);
+  
   const handleClickOutside = (event: MouseEvent) => {
     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
       setIndividualLetterInfo({
@@ -68,7 +71,18 @@ const IndividualLetterPopup = () => {
     };
   }, []);
 
+  useEffect(() => {
+    setLoadingState(true);
+    const img = new Image();
+    img.src = "/images/letter_background.jpg";
+    img.onload = () => {
+      setIsImageLoaded(true)
+      setLoadingState(false);
+    };
+  }, []);
+
   return (
+    isImageLoaded ? (
     <Popup ref={popupRef}>
       <CloseButton
         onClick={() =>
@@ -107,6 +121,7 @@ const IndividualLetterPopup = () => {
       }
       
     </Popup>
+    ): null
   );
 };
 
