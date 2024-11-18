@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { IoTrashBinSharp  } from "react-icons/io5";
+import { IoTrashBinSharp } from "react-icons/io5";
 import useDebounce from "../../hook/useDebounce";
 import { getReceiveLetter, getSendLetter } from "../../apis/controller/letter";
-import {individualLetterState} from "../../recoil/letterPopupAtom";
+import { individualLetterState } from "../../recoil/letterPopupAtom";
 import { useSetRecoilState } from "recoil";
 import { deleteLetterPopupState } from "../../recoil/deleteLetterPopupAtom";
 import ConfirmDelete from "./ConfirmDelete";
@@ -16,19 +16,18 @@ interface Mail {
   timeReceived: string;
 }
 
-
 const DeleteLetterModal: React.FC = () => {
   const [mails, setMails] = useState<Mail[]>([]);
   const [receiveMails, setReceiveMails] = useState<Mail[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [tab, setTab] = useState<"received"|"send">("received"); // "received" or "send"
+  const [tab, setTab] = useState<"received" | "send">("received"); // "received" or "send"
   const [checkedState, setCheckedState] = useState<boolean[]>([]);
   const debouncedSearchTerm = useDebounce(searchTerm, 300); // 300ms delay
   const [sendMails, setSendMails] = useState<Mail[]>([]);
   const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
-  const setDeleteLetterPopup = useSetRecoilState(deleteLetterPopupState)
-  const [isConfirmPopup, setIsConfirmPopup] = useState<boolean>(false)
-  const [deleteConfirm, setDeleteConfirm] = useState<boolean>(false)
+  const setDeleteLetterPopup = useSetRecoilState(deleteLetterPopupState);
+  const [isConfirmPopup, setIsConfirmPopup] = useState<boolean>(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<boolean>(false);
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -37,9 +36,8 @@ const DeleteLetterModal: React.FC = () => {
     setCheckedState(new Array(receiveMails.length).fill(false));
   }, [receiveMails]);
 
-
   useEffect(() => {
-    getAllReceiveLetter();
+    // getAllReceiveLetter();
     getAllSendLetter();
   }, []);
 
@@ -48,23 +46,22 @@ const DeleteLetterModal: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, debouncedSearchTerm, receiveMails, sendMails]);
 
-
   // 받은 편지함
-  const getAllReceiveLetter = async () => {
-    try {
-      const res = await getReceiveLetter();
-      const listLetter = res.data.responseData.listLetter;
-      const formattedMails = listLetter.map((letter: any) => ({
-        id: letter.id,
-        sender: letter.fromUserNickname,
-        subject: letter.contents,
-        timeReceived: letter.arrivedAt,
-      }));
-      setReceiveMails(formattedMails);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const getAllReceiveLetter = async () => {
+  //   try {
+  //     const res = await getReceiveLetter();
+  //     const listLetter = res.data.responseData.listLetter;
+  //     const formattedMails = listLetter.map((letter: any) => ({
+  //       id: letter.id,
+  //       sender: letter.fromUserNickname,
+  //       subject: letter.contents,
+  //       timeReceived: letter.arrivedAt,
+  //     }));
+  //     setReceiveMails(formattedMails);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   // 보낸 편지함
   const getAllSendLetter = async () => {
@@ -106,10 +103,9 @@ const DeleteLetterModal: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleTabChange = (newTab: "received"|"send") => {
+  const handleTabChange = (newTab: "received" | "send") => {
     setTab(newTab);
   };
-
 
   // 메일 아이템 클릭 이벤트(개별 편지 팝업창)
   const handleMailItemClick = (mail: Mail) => {
@@ -120,7 +116,7 @@ const DeleteLetterModal: React.FC = () => {
       toUserNickname: mail.sender,
       letterContent: mail.subject,
       fromUserNickname: mail.sender,
-      onDelete: true
+      onDelete: true,
     });
   };
 
@@ -137,13 +133,12 @@ const DeleteLetterModal: React.FC = () => {
     setCheckedState(updatedCheckedState);
   };
 
-
   return (
     <ModalOverlay>
       <ModalContent ref={modalRef}>
         <MailboxWrap>
           <Header>
-          <Tab
+            <Tab
               $active={tab === "received"}
               onClick={() => handleTabChange("received")}
             >
@@ -165,17 +160,17 @@ const DeleteLetterModal: React.FC = () => {
           <MailList>
             {mails.map((mail, index) => (
               <MailItem key={mail.id}>
-                <MailCheckBtn 
+                <MailCheckBtn
                   key={mail.id}
                   type="checkbox"
                   checked={checkedState[index]} // 개별 체크박스 상태
                   onChange={() => handleCheckboxChange(index)} // 클릭 이벤트
                 />
-                <MailItemColumnWrap  onClick={() => handleMailItemClick(mail)}>
+                <MailItemColumnWrap onClick={() => handleMailItemClick(mail)}>
                   <MailItemRowWrap>
                     <Sender>{mail.sender}</Sender>
                     <TimeReceived>
-                      {mail.timeReceived.split('T')[0]}
+                      {mail.timeReceived.split("T")[0]}
                     </TimeReceived>
                   </MailItemRowWrap>
                   <Subject>{mail.subject}</Subject>
@@ -186,12 +181,17 @@ const DeleteLetterModal: React.FC = () => {
           <LetterAllCheck onClick={handleSelectAllClick}>
             <CgPlayListCheck />
           </LetterAllCheck>
-          <LetterWriteButton onClick={()=> setIsConfirmPopup(prev => !prev)}>
+          <LetterWriteButton onClick={() => setIsConfirmPopup((prev) => !prev)}>
             <IoTrashBinSharp />
           </LetterWriteButton>
         </MailboxWrap>
       </ModalContent>
-      {isConfirmPopup && <ConfirmDelete setDeleteConfirm={setDeleteConfirm} setIsConfirmPopup={setIsConfirmPopup}/>}
+      {isConfirmPopup && (
+        <ConfirmDelete
+          setDeleteConfirm={setDeleteConfirm}
+          setIsConfirmPopup={setIsConfirmPopup}
+        />
+      )}
     </ModalOverlay>
   );
 };
@@ -362,7 +362,7 @@ const MailItem = styled.div`
   cursor: pointer;
 `;
 
-const MailCheckBtn = styled.input.attrs({ type: 'checkbox' })`
+const MailCheckBtn = styled.input.attrs({ type: "checkbox" })`
   /* 기본 체크박스 숨기기 */
   appearance: none;
   margin: 8px;
@@ -380,7 +380,7 @@ const MailCheckBtn = styled.input.attrs({ type: 'checkbox' })`
 
   /* 체크 표시 추가 (가상 요소 활용) */
   &:checked::after {
-    content: '✔';
+    content: "✔";
     color: white;
     display: block;
     text-align: center;
