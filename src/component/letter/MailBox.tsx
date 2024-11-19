@@ -168,7 +168,8 @@ const Mailbox: React.FC = () => {
       toUserNickname: mail.sender,
       letterContent: mail.subject,
       fromUserNickname: mail.sender,
-      onDelete: false,
+      onDelete:false,
+      tab: "received"
     });
     setReceiveLetterBoxModal(false);
   };

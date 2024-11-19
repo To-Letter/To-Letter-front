@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { IoTrashBinSharp } from "react-icons/io5";
 import useDebounce from "../../hook/useDebounce";
 import { getReceiveLetter, getSendLetter } from "../../apis/controller/letter";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { individualLetterState } from "../../recoil/letterPopupAtom";
-import { useSetRecoilState } from "recoil";
 import { deleteLetterPopupState } from "../../recoil/deleteLetterPopupAtom";
 import ConfirmDelete from "./ConfirmDelete";
 import { CgPlayListCheck } from "react-icons/cg";
@@ -25,10 +25,12 @@ const DeleteLetterModal: React.FC = () => {
   const [checkedState, setCheckedState] = useState<boolean[]>([]);
   const debouncedSearchTerm = useDebounce(searchTerm, 300); // 300ms delay
   const [sendMails, setSendMails] = useState<Mail[]>([]);
-  const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
+  const [isConfirmPopup, setIsConfirmPopup] = useState<boolean>(false)
+  const [deleteLetterIds, setDeleteLetterIds] = useState<number[]>([])
+  const [individualLetterInfo, setIndividualLetterInfo] = useRecoilState(
+    individualLetterState
+  );
   const setDeleteLetterPopup = useSetRecoilState(deleteLetterPopupState);
-  const [isConfirmPopup, setIsConfirmPopup] = useState<boolean>(false);
-  const [deleteConfirm, setDeleteConfirm] = useState<boolean>(false);
   const [receivePage, setReceivePage] = useState(0);
   const [sendPage, setSendPage] = useState(0);
   const [receiveHasMore, setReceiveHasMore] = useState(true);
@@ -38,14 +40,9 @@ const DeleteLetterModal: React.FC = () => {
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 체크박스 초기 상태 설정
-    setCheckedState(new Array(receiveMails.length).fill(false));
-  }, [receiveMails]);
-
-  useEffect(() => {
     getAllReceiveLetter();
     getAllSendLetter();
-  }, []);
+  }, [isConfirmPopup, individualLetterInfo.id]);
 
   useEffect(() => {
     searchFilter(tab);
@@ -84,6 +81,8 @@ const DeleteLetterModal: React.FC = () => {
         subject: letter.contents,
         timeReceived: letter.arrivedAt,
       }));
+      setReceiveMails(formattedMails);
+      setCheckedState(new Array(formattedMails.length).fill(false));
       setReceiveMails((prevMails) => [...prevMails, ...formattedMails]);
       // pageable 데이터만으로 마지막 페이지 여부 확인
       if (listLetter.length < pageable.pageSize) {
@@ -112,6 +111,8 @@ const DeleteLetterModal: React.FC = () => {
         subject: letter.contents,
         timeReceived: letter.arrivedAt,
       }));
+      setSendMails(formattedMails);
+      setCheckedState(new Array(formattedMails.length).fill(false));
       setSendMails((prevMails) => [...prevMails, ...formattedMails]);
       // pageable 데이터만으로 마지막 페이지 여부 확인
       if (listLetter.length < pageable.pageSize) {
@@ -199,6 +200,7 @@ const DeleteLetterModal: React.FC = () => {
       letterContent: mail.subject,
       fromUserNickname: mail.sender,
       onDelete: true,
+      tab: tab
     });
     setDeleteLetterPopup(false);
   };
@@ -206,14 +208,40 @@ const DeleteLetterModal: React.FC = () => {
   // 전체 선택 버튼 클릭 시 실행
   const handleSelectAllClick = () => {
     const allChecked = checkedState.every(Boolean); // 모든 체크박스가 체크되어 있는지 확인
-    setCheckedState(new Array(mails.length).fill(!allChecked)); // 모든 체크박스를 반전된 상태로 설정
+    const newCheckedState = new Array(mails.length).fill(!allChecked);
+    setCheckedState(newCheckedState);
+
+    if (!allChecked) {
+      // 전체 체크하는 경우: 체크되지 않은 메일의 ID를 추가
+      const uncheckedMailIds = mails
+        .filter((_, index) => !checkedState[index]) // 체크되지 않은 메일만 필터링
+        .map((mail) => mail.id);
+
+      setDeleteLetterIds((prevIds) => [...prevIds, ...uncheckedMailIds]);
+    } else {
+      // 전체 해제하는 경우: 현재 체크된 모든 메일의 ID를 삭제
+      const checkedMailIds = mails.map((mail) => mail.id);
+      setDeleteLetterIds((prevIds) =>
+        prevIds.filter((id) => !checkedMailIds.includes(id))
+      );
+    }
   };
 
+    // 체크박스 상태 변경 시 id값 업데이트 로직 추가
   const handleCheckboxChange = (index: number) => {
     const updatedCheckedState = checkedState.map((item, idx) =>
       idx === index ? !item : item
     );
     setCheckedState(updatedCheckedState);
+
+    const selectedMailId = mails[index].id;
+    if (updatedCheckedState[index]) {
+      // 체크된 경우 메일 ID 추가
+      setDeleteLetterIds((prevIds) => [...prevIds, selectedMailId]);
+    } else {
+      // 체크 해제된 경우 메일 ID 제거
+      setDeleteLetterIds((prevIds) => prevIds.filter((id) => id !== selectedMailId));
+    }
   };
 
   return (
@@ -270,10 +298,11 @@ const DeleteLetterModal: React.FC = () => {
         </MailboxWrap>
       </ModalContent>
       {isConfirmPopup && (
-        <ConfirmDelete
-          setDeleteConfirm={setDeleteConfirm}
-          setIsConfirmPopup={setIsConfirmPopup}
-        />
+        <ConfirmDelete 
+          mailIds={deleteLetterIds}
+          setIsConfirmPopup={setIsConfirmPopup} 
+          type={tab} 
+          setSearchTerm={setSearchTerm}/>
       )}
     </ModalOverlay>
   );
@@ -371,7 +400,7 @@ const LetterAllCheck = styled.button`
   left: 386px;
   width: 50px;
   height: 50px;
-  background-color: #63636395;
+  background-color: #636363;
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -382,7 +411,7 @@ const LetterAllCheck = styled.button`
   justify-content: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   &:hover {
-    background-color: #505050;
+    background-color: #8d8d8d;
   }
 `;
 
@@ -392,7 +421,7 @@ const LetterWriteButton = styled.button`
   left: 386px;
   width: 50px;
   height: 50px;
-  background-color: #ff6a6a96;
+  background-color: #b84d4d;
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -403,7 +432,7 @@ const LetterWriteButton = styled.button`
   justify-content: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   &:hover {
-    background-color: #ff6a6ac7;
+    background-color: #e75252;
   }
 `;
 

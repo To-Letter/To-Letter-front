@@ -38,3 +38,16 @@ export const getSendLetter = async (pageData: {
 
   return response;
 };
+
+
+// 편지 삭제
+export const deleteLetter = async (req: {
+  letterIds: number[] 
+  letterType: "received"|"send"
+}) => {
+  const response: any = await sendApi.delete(`/letter/deleteLetter`, {
+    letterIds: req.letterIds,
+    letterType: req.letterType ==="received"? "receivedLetter":"sentLetter"
+  })
+  return response;
+}
