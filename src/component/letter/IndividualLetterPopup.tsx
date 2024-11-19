@@ -5,6 +5,8 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { individualLetterState } from "../../recoil/letterPopupAtom";
 import { FaTrash } from "react-icons/fa";
 import { loadingState } from "../../recoil/loadingAtom";
+import { deleteLetter } from "../../apis/controller/letter";
+import ConfirmDelete from "./ConfirmDelete";
 
 const IndividualLetterPopup = () => {
   const popupRef = useRef<HTMLDivElement>(null);
@@ -14,6 +16,7 @@ const IndividualLetterPopup = () => {
     individualLetterState
   );
   const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
+  const [isConfirmPopup, setIsConfirmPopup] = useState<boolean>(false)
   const setLoadingState = useSetRecoilState(loadingState);
   
   const handleClickOutside = (event: MouseEvent) => {
@@ -24,22 +27,13 @@ const IndividualLetterPopup = () => {
         toUserNickname: "",
         letterContent: "",
         fromUserNickname: "",
-        onDelete: false
+        onDelete: false,
+        tab: "received"
       });
     }
   };
 
-  const onClickDeleteLetter = () => {
-    alert('편지 삭제')
-    setIndividualLetterInfo({
-      isOpen: false,
-      id: -9999,
-      toUserNickname: "",
-      letterContent: "",
-      fromUserNickname: "",
-      onDelete: false
-    });
-  }
+
 
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
@@ -92,7 +86,8 @@ const IndividualLetterPopup = () => {
             toUserNickname: "",
             letterContent: "",
             fromUserNickname: "",
-            onDelete: false
+            onDelete: false,
+            tab: "received"
           })
         }
       >
@@ -115,11 +110,11 @@ const IndividualLetterPopup = () => {
       <FromText>From. {individualLetterInfo.fromUserNickname}</FromText>
       {
         individualLetterInfo.onDelete &&
-        <DeleteButton onClick={onClickDeleteLetter}>
+        <DeleteButton onClick={()=>setIsConfirmPopup(true)}>
           <FaTrash />
         </DeleteButton>
       }
-      
+      {isConfirmPopup && <ConfirmDelete mailIds={[individualLetterInfo.id]} setIsConfirmPopup={setIsConfirmPopup} type={individualLetterInfo.tab}/>}
     </Popup>
     ): null
   );

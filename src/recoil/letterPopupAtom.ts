@@ -7,6 +7,7 @@ interface individualLetterState {
   letterContent: string;
   fromUserNickname: string;
   onDelete: boolean;
+  tab: "received"|"send"
 }
 
 // 2번 letter popup 상태
@@ -43,5 +44,6 @@ export const individualLetterState = atom<individualLetterState>({
     letterContent: "",
     fromUserNickname: "",
     onDelete: false,
+    tab: "received"
   },
 });

@@ -1,5 +1,8 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useMemo, useState } from "react";
 import styled from "styled-components";
+import { individualLetterState } from "../../recoil/letterPopupAtom";
+import { useSetRecoilState } from "recoil";
+import { deleteLetter } from "../../apis/controller/letter";
 
 interface defaultStyleProps {
   $direction?: "row" | "column";
@@ -8,16 +11,54 @@ interface defaultStyleProps {
 }
 
 interface propsI {
-  setDeleteConfirm: React.Dispatch<React.SetStateAction<boolean>>
+  mailIds: number[]
   setIsConfirmPopup: React.Dispatch<React.SetStateAction<boolean>>
+  type:"received"| "send"
+  setSearchTerm?: React.Dispatch<React.SetStateAction<string>>| null
 }
 
-const ConfirmDelete = ({setDeleteConfirm, setIsConfirmPopup}: propsI) => {
+const ConfirmDelete = ({mailIds, setIsConfirmPopup, type="received", setSearchTerm=null}: propsI) => {
+  const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
+  const message = useMemo(() => {
+    if(type==="received"){
+      return `선택한 편지를 버립니다.`
+    }else{
+      return `선택한 편지를 보낸 편지함에서 버립니다.\n편지를 받은 사람은 계속 편지를\n열람할 수 있습니다.`
+    }
+  },[type]);
 
-  const onClickConfirm = () => {
-    setDeleteConfirm(true);
+  const onClickConfirm = async () => {
+    try {
+      const res = await deleteLetter({letterIds: mailIds, letterType: type})
+      console.log("편지 삭제 결과", res)
+      if (res.data.responseCode === 200) {
+        // 편지 삭제 성공
+        alert('편지를 버렸습니다.')
+      } else if (res.data.responseCode === 401) {
+        // 메일 삭제 실패 / 메일(letterId)이 없음
+        alert('편지가 존재하지 않습니다.')
+      } else if (res.data.responseCode === 403) {
+        // 메일 삭제 실패 / 메일 주인이 아님
+        alert('편지의 주인이 아닙니다.')
+      }
+    } catch (error) {
+      
+    }
+    setIndividualLetterInfo({
+      isOpen: false,
+      id: -9999,
+      toUserNickname: "",
+      letterContent: "",
+      fromUserNickname: "",
+      onDelete: false,
+      tab:type
+    });
     setIsConfirmPopup(false);
+    if(setSearchTerm !== null){
+      setSearchTerm("")
+    }
   }
+
   return (
     <ModalOverlay>
       <ModalContent>
@@ -25,9 +66,9 @@ const ConfirmDelete = ({setDeleteConfirm, setIsConfirmPopup}: propsI) => {
           <NicknameAuthContent>
             <FormLabel>
               <Box $alignItems="center" $justifyContent="center">
-                <Box $alignItems="center" $justifyContent="center">
-                  선택한 편지를 버립니다.
-                </Box>
+                <Text>
+                  {message}
+                </Text>
                 <Exit onClick={() => setIsConfirmPopup(false)}>X</Exit>
               </Box>
   
@@ -78,6 +119,15 @@ export const NicknameSummry = styled.div`
     display: block;
   }
 `;
+
+const Text = styled.div`
+  font-size: 16px;
+  color: #cecece;
+  line-height: 24px;
+  text-align: center; /* 텍스트 가운데 정렬 */
+  white-space: pre-wrap; /* 줄바꿈을 포함한 공백 처리를 자연스럽게 */
+  word-break: break-word; /* 단어가 너무 길면 줄바꿈 */
+`
 
 export const TipBox = styled.div`
   display: none;
