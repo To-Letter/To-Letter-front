@@ -48,7 +48,6 @@ const LetterPopup: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("my info : ", myInfo);
     const handleWheel = (event: WheelEvent) => {
       if (textareaRef.current) {
         event.preventDefault();

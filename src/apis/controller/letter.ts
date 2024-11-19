@@ -16,15 +16,25 @@ export const sendLetter = async (sendLetterData: {
 };
 
 // 받은 편지함
-export const getReceiveLetter = async () => {
-  const response: any = await sendApi.get(`/letter/receive`);
+export const getReceiveLetter = async (pageData: {
+  page: number;
+  size: number;
+  sort: string;
+}) => {
+  const queryString = `?page=${pageData.page}&size=${pageData.size}&sort=${pageData.sort}`;
+  const response: any = await sendApi.get(`/letter/receive${queryString}`);
 
   return response;
 };
 
 // 보낸 편지함
-export const getSendLetter = async () => {
-  const response: any = await sendApi.get(`/letter/sent`);
+export const getSendLetter = async (pageData: {
+  page: number;
+  size: number;
+  sort: string;
+}) => {
+  const queryString = `?page=${pageData.page}&size=${pageData.size}&sort=${pageData.sort}`;
+  const response: any = await sendApi.get(`/letter/sent${queryString}`);
 
   return response;
 };

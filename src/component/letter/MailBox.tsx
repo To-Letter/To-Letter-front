@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import { IoIosMail } from "react-icons/io"; // 메일 버튼
 import useDebounce from "../../hook/useDebounce";
@@ -10,6 +10,7 @@ import {
 } from "../../recoil/letterPopupAtom";
 import { useSetRecoilState } from "recoil";
 import { toUserNicknameModalState } from "../../recoil/toUserNicknameAtom";
+import useThrottle from "../../hook/useThrottle";
 
 interface Mail {
   id: number;
@@ -22,6 +23,10 @@ const Mailbox: React.FC = () => {
   const [mails, setMails] = useState<Mail[]>([]);
   const [receiveMails, setReceiveMails] = useState<Mail[]>([]);
   const [sendMails, setSendMails] = useState<Mail[]>([]);
+  const [receivePage, setReceivePage] = useState(0);
+  const [sendPage, setSendPage] = useState(0);
+  const [receiveHasMore, setReceiveHasMore] = useState(true);
+  const [sendHasMore, setSendHasMore] = useState(true);
 
   const [tab, setTab] = useState("received"); // "received" or "send"
   const [searchTerm, setSearchTerm] = useState("");
@@ -34,6 +39,7 @@ const Mailbox: React.FC = () => {
   const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
 
   const modalRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getAllReceiveLetter();
@@ -61,34 +67,56 @@ const Mailbox: React.FC = () => {
   }, [setReceiveLetterBoxModal]);
 
   // 받은 편지함
-  const getAllReceiveLetter = async () => {
+  const getAllReceiveLetter = async (pageNumber = 0) => {
     try {
-      const res = await getReceiveLetter();
-      const listLetter = res.data.responseData.listLetter;
+      const res = await getReceiveLetter({
+        page: pageNumber,
+        size: 10,
+        sort: "desc",
+      });
+      const listLetter = res.data.responseData.letterDTO;
+      const pageable = res.data.responseData.pageable;
       const formattedMails = listLetter.map((letter: any) => ({
         id: letter.id,
         sender: letter.fromUserNickname,
         subject: letter.contents,
         timeReceived: letter.arrivedAt,
       }));
-      setReceiveMails(formattedMails);
+      setReceiveMails((prevMails) => [...prevMails, ...formattedMails]);
+      // pageable 데이터만으로 마지막 페이지 여부 확인
+      if (listLetter.length < pageable.pageSize) {
+        setReceiveHasMore(false); // 현재 페이지의 데이터가 pageSize보다 적으면 마지막 페이지로 간주
+      } else {
+        setReceiveHasMore(true);
+      }
     } catch (err) {
       console.log(err);
     }
   };
 
   // 보낸 편지함
-  const getAllSendLetter = async () => {
+  const getAllSendLetter = async (pageNumber = 0) => {
     try {
-      const res = await getSendLetter();
+      const res = await getSendLetter({
+        page: pageNumber,
+        size: 10,
+        sort: "desc",
+      });
       const listLetter = res.data.responseData.listLetter;
+      const pageable = res.data.responseData.pageable;
       const formattedMails = listLetter.map((letter: any) => ({
         id: letter.id,
         sender: letter.fromUserNickname,
         subject: letter.contents,
         timeReceived: letter.arrivedAt,
       }));
-      setSendMails(formattedMails);
+      setSendMails((prevMails) => [...prevMails, ...formattedMails]);
+      // pageable 데이터만으로 마지막 페이지 여부 확인
+      if (listLetter.length < pageable.pageSize) {
+        setSendHasMore(false); // 현재 페이지의 데이터가 pageSize보다 적으면 마지막 페이지로 간주
+      } else {
+        setSendHasMore(true);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -134,17 +162,55 @@ const Mailbox: React.FC = () => {
 
   // 메일 아이템 클릭 이벤트(개별 편지 팝업창)
   const handleMailItemClick = (mail: Mail) => {
-    console.log("개별 메일 확인: ", mail);
     setIndividualLetterInfo({
       isOpen: true,
       id: mail.id,
       toUserNickname: mail.sender,
       letterContent: mail.subject,
       fromUserNickname: mail.sender,
-      onDelete:false
+      onDelete: false,
     });
     setReceiveLetterBoxModal(false);
   };
+
+  // 스크롤 이벤트 핸들러
+  const handleScroll = useCallback(
+    useThrottle(() => {
+      if (listRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 5) {
+          if (tab === "received" && receiveHasMore) {
+            setReceivePage((prevPage) => {
+              const nextPage = prevPage + 1;
+              getAllReceiveLetter(nextPage);
+              return nextPage;
+            });
+          } else if (tab === "send" && sendHasMore) {
+            setSendPage((prevPage) => {
+              const nextPage = prevPage + 1;
+              getAllSendLetter(nextPage);
+              return nextPage;
+            });
+          }
+        }
+      }
+    }, 100),
+    [receiveHasMore, sendHasMore, tab]
+  );
+
+  useEffect(() => {
+    const currentRef = listRef.current;
+    if (currentRef) {
+      currentRef.addEventListener("scroll", handleScroll);
+      return () => currentRef.removeEventListener("scroll", handleScroll);
+    }
+  }, [handleScroll]);
+
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollTop = 0;
+    }
+  }, [tab]);
 
   return (
     <ModalOverlay>
@@ -170,7 +236,7 @@ const Mailbox: React.FC = () => {
             value={searchTerm}
             onChange={handleSearchChange}
           />
-          <MailList>
+          <MailList ref={listRef}>
             {mails.map((mail) => (
               <MailItem key={mail.id} onClick={() => handleMailItemClick(mail)}>
                 <MailItemColumnWrap>
