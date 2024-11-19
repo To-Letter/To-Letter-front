@@ -23,9 +23,10 @@ const Mailbox: React.FC = () => {
   const [mails, setMails] = useState<Mail[]>([]);
   const [receiveMails, setReceiveMails] = useState<Mail[]>([]);
   const [sendMails, setSendMails] = useState<Mail[]>([]);
-  const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const listRef = useRef<HTMLDivElement>(null);
+  const [receivePage, setReceivePage] = useState(0);
+  const [sendPage, setSendPage] = useState(0);
+  const [receiveHasMore, setReceiveHasMore] = useState(true);
+  const [sendHasMore, setSendHasMore] = useState(true);
 
   const [tab, setTab] = useState("received"); // "received" or "send"
   const [searchTerm, setSearchTerm] = useState("");
@@ -38,6 +39,7 @@ const Mailbox: React.FC = () => {
   const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
 
   const modalRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     getAllReceiveLetter();
@@ -45,6 +47,7 @@ const Mailbox: React.FC = () => {
   }, []);
   useEffect(() => {
     searchFilter(tab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, debouncedSearchTerm, receiveMails, sendMails]);
 
   // 모달 외부 클릭 감지 닫기
@@ -82,9 +85,9 @@ const Mailbox: React.FC = () => {
       setReceiveMails((prevMails) => [...prevMails, ...formattedMails]);
       // pageable 데이터만으로 마지막 페이지 여부 확인
       if (listLetter.length < pageable.pageSize) {
-        setHasMore(false); // 현재 페이지의 데이터가 pageSize보다 적으면 마지막 페이지로 간주
+        setReceiveHasMore(false); // 현재 페이지의 데이터가 pageSize보다 적으면 마지막 페이지로 간주
       } else {
-        setHasMore(true);
+        setReceiveHasMore(true);
       }
     } catch (err) {
       console.log(err);
@@ -92,17 +95,28 @@ const Mailbox: React.FC = () => {
   };
 
   // 보낸 편지함
-  const getAllSendLetter = async () => {
+  const getAllSendLetter = async (pageNumber = 0) => {
     try {
-      const res = await getSendLetter();
-      const listLetter = res.data.responseData.letterDTO;
+      const res = await getSendLetter({
+        page: pageNumber,
+        size: 10,
+        sort: "desc",
+      });
+      const listLetter = res.data.responseData.listLetter;
+      const pageable = res.data.responseData.pageable;
       const formattedMails = listLetter.map((letter: any) => ({
         id: letter.id,
         sender: letter.fromUserNickname,
         subject: letter.contents,
         timeReceived: letter.arrivedAt,
       }));
-      setSendMails(formattedMails);
+      setSendMails((prevMails) => [...prevMails, ...formattedMails]);
+      // pageable 데이터만으로 마지막 페이지 여부 확인
+      if (listLetter.length < pageable.pageSize) {
+        setSendHasMore(false); // 현재 페이지의 데이터가 pageSize보다 적으면 마지막 페이지로 간주
+      } else {
+        setSendHasMore(true);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -164,16 +178,24 @@ const Mailbox: React.FC = () => {
     useThrottle(() => {
       if (listRef.current) {
         const { scrollTop, scrollHeight, clientHeight } = listRef.current;
-        if (scrollTop + clientHeight >= scrollHeight - 5 && hasMore) {
-          setPage((prevPage) => {
-            const nextPage = prevPage + 1;
-            getAllReceiveLetter(nextPage);
-            return nextPage;
-          });
+        if (scrollTop + clientHeight >= scrollHeight - 5) {
+          if (tab === "received" && receiveHasMore) {
+            setReceivePage((prevPage) => {
+              const nextPage = prevPage + 1;
+              getAllReceiveLetter(nextPage);
+              return nextPage;
+            });
+          } else if (tab === "send" && sendHasMore) {
+            setSendPage((prevPage) => {
+              const nextPage = prevPage + 1;
+              getAllSendLetter(nextPage);
+              return nextPage;
+            });
+          }
         }
       }
     }, 100),
-    [hasMore]
+    [receiveHasMore, sendHasMore, tab]
   );
 
   useEffect(() => {
@@ -183,6 +205,12 @@ const Mailbox: React.FC = () => {
       return () => currentRef.removeEventListener("scroll", handleScroll);
     }
   }, [handleScroll]);
+
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollTop = 0;
+    }
+  }, [tab]);
 
   return (
     <ModalOverlay>

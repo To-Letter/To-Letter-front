@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import { IoTrashBinSharp } from "react-icons/io5";
 import useDebounce from "../../hook/useDebounce";
@@ -8,6 +8,7 @@ import { useSetRecoilState } from "recoil";
 import { deleteLetterPopupState } from "../../recoil/deleteLetterPopupAtom";
 import ConfirmDelete from "./ConfirmDelete";
 import { CgPlayListCheck } from "react-icons/cg";
+import useThrottle from "../../hook/useThrottle";
 
 interface Mail {
   id: number;
@@ -28,8 +29,13 @@ const DeleteLetterModal: React.FC = () => {
   const setDeleteLetterPopup = useSetRecoilState(deleteLetterPopupState);
   const [isConfirmPopup, setIsConfirmPopup] = useState<boolean>(false);
   const [deleteConfirm, setDeleteConfirm] = useState<boolean>(false);
+  const [receivePage, setReceivePage] = useState(0);
+  const [sendPage, setSendPage] = useState(0);
+  const [receiveHasMore, setReceiveHasMore] = useState(true);
+  const [sendHasMore, setSendHasMore] = useState(true);
 
   const modalRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // 체크박스 초기 상태 설정
@@ -37,7 +43,7 @@ const DeleteLetterModal: React.FC = () => {
   }, [receiveMails]);
 
   useEffect(() => {
-    // getAllReceiveLetter();
+    getAllReceiveLetter();
     getAllSendLetter();
   }, []);
 
@@ -46,35 +52,73 @@ const DeleteLetterModal: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, debouncedSearchTerm, receiveMails, sendMails]);
 
-  // 받은 편지함
-  // const getAllReceiveLetter = async () => {
-  //   try {
-  //     const res = await getReceiveLetter();
-  //     const listLetter = res.data.responseData.listLetter;
-  //     const formattedMails = listLetter.map((letter: any) => ({
-  //       id: letter.id,
-  //       sender: letter.fromUserNickname,
-  //       subject: letter.contents,
-  //       timeReceived: letter.arrivedAt,
-  //     }));
-  //     setReceiveMails(formattedMails);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  // 모달 외부 클릭 감지 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        setDeleteLetterPopup(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setDeleteLetterPopup]);
 
-  // 보낸 편지함
-  const getAllSendLetter = async () => {
+  // 받은 편지함
+  const getAllReceiveLetter = async (pageNumber = 0) => {
     try {
-      const res = await getSendLetter();
-      const listLetter = res.data.responseData.listLetter;
+      const res = await getReceiveLetter({
+        page: pageNumber,
+        size: 10,
+        sort: "desc",
+      });
+      const listLetter = res.data.responseData.letterDTO;
+      const pageable = res.data.responseData.pageable;
       const formattedMails = listLetter.map((letter: any) => ({
         id: letter.id,
         sender: letter.fromUserNickname,
         subject: letter.contents,
         timeReceived: letter.arrivedAt,
       }));
-      setSendMails(formattedMails);
+      setReceiveMails((prevMails) => [...prevMails, ...formattedMails]);
+      // pageable 데이터만으로 마지막 페이지 여부 확인
+      if (listLetter.length < pageable.pageSize) {
+        setReceiveHasMore(false); // 현재 페이지의 데이터가 pageSize보다 적으면 마지막 페이지로 간주
+      } else {
+        setReceiveHasMore(true);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 보낸 편지함
+  const getAllSendLetter = async (pageNumber = 0) => {
+    try {
+      const res = await getSendLetter({
+        page: pageNumber,
+        size: 10,
+        sort: "desc",
+      });
+      const listLetter = res.data.responseData.listLetter;
+      const pageable = res.data.responseData.pageable;
+      const formattedMails = listLetter.map((letter: any) => ({
+        id: letter.id,
+        sender: letter.fromUserNickname,
+        subject: letter.contents,
+        timeReceived: letter.arrivedAt,
+      }));
+      setSendMails((prevMails) => [...prevMails, ...formattedMails]);
+      // pageable 데이터만으로 마지막 페이지 여부 확인
+      if (listLetter.length < pageable.pageSize) {
+        setSendHasMore(false); // 현재 페이지의 데이터가 pageSize보다 적으면 마지막 페이지로 간주
+      } else {
+        setSendHasMore(true);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -107,9 +151,47 @@ const DeleteLetterModal: React.FC = () => {
     setTab(newTab);
   };
 
+  // 스크롤 이벤트 핸들러
+  const handleScroll = useCallback(
+    useThrottle(() => {
+      if (listRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 5) {
+          if (tab === "received" && receiveHasMore) {
+            setReceivePage((prevPage) => {
+              const nextPage = prevPage + 1;
+              getAllReceiveLetter(nextPage);
+              return nextPage;
+            });
+          } else if (tab === "send" && sendHasMore) {
+            setSendPage((prevPage) => {
+              const nextPage = prevPage + 1;
+              getAllSendLetter(nextPage);
+              return nextPage;
+            });
+          }
+        }
+      }
+    }, 100),
+    [receiveHasMore, sendHasMore, tab]
+  );
+
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollTop = 0;
+    }
+  }, [tab]);
+
+  useEffect(() => {
+    const currentRef = listRef.current;
+    if (currentRef) {
+      currentRef.addEventListener("scroll", handleScroll);
+      return () => currentRef.removeEventListener("scroll", handleScroll);
+    }
+  }, [handleScroll]);
+
   // 메일 아이템 클릭 이벤트(개별 편지 팝업창)
   const handleMailItemClick = (mail: Mail) => {
-    console.log("개별 메일 확인: ", mail);
     setIndividualLetterInfo({
       isOpen: true,
       id: mail.id,
@@ -118,6 +200,7 @@ const DeleteLetterModal: React.FC = () => {
       fromUserNickname: mail.sender,
       onDelete: true,
     });
+    setDeleteLetterPopup(false);
   };
 
   // 전체 선택 버튼 클릭 시 실행
@@ -157,7 +240,7 @@ const DeleteLetterModal: React.FC = () => {
             value={searchTerm}
             onChange={handleSearchChange}
           />
-          <MailList>
+          <MailList ref={listRef}>
             {mails.map((mail, index) => (
               <MailItem key={mail.id}>
                 <MailCheckBtn
@@ -339,16 +422,6 @@ const MailList = styled.div`
     background: #e9e4e4;
     border-radius: 6px;
   }
-`;
-
-const MailSelect = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-right: 10px;
-  border-bottom: 1px solid #ddd;
 `;
 
 const MailItem = styled.div`

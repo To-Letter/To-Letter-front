@@ -1,9 +1,13 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { IoMdClose } from "react-icons/io";
-import { useRecoilState } from "recoil";
-import { individualLetterState } from "../../recoil/letterPopupAtom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import {
+  individualLetterState,
+  receiveLetterBoxModalState,
+} from "../../recoil/letterPopupAtom";
 import { FaTrash } from "react-icons/fa";
+import useThrottle from "../../hook/useThrottle";
 
 const IndividualLetterPopup = () => {
   const popupRef = useRef<HTMLDivElement>(null);
@@ -12,6 +16,21 @@ const IndividualLetterPopup = () => {
   const [individualLetterInfo, setIndividualLetterInfo] = useRecoilState(
     individualLetterState
   );
+  const setReceiveLetterBoxModal = useSetRecoilState(
+    receiveLetterBoxModalState
+  );
+
+  // 편지 내용 상태와 페이지
+  const [content, setContent] = useState<string>("");
+  const [page, setPage] = useState(0);
+  const pageSize = 1000;
+
+  useEffect(() => {
+    // 초기 페이지 로드
+    setContent("");
+    setPage(0);
+    loadMoreContent(0);
+  }, [individualLetterInfo.letterContent]);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
@@ -21,45 +40,68 @@ const IndividualLetterPopup = () => {
         toUserNickname: "",
         letterContent: "",
         fromUserNickname: "",
-        onDelete: false
+        onDelete: false,
       });
     }
   };
 
   const onClickDeleteLetter = () => {
-    alert('편지 삭제')
+    alert("편지 삭제");
     setIndividualLetterInfo({
       isOpen: false,
       id: -9999,
       toUserNickname: "",
       letterContent: "",
       fromUserNickname: "",
-      onDelete: false
+      onDelete: false,
     });
-  }
+  };
+
+  // 페이지 단위로 내용 로드
+  const loadMoreContent = (pageNum: number) => {
+    const start = pageNum * pageSize;
+    const end = start + pageSize;
+    const newContent = individualLetterInfo.letterContent.slice(start, end);
+    setContent((prevContent) => prevContent + newContent);
+  };
+
+  // 스크롤 이벤트 핸들러
+  const handleScroll = useThrottle(() => {
+    if (textareaRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = textareaRef.current;
+      if (scrollTop + clientHeight >= scrollHeight - 5) {
+        const nextPage = page + 1;
+        loadMoreContent(nextPage);
+        setPage(nextPage);
+      }
+    }
+  }, 100);
+
+  const backToMailBox = () => {
+    setReceiveLetterBoxModal(true);
+    setIndividualLetterInfo({
+      isOpen: false,
+      id: -9999,
+      toUserNickname: "",
+      letterContent: "",
+      fromUserNickname: "",
+      onDelete: false,
+    });
+  };
 
   useEffect(() => {
-    const handleWheel = (event: WheelEvent) => {
-      if (textareaRef.current) {
-        event.preventDefault();
-        const lineHeight = parseFloat(
-          window.getComputedStyle(textareaRef.current).lineHeight
-        );
-        textareaRef.current.scrollTop +=
-          event.deltaY > 0 ? lineHeight : -lineHeight;
-      }
-    };
+    const currentRef = textareaRef.current;
 
-    if (textareaRef.current) {
-      textareaRef.current.addEventListener("wheel", handleWheel);
+    if (currentRef) {
+      currentRef.addEventListener("scroll", handleScroll);
     }
 
     return () => {
-      if (textareaRef.current) {
-        textareaRef.current.removeEventListener("wheel", handleWheel);
+      if (currentRef) {
+        currentRef.removeEventListener("scroll", handleScroll);
       }
     };
-  }, []);
+  }, [handleScroll]);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -70,6 +112,9 @@ const IndividualLetterPopup = () => {
 
   return (
     <Popup ref={popupRef}>
+      <BackButtonWrapper onClick={backToMailBox}>
+        <BackIcon src="images/back_arrow_icon.png" alt="Back" />
+      </BackButtonWrapper>
       <CloseButton
         onClick={() =>
           setIndividualLetterInfo({
@@ -78,7 +123,7 @@ const IndividualLetterPopup = () => {
             toUserNickname: "",
             letterContent: "",
             fromUserNickname: "",
-            onDelete: false
+            onDelete: false,
           })
         }
       >
@@ -89,7 +134,7 @@ const IndividualLetterPopup = () => {
           <ToInput>{`To. ${individualLetterInfo.toUserNickname}`}</ToInput>
         </ToInputWrapper>
         <StyledTextarea
-          value={individualLetterInfo.letterContent}
+          value={content}
           ref={textareaRef}
           placeholder="Write your letter here..."
           spellCheck={false}
@@ -99,13 +144,11 @@ const IndividualLetterPopup = () => {
         />
       </PopupInner>
       <FromText>From. {individualLetterInfo.fromUserNickname}</FromText>
-      {
-        individualLetterInfo.onDelete &&
+      {individualLetterInfo.onDelete && (
         <DeleteButton onClick={onClickDeleteLetter}>
           <FaTrash />
         </DeleteButton>
-      }
-      
+      )}
     </Popup>
   );
 };
@@ -251,6 +294,21 @@ const FromText = styled.div`
   right: 67px;
   font-family: "Handwriting", sans-serif;
   font-size: 18px;
+`;
+
+const BackButtonWrapper = styled.button`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 3px 3px;
+`;
+const BackIcon = styled.img`
+  width: 20px;
+  height: 20px;
 `;
 
 export default IndividualLetterPopup;
