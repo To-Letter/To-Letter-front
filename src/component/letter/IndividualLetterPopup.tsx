@@ -8,6 +8,7 @@ import {
 } from "../../recoil/letterPopupAtom";
 import { FaTrash } from "react-icons/fa";
 import useThrottle from "../../hook/useThrottle";
+import { loadingState } from "../../recoil/loadingAtom";
 
 const IndividualLetterPopup = () => {
   const popupRef = useRef<HTMLDivElement>(null);
@@ -24,6 +25,9 @@ const IndividualLetterPopup = () => {
   const [content, setContent] = useState<string>("");
   const [page, setPage] = useState(0);
   const pageSize = 1000;
+    
+  const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
+  const setLoadingState = useSetRecoilState(loadingState);
 
   useEffect(() => {
     // 초기 페이지 로드
@@ -31,7 +35,7 @@ const IndividualLetterPopup = () => {
     setPage(0);
     loadMoreContent(0);
   }, [individualLetterInfo.letterContent]);
-
+ 
   const handleClickOutside = (event: MouseEvent) => {
     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
       setIndividualLetterInfo({
@@ -110,7 +114,18 @@ const IndividualLetterPopup = () => {
     };
   }, []);
 
+  useEffect(() => {
+    setLoadingState(true);
+    const img = new Image();
+    img.src = "/images/letter_background.jpg";
+    img.onload = () => {
+      setIsImageLoaded(true)
+      setLoadingState(false);
+    };
+  }, []);
+
   return (
+    isImageLoaded ? (
     <Popup ref={popupRef}>
       <BackButtonWrapper onClick={backToMailBox}>
         <BackIcon src="images/back_arrow_icon.png" alt="Back" />
@@ -150,6 +165,7 @@ const IndividualLetterPopup = () => {
         </DeleteButton>
       )}
     </Popup>
+    ): null
   );
 };
 

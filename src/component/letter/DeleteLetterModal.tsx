@@ -411,6 +411,7 @@ const MailList = styled.div`
   width: 100%;
   max-height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -430,8 +431,8 @@ const MailItem = styled.div`
   align-items: center;
   padding-top: 10px;
   padding-bottom: 10px;
-  padding-right: 10px;
   border-bottom: 1px solid #ddd;
+  margin-right: 10px;
   cursor: pointer;
 `;
 
@@ -439,7 +440,7 @@ const MailCheckBtn = styled.input.attrs({ type: "checkbox" })`
   /* 기본 체크박스 숨기기 */
   appearance: none;
   margin: 8px;
-  width: 20px;
+  min-width: 20px;
   height: 20px;
   border: 2px solid #5a5a5a;
   border-radius: 4px;
@@ -466,9 +467,9 @@ const MailItemColumnWrap = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-  width: 100%;
   height: 100%;
   position: relative;
+  width: calc( 100% - 32px);
 `;
 
 const MailItemRowWrap = styled.div`
@@ -491,7 +492,7 @@ const Subject = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 100%; /* 추가 */
+  max-width: calc(100% - 8px);
   display: block; /* 추가 */
 `;
 
