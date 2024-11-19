@@ -30,12 +30,7 @@ const ConfirmDelete = ({mailIds, setIsConfirmPopup, type="received", setSearchTe
     }
   },[type]);
 
-  useEffect(()=>{
-    console.log("mailIds", mailIds)
-  },[])
-
   const onClickConfirm = async () => {
-    console.log("onClickConfirm 왜죠?")
     try {
       const res = await deleteLetter({letterIds: mailIds, letterType: type})
       console.log("편지 삭제 결과", res)
