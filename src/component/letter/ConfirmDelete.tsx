@@ -33,7 +33,6 @@ const ConfirmDelete = ({mailIds, setIsConfirmPopup, type="received", setSearchTe
   const onClickConfirm = async () => {
     try {
       const res = await deleteLetter({letterIds: mailIds, letterType: type})
-      console.log("편지 삭제 결과", res)
       if (res.data.responseCode === 200) {
         // 편지 삭제 성공
         alert('편지를 버렸습니다.')
