@@ -188,6 +188,7 @@ const SnsButtonsWrap = styled.div`
   display: flex;
   align-items: start;
   width: 100%;
+  justify-content: space-around;
 `;
 
 const ShareButton = styled.button`
@@ -197,7 +198,7 @@ const ShareButton = styled.button`
   border: none;
   background-color: transparent;
   padding: 0;
-  margin-right: 20px;
+  margin: 0px 20px;
   cursor: pointer;
 `;
 
