@@ -7,7 +7,15 @@ interface individualLetterState {
   letterContent: string;
   fromUserNickname: string;
   onDelete: boolean;
-  tab: "received"|"send"
+  tab: "received" | "send";
+}
+
+interface Mail {
+  id: number;
+  sender: string;
+  subject: string;
+  timeReceived: string;
+  viewCheck: boolean;
 }
 
 // 2번 letter popup 상태
@@ -44,6 +52,18 @@ export const individualLetterState = atom<individualLetterState>({
     letterContent: "",
     fromUserNickname: "",
     onDelete: false,
-    tab: "received"
+    tab: "received",
   },
+});
+
+// viewChaeck를 위한 recoil
+export const receiveLettersState = atom<Mail[]>({
+  key: "receiveLettersState", // 키 설정
+  default: [],
+});
+
+// tab관리 recoil
+export const tabState = atom<"received" | "send">({
+  key: "tabState",
+  default: "received",
 });

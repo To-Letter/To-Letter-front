@@ -5,6 +5,8 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   individualLetterState,
   receiveLetterBoxModalState,
+  receiveLettersState,
+  tabState,
 } from "../../recoil/letterPopupAtom";
 import { FaTrash } from "react-icons/fa";
 import useThrottle from "../../hook/useThrottle";
@@ -19,17 +21,20 @@ const IndividualLetterPopup = () => {
   const [individualLetterInfo, setIndividualLetterInfo] = useRecoilState(
     individualLetterState
   );
+  const [receiveLetters, setReceiveLetters] =
+    useRecoilState(receiveLettersState);
   const setReceiveLetterBoxModal = useSetRecoilState(
     receiveLetterBoxModalState
   );
+  const [tab, setTab] = useRecoilState(tabState);
 
   // 편지 내용 상태와 페이지
   const [content, setContent] = useState<string>("");
   const [page, setPage] = useState(0);
   const pageSize = 1000;
-    
+
   const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
-  const [isConfirmPopup, setIsConfirmPopup] = useState<boolean>(false)
+  const [isConfirmPopup, setIsConfirmPopup] = useState<boolean>(false);
   const setLoadingState = useSetRecoilState(loadingState);
 
   useEffect(() => {
@@ -38,21 +43,37 @@ const IndividualLetterPopup = () => {
     setPage(0);
     loadMoreContent(0);
   }, [individualLetterInfo.letterContent]);
- 
+
   const handleClickOutside = (event: MouseEvent) => {
     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-      setIndividualLetterInfo({
-        isOpen: false,
-        id: -9999,
-        toUserNickname: "",
-        letterContent: "",
-        fromUserNickname: "",
-        onDelete: false,
-        tab: "received"
-      });
+      closeModal();
     }
   };
 
+  const closeModal = () => {
+    if (individualLetterInfo.tab === "send") {
+      setTab("send");
+    } else {
+      setTab("received");
+    }
+    setReceiveLetterBoxModal(true);
+    setIndividualLetterInfo({
+      isOpen: false,
+      id: -9999,
+      toUserNickname: "",
+      letterContent: "",
+      fromUserNickname: "",
+      onDelete: false,
+      tab: "received",
+    });
+    setReceiveLetters((prevLetters) =>
+      prevLetters.map((letter) =>
+        letter.id === individualLetterInfo.id
+          ? { ...letter, viewCheck: true }
+          : letter
+      )
+    );
+  };
 
   // 페이지 단위로 내용 로드
   const loadMoreContent = (pageNum: number) => {
@@ -75,16 +96,7 @@ const IndividualLetterPopup = () => {
   }, 100);
 
   const backToMailBox = () => {
-    setReceiveLetterBoxModal(true);
-    setIndividualLetterInfo({
-      isOpen: false,
-      id: -9999,
-      toUserNickname: "",
-      letterContent: "",
-      fromUserNickname: "",
-      onDelete: false,
-      tab: "received"
-    });
+    closeModal();
   };
 
   useEffect(() => {
@@ -113,30 +125,17 @@ const IndividualLetterPopup = () => {
     const img = new Image();
     img.src = "/images/letter_background.jpg";
     img.onload = () => {
-      setIsImageLoaded(true)
+      setIsImageLoaded(true);
       setLoadingState(false);
     };
   }, []);
 
-  return (
-    isImageLoaded ? (
+  return isImageLoaded ? (
     <Popup ref={popupRef}>
       <BackButtonWrapper onClick={backToMailBox}>
         <BackIcon src="images/back_arrow_icon.png" alt="Back" />
       </BackButtonWrapper>
-      <CloseButton
-        onClick={() =>
-          setIndividualLetterInfo({
-            isOpen: false,
-            id: -9999,
-            toUserNickname: "",
-            letterContent: "",
-            fromUserNickname: "",
-            onDelete: false,
-            tab: "received"
-          })
-        }
-      >
+      <CloseButton onClick={closeModal}>
         <IoMdClose />
       </CloseButton>
       <PopupInner ref={innerRef}>
@@ -154,16 +153,20 @@ const IndividualLetterPopup = () => {
         />
       </PopupInner>
       <FromText>From. {individualLetterInfo.fromUserNickname}</FromText>
-      {
-        individualLetterInfo.onDelete &&
-        <DeleteButton onClick={()=>setIsConfirmPopup(true)}>
+      {individualLetterInfo.onDelete && (
+        <DeleteButton onClick={() => setIsConfirmPopup(true)}>
           <FaTrash />
         </DeleteButton>
-      }
-      {isConfirmPopup && <ConfirmDelete mailIds={[individualLetterInfo.id]} setIsConfirmPopup={setIsConfirmPopup} type={individualLetterInfo.tab}/>}
+      )}
+      {isConfirmPopup && (
+        <ConfirmDelete
+          mailIds={[individualLetterInfo.id]}
+          setIsConfirmPopup={setIsConfirmPopup}
+          type={individualLetterInfo.tab}
+        />
+      )}
     </Popup>
-    ): null
-  );
+  ) : null;
 };
 
 const Popup = styled.div`

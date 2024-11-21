@@ -7,8 +7,10 @@ import { getReceiveLetter, getSendLetter } from "../../apis/controller/letter";
 import {
   individualLetterState,
   receiveLetterBoxModalState,
+  receiveLettersState,
+  tabState,
 } from "../../recoil/letterPopupAtom";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { toUserNicknameModalState } from "../../recoil/toUserNicknameAtom";
 import useThrottle from "../../hook/useThrottle";
 
@@ -17,18 +19,19 @@ interface Mail {
   sender: string;
   subject: string;
   timeReceived: string;
+  viewCheck: boolean;
 }
 
 const Mailbox: React.FC = () => {
   const [mails, setMails] = useState<Mail[]>([]);
-  const [receiveMails, setReceiveMails] = useState<Mail[]>([]);
+  const [receiveMails, setReceiveMails] = useRecoilState(receiveLettersState);
   const [sendMails, setSendMails] = useState<Mail[]>([]);
   const [receivePage, setReceivePage] = useState(0);
   const [sendPage, setSendPage] = useState(0);
   const [receiveHasMore, setReceiveHasMore] = useState(true);
   const [sendHasMore, setSendHasMore] = useState(true);
 
-  const [tab, setTab] = useState("received"); // "received" or "send"
+  const [tab, setTab] = useRecoilState(tabState);
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 300); // 300ms delay
 
@@ -42,9 +45,12 @@ const Mailbox: React.FC = () => {
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    getAllReceiveLetter();
+    if (receiveMails.length === 0) {
+      getAllReceiveLetter();
+    }
     getAllSendLetter();
   }, []);
+
   useEffect(() => {
     searchFilter(tab);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,6 +74,11 @@ const Mailbox: React.FC = () => {
 
   // 받은 편지함
   const getAllReceiveLetter = async (pageNumber = 0) => {
+    if (!receiveHasMore && pageNumber !== 0) {
+      // 더 이상 데이터를 불러올 필요가 없을 때
+      return;
+    }
+
     try {
       const res = await getReceiveLetter({
         page: pageNumber,
@@ -81,9 +92,17 @@ const Mailbox: React.FC = () => {
         sender: letter.fromUserNickname,
         subject: letter.contents,
         timeReceived: letter.arrivedAt,
+        viewCheck: letter.viewCheck,
       }));
-      setReceiveMails((prevMails) => [...prevMails, ...formattedMails]);
-      // pageable 데이터만으로 마지막 페이지 여부 확인
+
+      setReceiveMails((prevMails) => {
+        // 중복된 데이터를 방지하기 위해 필터링
+        const newMails = formattedMails.filter(
+          (newMail: any) => !prevMails.some((mail) => mail.id === newMail.id)
+        );
+        return [...prevMails, ...newMails];
+      });
+
       if (listLetter.length < pageable.pageSize) {
         setReceiveHasMore(false); // 현재 페이지의 데이터가 pageSize보다 적으면 마지막 페이지로 간주
       } else {
@@ -145,8 +164,13 @@ const Mailbox: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleTabChange = (newTab: string) => {
+  const handleTabChange = (newTab: "received" | "send") => {
     setTab(newTab);
+    if (newTab === "send") {
+      setMails(sendMails); // 보낸 편지함 탭일 때 sendMails 설정
+    } else {
+      setMails(receiveMails); // 받은 편지함 탭일 때receiveMails 설정
+    }
   };
 
   // 편지 쓰기 모달창 이동 이벤트
@@ -162,15 +186,20 @@ const Mailbox: React.FC = () => {
 
   // 메일 아이템 클릭 이벤트(개별 편지 팝업창)
   const handleMailItemClick = (mail: Mail) => {
-    setIndividualLetterInfo({
+    console.log("클릭한 편지 ID: ", mail.id);
+    setReceiveMails((prevMails) =>
+      prevMails.map((m) => (m.id === mail.id ? { ...m, viewCheck: true } : m))
+    );
+    setIndividualLetterInfo((prev) => ({
+      ...prev,
       isOpen: true,
       id: mail.id,
       toUserNickname: mail.sender,
       letterContent: mail.subject,
       fromUserNickname: mail.sender,
-      onDelete:false,
-      tab: "received"
-    });
+      onDelete: false,
+      tab: tab as "received" | "send",
+    }));
     setReceiveLetterBoxModal(false);
   };
 
@@ -242,7 +271,15 @@ const Mailbox: React.FC = () => {
               <MailItem key={mail.id} onClick={() => handleMailItemClick(mail)}>
                 <MailItemColumnWrap>
                   <MailItemRowWrap>
-                    <Sender>{mail.sender}</Sender>
+                    <Sender>
+                      {tab === "received" && !mail.viewCheck && (
+                        <UnreadIcon
+                          src="images/letter_reading_icon.jpg"
+                          alt="Unread"
+                        />
+                      )}
+                      {mail.sender}
+                    </Sender>
                     <TimeReceived>{mail.timeReceived}</TimeReceived>
                   </MailItemRowWrap>
                   <Subject>{mail.subject}</Subject>
@@ -415,6 +452,11 @@ const MailItemRowWrap = styled.div`
 
 const Sender = styled.div`
   font-weight: bold;
+`;
+const UnreadIcon = styled.img`
+  margin-right: 8px;
+  width: 18px;
+  height: 12px;
 `;
 
 const Subject = styled.div`
