@@ -11,6 +11,7 @@ import useThrottle from "../../hook/useThrottle";
 import { loadingState } from "../../recoil/loadingAtom";
 import { deleteLetter } from "../../apis/controller/letter";
 import ConfirmDelete from "./ConfirmDelete";
+import { deleteLetterPopupState } from "../../recoil/deleteLetterPopupAtom";
 
 const IndividualLetterPopup = () => {
   const popupRef = useRef<HTMLDivElement>(null);
@@ -31,6 +32,10 @@ const IndividualLetterPopup = () => {
   const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
   const [isConfirmPopup, setIsConfirmPopup] = useState<boolean>(false)
   const setLoadingState = useSetRecoilState(loadingState);
+  
+  // 이 전 페이지가 편지 삭제 리스트였을 경우
+  const setDeleteLetterPopup = useSetRecoilState(deleteLetterPopupState)
+
 
   useEffect(() => {
     // 초기 페이지 로드
@@ -75,7 +80,6 @@ const IndividualLetterPopup = () => {
   }, 100);
 
   const backToMailBox = () => {
-    setReceiveLetterBoxModal(true);
     setIndividualLetterInfo({
       isOpen: false,
       id: -9999,
@@ -83,8 +87,13 @@ const IndividualLetterPopup = () => {
       letterContent: "",
       fromUserNickname: "",
       onDelete: false,
-      tab: "received"
+      tab: individualLetterInfo.tab
     });
+    if(individualLetterInfo.onDelete){
+      setDeleteLetterPopup(true)
+    }else{
+      setReceiveLetterBoxModal(true);
+    }
   };
 
   useEffect(() => {
@@ -125,16 +134,20 @@ const IndividualLetterPopup = () => {
         <BackIcon src="images/back_arrow_icon.png" alt="Back" />
       </BackButtonWrapper>
       <CloseButton
-        onClick={() =>
-          setIndividualLetterInfo({
-            isOpen: false,
-            id: -9999,
-            toUserNickname: "",
-            letterContent: "",
-            fromUserNickname: "",
-            onDelete: false,
-            tab: "received"
-          })
+        onClick={() =>{
+            setIndividualLetterInfo({
+              isOpen: false,
+              id: -9999,
+              toUserNickname: "",
+              letterContent: "",
+              fromUserNickname: "",
+              onDelete: false,
+              tab: individualLetterInfo.tab
+            })
+            if(individualLetterInfo.onDelete){
+              setDeleteLetterPopup(true)
+            }
+          }
         }
       >
         <IoMdClose />
