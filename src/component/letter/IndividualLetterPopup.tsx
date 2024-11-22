@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { IoMdClose } from "react-icons/io";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   individualLetterState,
   receiveLetterBoxModalState,
-  receiveLettersState,
   tabState,
 } from "../../recoil/letterPopupAtom";
 import { FaTrash } from "react-icons/fa";
@@ -21,8 +20,6 @@ const IndividualLetterPopup = () => {
   const [individualLetterInfo, setIndividualLetterInfo] = useRecoilState(
     individualLetterState
   );
-  const [receiveLetters, setReceiveLetters] =
-    useRecoilState(receiveLettersState);
   const setReceiveLetterBoxModal = useSetRecoilState(
     receiveLetterBoxModalState
   );
@@ -66,13 +63,6 @@ const IndividualLetterPopup = () => {
       onDelete: false,
       tab: "received",
     });
-    setReceiveLetters((prevLetters) =>
-      prevLetters.map((letter) =>
-        letter.id === individualLetterInfo.id
-          ? { ...letter, viewCheck: true }
-          : letter
-      )
-    );
   };
 
   // 페이지 단위로 내용 로드
@@ -94,10 +84,6 @@ const IndividualLetterPopup = () => {
       }
     }
   }, 100);
-
-  const backToMailBox = () => {
-    closeModal();
-  };
 
   useEffect(() => {
     const currentRef = textareaRef.current;
@@ -132,7 +118,7 @@ const IndividualLetterPopup = () => {
 
   return isImageLoaded ? (
     <Popup ref={popupRef}>
-      <BackButtonWrapper onClick={backToMailBox}>
+      <BackButtonWrapper onClick={closeModal}>
         <BackIcon src="images/back_arrow_icon.png" alt="Back" />
       </BackButtonWrapper>
       <CloseButton onClick={closeModal}>

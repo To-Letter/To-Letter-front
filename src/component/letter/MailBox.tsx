@@ -3,11 +3,14 @@ import styled from "styled-components";
 import { IoIosMail } from "react-icons/io"; // 메일 버튼
 import useDebounce from "../../hook/useDebounce";
 import sessionStorageService from "../../utils/sessionStorageService";
-import { getReceiveLetter, getSendLetter } from "../../apis/controller/letter";
+import {
+  getReceiveLetter,
+  getSendLetter,
+  getLetterReading,
+} from "../../apis/controller/letter";
 import {
   individualLetterState,
   receiveLetterBoxModalState,
-  receiveLettersState,
   tabState,
 } from "../../recoil/letterPopupAtom";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -21,41 +24,38 @@ interface Mail {
   timeReceived: string;
   viewCheck: boolean;
 }
-
 const Mailbox: React.FC = () => {
+  // mail state
   const [mails, setMails] = useState<Mail[]>([]);
-  const [receiveMails, setReceiveMails] = useRecoilState(receiveLettersState);
+  const [receiveMails, setReceiveMails] = useState<Mail[]>([]);
   const [sendMails, setSendMails] = useState<Mail[]>([]);
+  // page state
   const [receivePage, setReceivePage] = useState(0);
   const [sendPage, setSendPage] = useState(0);
   const [receiveHasMore, setReceiveHasMore] = useState(true);
   const [sendHasMore, setSendHasMore] = useState(true);
-
-  const [tab, setTab] = useRecoilState(tabState);
+  // search state
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 300); // 300ms delay
-
+  // recoil state
+  const setToUserNicknameModal = useSetRecoilState(toUserNicknameModalState);
+  const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
   const setReceiveLetterBoxModal = useSetRecoilState(
     receiveLetterBoxModalState
   );
-  const setToUserNicknameModal = useSetRecoilState(toUserNicknameModalState);
-  const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
+  const [tab, setTab] = useRecoilState(tabState);
 
   const modalRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (receiveMails.length === 0) {
-      getAllReceiveLetter();
-    }
+    getAllReceiveLetter();
     getAllSendLetter();
   }, []);
-
   useEffect(() => {
     searchFilter(tab);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, debouncedSearchTerm, receiveMails, sendMails]);
-
   // 모달 외부 클릭 감지 닫기
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -72,39 +72,41 @@ const Mailbox: React.FC = () => {
     };
   }, [setReceiveLetterBoxModal]);
 
+  // 시간 format
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
+    return `${year}-${month}-${day} ${hours}시 ${minutes}분`;
+  };
+
   // 받은 편지함
   const getAllReceiveLetter = async (pageNumber = 0) => {
-    if (!receiveHasMore && pageNumber !== 0) {
-      // 더 이상 데이터를 불러올 필요가 없을 때
-      return;
-    }
-
     try {
       const res = await getReceiveLetter({
         page: pageNumber,
         size: 10,
         sort: "desc",
       });
+      console.log("res: " + JSON.stringify(res, null, 2));
       const listLetter = res.data.responseData.letterDTO;
       const pageable = res.data.responseData.pageable;
       const formattedMails = listLetter.map((letter: any) => ({
         id: letter.id,
         sender: letter.fromUserNickname,
         subject: letter.contents,
-        timeReceived: letter.arrivedAt,
+        timeReceived: formatDate(letter.arrivedAt),
         viewCheck: letter.viewCheck,
       }));
-
-      setReceiveMails((prevMails) => {
-        // 중복된 데이터를 방지하기 위해 필터링
-        const newMails = formattedMails.filter(
-          (newMail: any) => !prevMails.some((mail) => mail.id === newMail.id)
-        );
-        return [...prevMails, ...newMails];
-      });
-
+      setReceiveMails((prevMails) => [...prevMails, ...formattedMails]); // pageable 데이터만으로 마지막 페이지 여부 확인
       if (listLetter.length < pageable.pageSize) {
-        setReceiveHasMore(false); // 현재 페이지의 데이터가 pageSize보다 적으면 마지막 페이지로 간주
+        // 현재 페이지의 데이터가 pageSize보다 적으면 마지막 페이지로 간주
+        setReceiveHasMore(false);
       } else {
         setReceiveHasMore(true);
       }
@@ -127,12 +129,13 @@ const Mailbox: React.FC = () => {
         id: letter.id,
         sender: letter.fromUserNickname,
         subject: letter.contents,
-        timeReceived: letter.arrivedAt,
+        timeReceived: formatDate(letter.createdAt),
       }));
-      setSendMails((prevMails) => [...prevMails, ...formattedMails]);
-      // pageable 데이터만으로 마지막 페이지 여부 확인
+      console.log("formattedMails : ", formattedMails);
+      setSendMails((prevMails) => [...prevMails, ...formattedMails]); // pageable 데이터만으로 마지막 페이지 여부 확인
       if (listLetter.length < pageable.pageSize) {
-        setSendHasMore(false); // 현재 페이지의 데이터가 pageSize보다 적으면 마지막 페이지로 간주
+        // 현재 페이지의 데이터가 pageSize보다 적으면 마지막 페이지로 간주
+        setSendHasMore(false);
       } else {
         setSendHasMore(true);
       }
@@ -166,18 +169,14 @@ const Mailbox: React.FC = () => {
 
   const handleTabChange = (newTab: "received" | "send") => {
     setTab(newTab);
-    if (newTab === "send") {
-      setMails(sendMails); // 보낸 편지함 탭일 때 sendMails 설정
-    } else {
-      setMails(receiveMails); // 받은 편지함 탭일 때receiveMails 설정
-    }
   };
 
   // 편지 쓰기 모달창 이동 이벤트
   const toUserNicknameModalClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    event.stopPropagation(); // 이벤트 전파 방지
+    event.stopPropagation();
+    // 이벤트 전파 방지
     if (sessionStorageService.get("accessToken") !== null) {
       setReceiveLetterBoxModal(false);
       setToUserNicknameModal(true);
@@ -185,11 +184,7 @@ const Mailbox: React.FC = () => {
   };
 
   // 메일 아이템 클릭 이벤트(개별 편지 팝업창)
-  const handleMailItemClick = (mail: Mail) => {
-    console.log("클릭한 편지 ID: ", mail.id);
-    setReceiveMails((prevMails) =>
-      prevMails.map((m) => (m.id === mail.id ? { ...m, viewCheck: true } : m))
-    );
+  const handleMailItemClick = async (mail: Mail) => {
     setIndividualLetterInfo((prev) => ({
       ...prev,
       isOpen: true,
@@ -200,6 +195,7 @@ const Mailbox: React.FC = () => {
       onDelete: false,
       tab: tab as "received" | "send",
     }));
+    await getLetterReading(mail.id);
     setReceiveLetterBoxModal(false);
   };
 

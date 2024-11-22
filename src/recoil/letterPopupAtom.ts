@@ -52,14 +52,8 @@ export const individualLetterState = atom<individualLetterState>({
     letterContent: "",
     fromUserNickname: "",
     onDelete: false,
-    tab: "received",
+    tab: "received" as "received" | "send",
   },
-});
-
-// viewChaeck를 위한 recoil
-export const receiveLettersState = atom<Mail[]>({
-  key: "receiveLettersState", // 키 설정
-  default: [],
 });
 
 // tab관리 recoil
