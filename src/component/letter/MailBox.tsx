@@ -3,12 +3,17 @@ import styled from "styled-components";
 import { IoIosMail } from "react-icons/io"; // 메일 버튼
 import useDebounce from "../../hook/useDebounce";
 import sessionStorageService from "../../utils/sessionStorageService";
-import { getReceiveLetter, getSendLetter } from "../../apis/controller/letter";
+import {
+  getReceiveLetter,
+  getSendLetter,
+  getLetterReading,
+} from "../../apis/controller/letter";
 import {
   individualLetterState,
   receiveLetterBoxModalState,
+  tabState,
 } from "../../recoil/letterPopupAtom";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { toUserNicknameModalState } from "../../recoil/toUserNicknameAtom";
 import useThrottle from "../../hook/useThrottle";
 
@@ -17,26 +22,28 @@ interface Mail {
   sender: string;
   subject: string;
   timeReceived: string;
+  viewCheck: boolean;
 }
-
 const Mailbox: React.FC = () => {
+  // mail state
   const [mails, setMails] = useState<Mail[]>([]);
   const [receiveMails, setReceiveMails] = useState<Mail[]>([]);
   const [sendMails, setSendMails] = useState<Mail[]>([]);
+  // page state
   const [receivePage, setReceivePage] = useState(0);
   const [sendPage, setSendPage] = useState(0);
   const [receiveHasMore, setReceiveHasMore] = useState(true);
   const [sendHasMore, setSendHasMore] = useState(true);
-
-  const [tab, setTab] = useState("received"); // "received" or "send"
+  // search state
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 300); // 300ms delay
-
+  // recoil state
+  const setToUserNicknameModal = useSetRecoilState(toUserNicknameModalState);
+  const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
   const setReceiveLetterBoxModal = useSetRecoilState(
     receiveLetterBoxModalState
   );
-  const setToUserNicknameModal = useSetRecoilState(toUserNicknameModalState);
-  const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
+  const [tab, setTab] = useRecoilState(tabState);
 
   const modalRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -49,7 +56,6 @@ const Mailbox: React.FC = () => {
     searchFilter(tab);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, debouncedSearchTerm, receiveMails, sendMails]);
-
   // 모달 외부 클릭 감지 닫기
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -66,6 +72,19 @@ const Mailbox: React.FC = () => {
     };
   }, [setReceiveLetterBoxModal]);
 
+  // 시간 format
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
+    return `${year}-${month}-${day} ${hours}시 ${minutes}분`;
+  };
+
   // 받은 편지함
   const getAllReceiveLetter = async (pageNumber = 0) => {
     try {
@@ -74,18 +93,20 @@ const Mailbox: React.FC = () => {
         size: 10,
         sort: "desc",
       });
+      console.log("res: " + JSON.stringify(res, null, 2));
       const listLetter = res.data.responseData.letterDTO;
       const pageable = res.data.responseData.pageable;
       const formattedMails = listLetter.map((letter: any) => ({
         id: letter.id,
         sender: letter.fromUserNickname,
         subject: letter.contents,
-        timeReceived: letter.arrivedAt,
+        timeReceived: formatDate(letter.arrivedAt),
+        viewCheck: letter.viewCheck,
       }));
-      setReceiveMails((prevMails) => [...prevMails, ...formattedMails]);
-      // pageable 데이터만으로 마지막 페이지 여부 확인
+      setReceiveMails((prevMails) => [...prevMails, ...formattedMails]); // pageable 데이터만으로 마지막 페이지 여부 확인
       if (listLetter.length < pageable.pageSize) {
-        setReceiveHasMore(false); // 현재 페이지의 데이터가 pageSize보다 적으면 마지막 페이지로 간주
+        // 현재 페이지의 데이터가 pageSize보다 적으면 마지막 페이지로 간주
+        setReceiveHasMore(false);
       } else {
         setReceiveHasMore(true);
       }
@@ -108,12 +129,13 @@ const Mailbox: React.FC = () => {
         id: letter.id,
         sender: letter.fromUserNickname,
         subject: letter.contents,
-        timeReceived: letter.arrivedAt,
+        timeReceived: formatDate(letter.createdAt),
       }));
-      setSendMails((prevMails) => [...prevMails, ...formattedMails]);
-      // pageable 데이터만으로 마지막 페이지 여부 확인
+      console.log("formattedMails : ", formattedMails);
+      setSendMails((prevMails) => [...prevMails, ...formattedMails]); // pageable 데이터만으로 마지막 페이지 여부 확인
       if (listLetter.length < pageable.pageSize) {
-        setSendHasMore(false); // 현재 페이지의 데이터가 pageSize보다 적으면 마지막 페이지로 간주
+        // 현재 페이지의 데이터가 pageSize보다 적으면 마지막 페이지로 간주
+        setSendHasMore(false);
       } else {
         setSendHasMore(true);
       }
@@ -145,7 +167,7 @@ const Mailbox: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleTabChange = (newTab: string) => {
+  const handleTabChange = (newTab: "received" | "send") => {
     setTab(newTab);
   };
 
@@ -153,7 +175,8 @@ const Mailbox: React.FC = () => {
   const toUserNicknameModalClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    event.stopPropagation(); // 이벤트 전파 방지
+    event.stopPropagation();
+    // 이벤트 전파 방지
     if (sessionStorageService.get("accessToken") !== null) {
       setReceiveLetterBoxModal(false);
       setToUserNicknameModal(true);
@@ -161,16 +184,18 @@ const Mailbox: React.FC = () => {
   };
 
   // 메일 아이템 클릭 이벤트(개별 편지 팝업창)
-  const handleMailItemClick = (mail: Mail) => {
-    setIndividualLetterInfo({
+  const handleMailItemClick = async (mail: Mail) => {
+    setIndividualLetterInfo((prev) => ({
+      ...prev,
       isOpen: true,
       id: mail.id,
       toUserNickname: mail.sender,
       letterContent: mail.subject,
       fromUserNickname: mail.sender,
-      onDelete:false,
-      tab: "received"
-    });
+      onDelete: false,
+      tab: tab as "received" | "send",
+    }));
+    await getLetterReading(mail.id);
     setReceiveLetterBoxModal(false);
   };
 
@@ -242,7 +267,15 @@ const Mailbox: React.FC = () => {
               <MailItem key={mail.id} onClick={() => handleMailItemClick(mail)}>
                 <MailItemColumnWrap>
                   <MailItemRowWrap>
-                    <Sender>{mail.sender}</Sender>
+                    <Sender>
+                      {tab === "received" && !mail.viewCheck && (
+                        <UnreadIcon
+                          src="images/letter_reading_icon.jpg"
+                          alt="Unread"
+                        />
+                      )}
+                      {mail.sender}
+                    </Sender>
                     <TimeReceived>{mail.timeReceived}</TimeReceived>
                   </MailItemRowWrap>
                   <Subject>{mail.subject}</Subject>
@@ -415,6 +448,11 @@ const MailItemRowWrap = styled.div`
 
 const Sender = styled.div`
   font-weight: bold;
+`;
+const UnreadIcon = styled.img`
+  margin-right: 8px;
+  width: 18px;
+  height: 12px;
 `;
 
 const Subject = styled.div`
