@@ -21,7 +21,6 @@ const DeleteLetterModal: React.FC = () => {
   const [mails, setMails] = useState<Mail[]>([]);
   const [receiveMails, setReceiveMails] = useState<Mail[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [tab, setTab] = useState<"received" | "send">("received"); // "received" or "send"
   const [checkedState, setCheckedState] = useState<boolean[]>([]);
   const debouncedSearchTerm = useDebounce(searchTerm, 300); // 300ms delay
   const [sendMails, setSendMails] = useState<Mail[]>([]);
@@ -30,40 +29,30 @@ const DeleteLetterModal: React.FC = () => {
   const [individualLetterInfo, setIndividualLetterInfo] = useRecoilState(
     individualLetterState
   );
+  const [tab, setTab] = useState<"received" | "send">(individualLetterInfo.tab); // "received" or "send"
   const setDeleteLetterPopup = useSetRecoilState(deleteLetterPopupState);
   const [receivePage, setReceivePage] = useState(0);
   const [sendPage, setSendPage] = useState(0);
   const [receiveHasMore, setReceiveHasMore] = useState(true);
   const [sendHasMore, setSendHasMore] = useState(true);
+  // 삭제 완료 확인
+  const [deleteLetter, setDeleteLetter] = useState<boolean>(false);
 
   const modalRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setReceiveMails([]);
+    setSendMails([]);
     getAllReceiveLetter();
     getAllSendLetter();
-  }, [isConfirmPopup, individualLetterInfo.id]);
+  }, [deleteLetter, individualLetterInfo.id]);
 
   useEffect(() => {
     searchFilter(tab);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, debouncedSearchTerm, receiveMails, sendMails]);
 
-  // 모달 외부 클릭 감지 닫기
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
-      ) {
-        setDeleteLetterPopup(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [setDeleteLetterPopup]);
 
   // 받은 편지함
   const getAllReceiveLetter = async (pageNumber = 0) => {
@@ -81,7 +70,6 @@ const DeleteLetterModal: React.FC = () => {
         subject: letter.contents,
         timeReceived: letter.arrivedAt,
       }));
-      setReceiveMails(formattedMails);
       setCheckedState(new Array(formattedMails.length).fill(false));
       setReceiveMails((prevMails) => [...prevMails, ...formattedMails]);
       // pageable 데이터만으로 마지막 페이지 여부 확인
@@ -111,7 +99,6 @@ const DeleteLetterModal: React.FC = () => {
         subject: letter.contents,
         timeReceived: letter.arrivedAt,
       }));
-      setSendMails(formattedMails);
       setCheckedState(new Array(formattedMails.length).fill(false));
       setSendMails((prevMails) => [...prevMails, ...formattedMails]);
       // pageable 데이터만으로 마지막 페이지 여부 확인
@@ -302,7 +289,8 @@ const DeleteLetterModal: React.FC = () => {
           mailIds={deleteLetterIds}
           setIsConfirmPopup={setIsConfirmPopup} 
           type={tab} 
-          setSearchTerm={setSearchTerm}/>
+          setSearchTerm={setSearchTerm}
+          setDeleteLetter={setDeleteLetter}/>
       )}
     </ModalOverlay>
   );

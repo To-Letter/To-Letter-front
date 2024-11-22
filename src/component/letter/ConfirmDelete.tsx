@@ -1,8 +1,9 @@
-import React, { ChangeEvent, useMemo, useState } from "react";
+import React, { ChangeEvent, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { individualLetterState } from "../../recoil/letterPopupAtom";
 import { useSetRecoilState } from "recoil";
 import { deleteLetter } from "../../apis/controller/letter";
+import { deleteLetterPopupState } from "../../recoil/deleteLetterPopupAtom";
 
 interface defaultStyleProps {
   $direction?: "row" | "column";
@@ -15,10 +16,12 @@ interface propsI {
   setIsConfirmPopup: React.Dispatch<React.SetStateAction<boolean>>
   type:"received"| "send"
   setSearchTerm?: React.Dispatch<React.SetStateAction<string>>| null
+  setDeleteLetter?: React.Dispatch<React.SetStateAction<boolean>>|null
 }
 
-const ConfirmDelete = ({mailIds, setIsConfirmPopup, type="received", setSearchTerm=null}: propsI) => {
+const ConfirmDelete = ({mailIds, setIsConfirmPopup, type="received", setSearchTerm=null, setDeleteLetter=null}: propsI) => {
   const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
+  const setDeleteLetterPopup = useSetRecoilState(deleteLetterPopupState)
   const message = useMemo(() => {
     if(type==="received"){
       return `선택한 편지를 버립니다.`
@@ -30,7 +33,6 @@ const ConfirmDelete = ({mailIds, setIsConfirmPopup, type="received", setSearchTe
   const onClickConfirm = async () => {
     try {
       const res = await deleteLetter({letterIds: mailIds, letterType: type})
-      console.log("편지 삭제 결과", res)
       if (res.data.responseCode === 200) {
         // 편지 삭제 성공
         alert('편지를 버렸습니다.')
@@ -42,7 +44,7 @@ const ConfirmDelete = ({mailIds, setIsConfirmPopup, type="received", setSearchTe
         alert('편지의 주인이 아닙니다.')
       }
     } catch (error) {
-      
+      console.log("onClickConfirm-deleteLetter error: ", error)
     }
     setIndividualLetterInfo({
       isOpen: false,
@@ -54,8 +56,12 @@ const ConfirmDelete = ({mailIds, setIsConfirmPopup, type="received", setSearchTe
       tab:type
     });
     setIsConfirmPopup(false);
+    setDeleteLetterPopup(true);
     if(setSearchTerm !== null){
       setSearchTerm("")
+    }
+    if(setDeleteLetter!== null){
+      setDeleteLetter(prev=>!prev)
     }
   }
 

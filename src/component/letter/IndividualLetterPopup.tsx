@@ -12,6 +12,7 @@ import useThrottle from "../../hook/useThrottle";
 import { loadingState } from "../../recoil/loadingAtom";
 import { deleteLetter } from "../../apis/controller/letter";
 import ConfirmDelete from "./ConfirmDelete";
+import { deleteLetterPopupState } from "../../recoil/deleteLetterPopupAtom";
 
 const IndividualLetterPopup = () => {
   const popupRef = useRef<HTMLDivElement>(null);
@@ -33,6 +34,10 @@ const IndividualLetterPopup = () => {
   const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
   const [isConfirmPopup, setIsConfirmPopup] = useState<boolean>(false);
   const setLoadingState = useSetRecoilState(loadingState);
+  
+  // 이 전 페이지가 편지 삭제 리스트였을 경우
+  const setDeleteLetterPopup = useSetRecoilState(deleteLetterPopupState)
+
 
   useEffect(() => {
     // 초기 페이지 로드
