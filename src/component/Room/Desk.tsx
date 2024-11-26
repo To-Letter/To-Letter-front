@@ -8,6 +8,7 @@ import Bookshelf from "./Bookshelf";
 import sessionStorageService from "../../utils/sessionStorageService";
 import { useSetRecoilState } from "recoil";
 import { toUserNicknameModalState } from "../../recoil/toUserNicknameAtom";
+import NewLetter from "./NewLetter";
 
 // 연필통 색상 수정
 const meshColors: { [key: string]: string } = {
@@ -105,6 +106,9 @@ const Desk = () => {
 
       {/* 책선반 */}
       <Bookshelf position={[1.1, -1.68, -2.7]} />
+
+      {/**편지지 */}
+      <NewLetter/>
 
       {/* 책상 */}
       <mesh ref={deskRef} rotation-y={Math.PI} scale={5} position={[0, -5, -2]}>
