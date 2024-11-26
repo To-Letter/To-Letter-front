@@ -27,20 +27,27 @@ const SceneryIndex = () => {
           getWeather({ lat: latitude, lng: longitude });
         },
         (error) => {
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              alert('사용자가 위치 정보 제공을 거부했습니다.');
-              break;
-            case error.POSITION_UNAVAILABLE:
-              alert('위치 정보를 사용할 수 없습니다.');
-              break;
-            case error.TIMEOUT:
-              alert('위치 정보 요청이 시간 초과되었습니다.');
-              break;
-            default:
-              alert('알 수 없는 오류가 발생했습니다.');
-              break;
-          }
+          /**
+           * 위치 정보 제공 여부가 크게 중요하지 않다고 판단, 기본 값 설정
+           */
+          // switch (error.code) {
+          //   case error.PERMISSION_DENIED:
+          //     alert('사용자가 위치 정보 제공을 거부했습니다.');
+          //     break;
+          //   case error.POSITION_UNAVAILABLE:
+          //     alert('위치 정보를 사용할 수 없습니다.');
+          //     break;
+          //   case error.TIMEOUT:
+          //     alert('위치 정보 요청이 시간 초과되었습니다.');
+          //     break;
+          //   default:
+          //     alert('알 수 없는 오류가 발생했습니다.');
+          //     break;
+          // }
+          /**
+           * 기본 값, 서울 시청 좌표
+           */
+          getWeather({ lat: 37.5665851, lng: 126.9782038 });
         })
     } else {
       alert('이 브라우저는 위치 정보를 지원하지 않습니다.');
