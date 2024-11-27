@@ -34,9 +34,6 @@ const IndividualLetterPopup = () => {
   const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
   const [isConfirmPopup, setIsConfirmPopup] = useState<boolean>(false);
   const setLoadingState = useSetRecoilState(loadingState);
-  
-  // 이 전 페이지가 편지 삭제 리스트였을 경우
-  const setDeleteLetterPopup = useSetRecoilState(deleteLetterPopupState)
 
 
   useEffect(() => {
@@ -58,7 +55,6 @@ const IndividualLetterPopup = () => {
     } else {
       setTab("received");
     }
-    setReceiveLetterBoxModal(true);
     setIndividualLetterInfo({
       isOpen: false,
       id: -9999,

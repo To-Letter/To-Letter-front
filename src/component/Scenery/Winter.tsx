@@ -11,8 +11,6 @@ import { seasonFile } from "../../constants/seasonTree";
 const Winter = () => {
   const [treeClones, setTreeClones] = useState<Group<Object3DEventMap>[]>([]);
 
-  console.log(seasonFile.winter)
-
   const treeglb = useLoader(GLTFLoader, seasonFile.winter.modelPath);
 
   const woodTexture = useLoader(
@@ -23,12 +21,10 @@ const Winter = () => {
 
 
   useEffect(() => {
-    console.log("나무 start:", woodTexture);
   
     treeglb.scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
-        console.log("나무:", child);
         mesh.material = new THREE.MeshStandardMaterial({
           color: seasonFile.winter.color,
           map: woodTexture,

@@ -48,7 +48,7 @@ const SeasonBackground = ({ nowMonthValue, weatherInfo }: SeasonBackgroundProps)
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
         mesh.material = new MeshStandardMaterial({
-          color: seasonFile[seasonIndex].floorColor,
+          color: weatherInfo!=="Snow"? seasonFile[seasonIndex].floorColor: "white",
           map: groundTexture
         }); 
         mesh.castShadow = true; // 그림자 생성
@@ -60,7 +60,7 @@ const SeasonBackground = ({ nowMonthValue, weatherInfo }: SeasonBackgroundProps)
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
         mesh.material = new MeshStandardMaterial({
-          color: seasonFile[seasonIndex].floorColor,
+          color: weatherInfo!=="Snow"?seasonFile[seasonIndex].floorColor: "white",
           map: groundTexture
         }); 
         if(mesh.name === "grass_2"){

@@ -25,8 +25,6 @@ const Winter = () => {
   const [bgTexture, setBgTexture] = useState<THREE.Texture | null>(null);
   const [treeClones, setTreeClones] = useState<Group<Object3DEventMap>[]>([]);
 
-  console.log(seasonFile.spring)
-
   const treeglb = useLoader(GLTFLoader, seasonFile.spring.modelPath);
 
   const woodTexture = useLoader(

@@ -24,6 +24,8 @@ import { shareLetterState } from "../recoil/shareLetterAtom";
 import ShareLetterBtn from "../component/ShareLetterBtn";
 import { deleteLetterPopupState } from "../recoil/deleteLetterPopupAtom";
 import DeleteLetterModal from "../component/letter/DeleteLetterModal";
+import { newLetterPopupState } from "../recoil/newLetterPopupState";
+import NewLetterModal from "../component/letter/NewLetterModal";
 
 function Home() {
   const modalState = useRecoilValue(accountModalState);
@@ -35,6 +37,7 @@ function Home() {
   const individualLetterPopup = useRecoilValue(individualLetterState);
   const shareLetterRecoilValue = useRecoilValue(shareLetterState);
   const deleteLetterPopup = useRecoilValue(deleteLetterPopupState)
+  const newLetterPopup = useRecoilValue(newLetterPopupState)
 
   return (
     <>
@@ -73,6 +76,7 @@ function Home() {
         {individualLetterPopup.isOpen && <IndividualLetterPopup />}
         {shareLetterRecoilValue && <ShareLetterBtn />}
         {deleteLetterPopup&&<DeleteLetterModal/>}
+        {newLetterPopup&&<NewLetterModal/>}
       </PopupProvider>
     </>
   );
