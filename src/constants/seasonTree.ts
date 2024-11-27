@@ -136,14 +136,14 @@ export const seasonFile: seasonFilesI = {
   spring: {
     modelPath: "/models/tree.glb",
     texturePath: "/images/scenery/treeTexture1.png",
-    scale: 0.0035,
+    scale: 0.072,
     color: "#576403",
     floorColor:"#387a3c"
   },
   summer: {
     modelPath: "/models/tree.glb",
     texturePath: "/images/scenery/treeTexture1.png",
-    scale: 0.0035,
+    scale: 0.072,
     color: "#2a3f01",
     floorColor:"#205e24"
   },
