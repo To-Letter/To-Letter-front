@@ -9,6 +9,7 @@ import { deleteLetterPopupState } from "../../recoil/deleteLetterPopupAtom";
 import ConfirmDelete from "./ConfirmDelete";
 import { CgPlayListCheck } from "react-icons/cg";
 import useThrottle from "../../hook/useThrottle";
+import { formatDate } from "../../utils/formatDate";
 
 interface Mail {
   id: number;
@@ -189,7 +190,6 @@ const DeleteLetterModal: React.FC = () => {
       onDelete: true,
       tab: tab
     });
-    setDeleteLetterPopup(false);
   };
 
   // 전체 선택 버튼 클릭 시 실행
@@ -268,7 +268,7 @@ const DeleteLetterModal: React.FC = () => {
                   <MailItemRowWrap>
                     <Sender>{mail.sender}</Sender>
                     <TimeReceived>
-                      {mail.timeReceived.split("T")[0]}
+                      {formatDate(mail.timeReceived)}
                     </TimeReceived>
                   </MailItemRowWrap>
                   <Subject>{mail.subject}</Subject>
