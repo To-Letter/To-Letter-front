@@ -196,7 +196,6 @@ const Mailbox: React.FC = () => {
       tab: tab as "received" | "send",
     }));
     await getLetterReading(mail.id);
-    setReceiveLetterBoxModal(false);
   };
 
   // 스크롤 이벤트 핸들러

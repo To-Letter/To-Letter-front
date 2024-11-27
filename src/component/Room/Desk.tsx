@@ -6,9 +6,10 @@ import * as THREE from "three";
 import Calender from "./Calender";
 import Bookshelf from "./Bookshelf";
 import sessionStorageService from "../../utils/sessionStorageService";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { toUserNicknameModalState } from "../../recoil/toUserNicknameAtom";
 import NewLetter from "./NewLetter";
+import { newLetterAlarmState } from "../../recoil/newLetterPopupState";
 
 // 연필통 색상 수정
 const meshColors: { [key: string]: string } = {
@@ -42,9 +43,11 @@ const Desk = () => {
   const pencilRef = useRef<THREE.Mesh>(null);
   const { gl } = useThree();
   const setToUserNicknameModal = useSetRecoilState(toUserNicknameModalState);
+  const newLetterAlarm = useRecoilValue(newLetterAlarmState)
 
   // 모델 수정
   useEffect(() => {
+    console.log("newLetterAlarm", newLetterAlarm)
     if (deskglb && deskglb.scene) {
       deskglb.scene.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {
@@ -108,7 +111,10 @@ const Desk = () => {
       <Bookshelf position={[1.1, -1.68, -2.7]} />
 
       {/**편지지 */}
-      <NewLetter/>
+      {
+        newLetterAlarm &&<NewLetter/>
+      }
+      
 
       {/* 책상 */}
       <mesh ref={deskRef} rotation-y={Math.PI} scale={5} position={[0, -5, -2]}>

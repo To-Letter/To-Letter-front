@@ -3,11 +3,14 @@ import { useLoader } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
+import { useSetRecoilState } from "recoil";
+import { newLetterPopupState } from "../../recoil/newLetterPopupState";
 
 
 const NewLetter = () => {
   const LetterGlb = useLoader(GLTFLoader, "/models/letter.glb");
   const meshRef = useRef<THREE.Mesh>(null);
+  const setNewLetterPopup = useSetRecoilState(newLetterPopupState)
 
   const letterTexture = useLoader(
     THREE.TextureLoader,
@@ -19,7 +22,6 @@ const NewLetter = () => {
     LetterGlb.scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
-        console.log("letter", child)
         mesh.material = new MeshStandardMaterial({
           color: "#DCD5C6",
           map: letterTexture,
@@ -38,6 +40,7 @@ const NewLetter = () => {
       position={[-0.5, -1.97, -2.5]}
       castShadow
       receiveShadow
+      onClick={()=>setNewLetterPopup(true)}
     >
       <primitive object={LetterGlb.scene} />
     </mesh>
