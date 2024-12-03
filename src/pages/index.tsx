@@ -26,6 +26,8 @@ import { deleteLetterPopupState } from "../recoil/deleteLetterPopupAtom";
 import DeleteLetterModal from "../component/letter/DeleteLetterModal";
 import { newLetterPopupState } from "../recoil/newLetterPopupState";
 import NewLetterModal from "../component/letter/NewLetterModal";
+import { NewLetterAlarmMessage } from "../component/letter/NewLetterAlarmMessage";
+import { useEffect } from "react";
 
 function Home() {
   const modalState = useRecoilValue(accountModalState);
@@ -38,6 +40,10 @@ function Home() {
   const shareLetterRecoilValue = useRecoilValue(shareLetterState);
   const deleteLetterPopup = useRecoilValue(deleteLetterPopupState)
   const newLetterPopup = useRecoilValue(newLetterPopupState)
+
+  useEffect(()=>{
+    console.log("Home")
+  },[])
 
   return (
     <>
@@ -77,6 +83,7 @@ function Home() {
         {shareLetterRecoilValue && <ShareLetterBtn />}
         {deleteLetterPopup&&<DeleteLetterModal/>}
         {newLetterPopup&&<NewLetterModal/>}
+        {sessionStorageService.get("accessToken")!==null && <NewLetterAlarmMessage/>}
       </PopupProvider>
     </>
   );
