@@ -1,12 +1,12 @@
-import sessionStorageService from "./sessionStorageService";
+import axiosInterceptor from "../apis/axiosInterceptor";
 
 const authorization = () => {
+  const accessToken = axiosInterceptor.defaults.headers.common["Authorization"];
   return {
     headers: {
-      Authorization: `${sessionStorageService.get("accessToken")}`,
-      refreshToken: `${sessionStorageService.get("refreshToken")}`,
+      Authorization: accessToken,
     },
-    
+
     withCredentials: true,
   };
 };

@@ -4,21 +4,21 @@ import { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { useSetRecoilState } from "recoil";
 import { myPageModalState } from "../../recoil/myInfoAtom";
-import sessionStorageService from "../../utils/sessionStorageService";
+import axiosInterceptor from "../../apis/axiosInterceptor";
 
 const Bed = () => {
   // 모델 선언
   const bedglb = useLoader(GLTFLoader, "/models/bed.glb");
   const bedRef = useRef<THREE.Mesh>(null);
   // 마이페이지 모달
-  const setMyPageModalState = useSetRecoilState(myPageModalState)
+  const setMyPageModalState = useSetRecoilState(myPageModalState);
 
   const onClickBed = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation(); // 이벤트 전파 방지
-    if(sessionStorageService.get("accessToken") !== null){
+    if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
       setMyPageModalState(true);
     }
-  }
+  };
 
   useEffect(() => {
     // 침대 모델 조정

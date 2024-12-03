@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import { IoIosMail } from "react-icons/io"; // 메일 버튼
 import useDebounce from "../../hook/useDebounce";
-import sessionStorageService from "../../utils/sessionStorageService";
 import {
   getReceiveLetter,
   getSendLetter,
@@ -16,6 +15,7 @@ import {
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { toUserNicknameModalState } from "../../recoil/toUserNicknameAtom";
 import useThrottle from "../../hook/useThrottle";
+import axiosInterceptor from "../../apis/axiosInterceptor";
 
 interface Mail {
   id: number;
@@ -177,7 +177,7 @@ const Mailbox: React.FC = () => {
   ) => {
     event.stopPropagation();
     // 이벤트 전파 방지
-    if (sessionStorageService.get("accessToken") !== null) {
+    if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
       setReceiveLetterBoxModal(false);
       setToUserNicknameModal(true);
     }

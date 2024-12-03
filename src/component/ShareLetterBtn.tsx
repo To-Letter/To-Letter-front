@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { shareLetterState } from "../recoil/shareLetterAtom";
 import { useUser } from "../hook/useUser";
-import sessionStorageService from "../utils/sessionStorageService";
+import axiosInterceptor from "../apis/axiosInterceptor";
 
 const ShareLetterBtn: React.FC = () => {
   const [shareLetterRecoil, setShareLetterRecoil] =
@@ -44,7 +44,7 @@ const ShareLetterBtn: React.FC = () => {
 
   const shareToKakao = async () => {
     try {
-      if (sessionStorageService.get("accessToken") !== null) {
+      if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
         const imageUrl = await kakaoImageUploading();
         window.Kakao.Share.sendDefault({
           objectType: "feed",

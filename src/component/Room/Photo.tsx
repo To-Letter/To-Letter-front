@@ -4,7 +4,7 @@ import Popup from "./Popup";
 import { usePopup } from "../../context/PopupContext";
 import { useSetRecoilState } from "recoil";
 import { shareLetterState } from "../../recoil/shareLetterAtom";
-import sessionStorageService from "../../utils/sessionStorageService";
+import axiosInterceptor from "../../apis/axiosInterceptor";
 
 const Photo = ({
   position,
@@ -24,7 +24,7 @@ const Photo = ({
   const handleClick = () => {
     if (
       popupId === "photo1" &&
-      sessionStorageService.get("accessToken") !== null
+      axiosInterceptor.defaults.headers.common["Authorization"] !== null
     ) {
       setShareLetterRecoil(true);
     } else {
@@ -35,7 +35,7 @@ const Photo = ({
   const handleClose = () => {
     if (
       popupId === "photo1" &&
-      sessionStorageService.get("accessToken") !== null
+      axiosInterceptor.defaults.headers.common["Authorization"] !== null
     ) {
       setShareLetterRecoil(false);
     } else {

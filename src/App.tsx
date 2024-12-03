@@ -9,7 +9,7 @@ import ErrorPage from "./pages/errorPage";
 function App() {
   return (
     <RecoilRoot>
-      <LoadingSpinner/>
+      <LoadingSpinner />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />

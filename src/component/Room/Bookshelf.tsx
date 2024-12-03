@@ -1,7 +1,7 @@
 import { ThreeEvent } from "@react-three/fiber";
-import sessionStorageService from "../../utils/sessionStorageService";
 import { receiveLetterBoxModalState } from "../../recoil/letterPopupAtom";
 import { useSetRecoilState } from "recoil";
+import axiosInterceptor from "../../apis/axiosInterceptor";
 
 const Bookshelf = ({ position }: { position: [number, number, number] }) => {
   const shelfWidth = 1.5;
@@ -15,7 +15,7 @@ const Bookshelf = ({ position }: { position: [number, number, number] }) => {
 
   const setReceiveLetterBoxModalClick = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation(); // 이벤트 전파 방지
-    if (sessionStorageService.get("accessToken") !== null) {
+    if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
       console.log("로그인 되어있어요!");
       setReceiveLetterBoxModal(true);
     }

@@ -5,7 +5,6 @@ import Index from "../component/account/Index";
 import { PopupProvider } from "../context/PopupContext";
 import { useRecoilValue } from "recoil";
 import { accountModalState } from "../recoil/accountAtom";
-import sessionStorageService from "../utils/sessionStorageService";
 import { myPageModalState } from "../recoil/myInfoAtom";
 import MyPage from "../component/myPage/MyPage";
 import {
@@ -26,6 +25,7 @@ import { deleteLetterPopupState } from "../recoil/deleteLetterPopupAtom";
 import DeleteLetterModal from "../component/letter/DeleteLetterModal";
 import { newLetterPopupState } from "../recoil/newLetterPopupState";
 import NewLetterModal from "../component/letter/NewLetterModal";
+import axiosInterceptor from "../apis/axiosInterceptor";
 
 function Home() {
   const modalState = useRecoilValue(accountModalState);
@@ -36,15 +36,16 @@ function Home() {
   const receiveLetterBoxModal = useRecoilValue(receiveLetterBoxModalState);
   const individualLetterPopup = useRecoilValue(individualLetterState);
   const shareLetterRecoilValue = useRecoilValue(shareLetterState);
-  const deleteLetterPopup = useRecoilValue(deleteLetterPopupState)
-  const newLetterPopup = useRecoilValue(newLetterPopupState)
+  const deleteLetterPopup = useRecoilValue(deleteLetterPopupState);
+  const newLetterPopup = useRecoilValue(newLetterPopupState);
 
   return (
     <>
       <PopupProvider>
         <Canvas shadows>
           <Secen />
-          {sessionStorageService.get("accessToken") === null && (
+          {axiosInterceptor.defaults.headers.common["Authorization"] ===
+            undefined && (
             <OrbitControls
               minPolarAngle={Math.PI / 2.5} // under
               maxPolarAngle={1.396} // 약 80도
@@ -55,7 +56,8 @@ function Home() {
               maxDistance={3} // 최대 축소 거리
             />
           )}
-          {sessionStorageService.get("accessToken") !== null && (
+          {axiosInterceptor.defaults.headers.common["Authorization"] !==
+            undefined && (
             <OrbitControls
               minPolarAngle={Math.PI / 2.8} // under
               maxPolarAngle={1.396} // 약 80도
@@ -75,8 +77,8 @@ function Home() {
         {receiveLetterBoxModal && <Mailbox />}
         {individualLetterPopup.isOpen && <IndividualLetterPopup />}
         {shareLetterRecoilValue && <ShareLetterBtn />}
-        {deleteLetterPopup&&<DeleteLetterModal/>}
-        {newLetterPopup&&<NewLetterModal/>}
+        {deleteLetterPopup && <DeleteLetterModal />}
+        {newLetterPopup && <NewLetterModal />}
       </PopupProvider>
     </>
   );
