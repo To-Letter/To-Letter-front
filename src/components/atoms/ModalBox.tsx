@@ -24,7 +24,7 @@ interface defaultStyleProps {
   $margin?: string;
 }
 
-export default function Box({
+export default function ModalBox({
   children,
   isExitBtn = false,
   $direction = "row",
