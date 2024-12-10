@@ -47,7 +47,7 @@ export default function ModalBox({
         $margin={$margin}
         $padding={$padding}
       >
-        {isExitBtn && <Exit onClick={router.back()}>X</Exit>}
+        {isExitBtn && <Exit onClick={() => router.back()}>X</Exit>}
         {children}
       </BoxWrap>
     </BackgroundOverlay>
