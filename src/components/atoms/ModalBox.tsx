@@ -23,7 +23,18 @@ interface defaultStyleProps {
   $padding?: string;
   $margin?: string;
 }
-
+/**
+ * @param children 모달 안에 들어갈 하위 노드(React.ReactNode)
+ * @param isExitBtn 나가기 버튼 유무, 기본 값 false(boolean)
+ * @param $direction?: "row" | "column"; 기본 값 "row"
+ * @param $justifyContent?: string; 기본 값 "center"
+ * @param $alignItems?: string; 기본 값 "center"
+ * @param $width?: string; 기본 값 "auto"
+ * @param $height?: string; 기본 값 "auto"
+ * @param $padding?: string; 기본 값 "0"
+ * @param $margin?: string; 기본 값 "0"
+ * @returns 기본 모달Box(배경 오버레이 포함) 디자인 UI
+ */
 export default function ModalBox({
   children,
   isExitBtn = false,

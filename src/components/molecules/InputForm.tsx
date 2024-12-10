@@ -14,6 +14,18 @@ interface props {
   onClick?: () => void;
 }
 
+/**
+ * 
+ * @param key component key(string)
+ * @param labelTitle 해당 inputform name(string);
+ * @param type input type(string)
+ * @param name input name(string)
+ * @param onChange input onChange event hdr((e: ChangeEvent<HTMLInputElement>) => void)
+ * @param isExistButton?: 폼 왼쪽에 버튼이 붙을 시, 기본 false(boolean)
+ * @param buttonTitle?: 버튼 title, 기본 ""(string)
+ * @param onClick?: 버튼 onclick envent(() => void)
+ * @returns 
+ */
 export default function InputForm({
   key,
   labelTitle,

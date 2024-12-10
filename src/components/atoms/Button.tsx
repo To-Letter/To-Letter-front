@@ -13,6 +13,13 @@ interface defaultStyleProps {
   $margin?: string;
 }
 
+/**
+ * @param title 버튼 TEXT(String)
+ * @param onClick onClick event(()=>void)
+ * @param $margin margin Style(String)
+ * @param $padding padding Style(String)
+ * @returns 기본 버튼 디자인 UI
+ */
 export default function Button({
   title,
   onClick,
