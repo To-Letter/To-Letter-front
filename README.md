@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# :envelope: 온라인을 통해 만나는 아날로그한 편지, TO. Letter :mailbox_with_mail:
 
-## Getting Started
+- threejs를 통해 가상의 나의 방에서 편지를 주고 받을 수 있어요.
+- 내가 설정해둔 우편함 위치를 기준으로 편지가 도착하는 시간이 정해져요.
+- 나의 편지 주소를 카카오톡으로 공유할 수 있어요.
+- 로그인시 새로 도착한 편지 알림을 받을 수 있어요.
 
-First, run the development server:
+<br/>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## :gift: 서비스 소개 :gift:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 1. 팀원 구성
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 재윤(front)
+- 유정(back)
+- 윤미(front)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 2. 개발 환경
 
-## Learn More
+- front: react, typescript
+- 버전 및 이슈관리 : Github, Github Issues, Github Project
+- 서비스 배포 환경 : -
+- 협업 툴: [Github Wiki](https://github.com/To-Letter/To-Letter-front/wiki)
 
-To learn more about Next.js, take a look at the following resources:
+### 3. 사용 기술
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- threeJs, recoil, styled-components
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+<br/>
 
-## Deploy on Vercel
+## :pushpin: version 1 summery :pushpin:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| 1. 기본 배경                                                                                                |
+| :---------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| <img src="https://github.com/user-attachments/assets/f9147aa3-f697-4c92-a7cc-0bdd8fc77963">                 | 방(침대, 책상, 의자, 서랍, 캘린더, 벽걸이 랙, 창문, 커튼 등)야외 풍경(계절 별, 시간대 별, 날씨 별) |
+| - 방(침대, 책상, 의자, 서랍, 캘린더, 벽걸이 랙, 창문, 커튼 등)<br/>- 야외 풍경(계절 별, 시간대 별, 날씨 별) |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 2. 로그인/회원가입 - 의자
+
+- 일반 로그인/회원가입
+- 소셜(카카오) 로그인/회원가입
+- 일반 로그인 유저 비밀번호 찾기
+
+### 3. 마이 페이지 모달 - 침대
+
+- 내 정보 확인 및 수정
+- 비밀번호 변경
+- 로그아웃 및 회원탈퇴
+
+### 4. 편지/송수신 - 책상 위 연필꽂이
+
+- 설정 우편함 위치 기준 도착 시간 설정
+- 편지 주소 공유 기능
+
+### 5. 나의 편지함(보낸/받은 편지) - 책상 위 책장
+
+### 6. 편지 삭제 - 책상 오른쪽 쓰레기통
+
+### 7. 편지 도착 알림 - (발생 시)책상 위 편지봉투 더미 등장
