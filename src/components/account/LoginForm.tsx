@@ -1,5 +1,11 @@
+"use client";
+
 import React, { ChangeEvent, useState } from "react";
 import styled from "styled-components";
+import ModalBox from "../atoms/ModalBox";
+import InputForm from "../molecules/InputForm";
+import Button from "../atoms/Button";
+import { Text } from "../atoms/Text";
 import { getKakaoURL, postLocalLogin } from "../../apis/controller/account";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { accountModalState, emailState } from "../../recoil/accountAtom";
@@ -11,7 +17,14 @@ interface loginFormI {
   password: string;
 }
 
-const Login = () => {
+interface LoginResponse {
+  data: {
+    responseCode: number;
+    responseData?: string;
+  };
+}
+
+const LoginForm = () => {
   const setEmail = useSetRecoilState(emailState);
   const setLoadingState = useSetRecoilState(loadingState);
   const setModalState = useSetRecoilState(accountModalState);
@@ -37,7 +50,7 @@ const Login = () => {
     try {
       //기존에 저장되어있는 유저 정보 삭제
       resetMyInfo();
-      let res: any = await postLocalLogin({
+      const res: LoginResponse = await postLocalLogin({
         email: loginForm.email,
         password: loginForm.password,
       });
@@ -63,7 +76,8 @@ const Login = () => {
         // 걍 틀림
         alert("이메일 혹은 비밀번호를 잘못입력하셨습니다.");
       }
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
       alert("이메일 혹은 비밀번호를 잘못입력하셨습니다.");
     }
   };
@@ -73,135 +87,87 @@ const Login = () => {
     resetMyInfo();
     setLoadingState(true);
     try {
-      let res: any = await getKakaoURL();
-      if (res.data.responseCode === 200) {
+      const res: LoginResponse = await getKakaoURL();
+      if (res.data.responseCode === 200 && res.data.responseData) {
         window.location.href = res.data.responseData;
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error("kakao Login Error:", err);
       alert("kakao Login code Error");
     }
   };
 
   return (
-    <LoginWrap>
-      <LoginContent>
-        <FormLabel>
-          Email
-          <FormInput type="text" name="email" onChange={onChangeFormHdr} />
-        </FormLabel>
-        <FormLabel>
-          Password
-          <FormInput
-            type="password"
-            name="password"
-            onChange={onChangeFormHdr}
+    <ModalBox
+      isExitBtn={true}
+      $direction="column"
+      $justifyContent="flex-start"
+      $width="430px"
+      $height="auto"
+      $padding="32px 0"
+    >
+      <ContentContainer>
+        <InputForm
+          key="email"
+          labelTitle="Email"
+          type="text"
+          name="email"
+          onChange={onChangeFormHdr}
+        />
+        <InputForm
+          key="password"
+          labelTitle="Password"
+          type="password"
+          name="password"
+          onChange={onChangeFormHdr}
+        />
+
+        <ButtonGroup>
+          <Button
+            title="Login"
+            onClick={onClickLogin}
+            $padding="8px 0"
+            $margin="0 0 16px 0"
           />
-        </FormLabel>
-      </LoginContent>
-      <LoginBtn onClick={onClickLogin}>Login</LoginBtn>
-      <SocialLoginWrap>
-        <LoginBtn onClick={onClickKakaoLogin}>카카오톡 로그인</LoginBtn>
-        {/* <SocialLoginBtn>google 로그인</SocialLoginBtn> */}
-      </SocialLoginWrap>
-      <FindAccountTextWrap>can't login?</FindAccountTextWrap>
-    </LoginWrap>
+
+          <Button
+            title="카카오톡 로그인"
+            onClick={onClickKakaoLogin}
+            $padding="8px 0"
+            $margin="0 0 16px 0"
+          />
+
+          <Text
+            $fontSize="14px"
+            $color="#e9e9e9"
+            $margin="8px 0 0 0"
+            $isClickAble={true}
+            onClick={() => {
+              // 비밀번호 찾기 로직
+            }}
+          >
+            can&apos;t login?
+          </Text>
+        </ButtonGroup>
+      </ContentContainer>
+    </ModalBox>
   );
 };
 
-export default Login;
+export default LoginForm;
 
-const LoginWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
+// 레이아웃을 위한 최소한의 스타일 컴포넌트만 유지
+const ContentContainer = styled.div`
   width: calc(100% - 80px);
-  margin: 12px 40px 20px 40px;
-`;
-
-const LoginContent = styled.div`
+  margin: 0 40px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  margin: 16px 0;
-  width: 100%;
 `;
 
-const FormLabel = styled.label`
+const ButtonGroup = styled.div`
+  width: 100%;
+  margin-top: 24px;
   display: flex;
   flex-direction: column;
-  margin: 8px 0;
-  width: 100%;
-  color: #cecece;
+  align-items: flex-end;
 `;
-const FormInput = styled.input`
-  border: none;
-  background-color: transparent;
-  border-bottom: 1px solid white;
-  width: 100%;
-  height: 28px;
-  font-size: 20px;
-  margin-top: 8px;
-  color: #ffffff;
-  &:focus {
-    outline: none; /* 기본 outline 제거 */
-    box-shadow: none; /* 기본 box-shadow 제거 */
-  }
-  &:-internal-autofill-selected {
-    border: none;
-    background-color: transparent;
-    border-bottom: 1px solid white;
-    width: 100%;
-    height: 28px;
-    font-size: 20px;
-    margin-top: 8px;
-    color: #ffffff;
-  }
-  &:-webkit-autofill,
-  &:-webkit-autofill:hover,
-  &:-webkit-autofill:focus {
-    border: none;
-    -webkit-text-fill-color: #ffffff !important;
-    -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
-    background-color: transparent !important;
-    transition: background-color 5000s ease-in-out 0s;
-    border-bottom: 1px solid white;
-  }
-`;
-
-const LoginBtn = styled.div`
-  width: 100%;
-  border: 1px solid #e9e9e9;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 0;
-  margin-bottom: 16px;
-  color: #e9e9e9;
-  background-color: #262523;
-
-  cursor: pointer;
-`;
-
-const SocialLoginWrap = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const FindAccountTextWrap = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  color: #e9e9e9;
-  cursor: pointer;
-`;
-
-// const SocialLoginBtn = styled(LoginBtn)`
-//   width: 48%;
-//   color: #e9e9e9;
-// `

@@ -1,5 +1,6 @@
 "use client";
 
+import StyledComponentsRegistry from "@/lib/reistry";
 import { RecoilRoot } from "recoil";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
@@ -12,8 +13,10 @@ export default function RootLayout({
     <html lang="ko">
       <body>
         <RecoilRoot>
-          <LoadingSpinner />
-          {children}
+          <StyledComponentsRegistry>
+            <LoadingSpinner />
+            {children}
+          </StyledComponentsRegistry>
         </RecoilRoot>
       </body>
     </html>

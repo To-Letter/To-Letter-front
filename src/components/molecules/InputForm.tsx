@@ -1,13 +1,14 @@
 import styled from "styled-components";
-import Box from "./Box";
-import Button from "./Button";
+import Box from "../atoms/ModalBox";
+import Button from "../atoms/Button";
+import { ChangeEvent } from "react";
 
 interface props {
   key: string;
   labelTitle: string;
   type: string;
   name: string;
-  onChange: () => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   isExistButton?: boolean;
   buttonTitle?: string;
   onClick?: () => void;
