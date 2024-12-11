@@ -1,6 +1,6 @@
 "use client";
 
-import LoadingSpinner from "@/components/common_ui/loading_spinner";
+import LoadingSpinner from "@/components/commonui/LoadingSpinner";
 
 export default function Loading() {
   return <LoadingSpinner />;
