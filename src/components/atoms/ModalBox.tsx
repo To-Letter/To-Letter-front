@@ -37,7 +37,7 @@ interface defaultStyleProps {
  */
 export default function ModalBox({
   children,
-  isExitBtn = false,
+  isExitBtn = true,
   $direction = "row",
   $justifyContent = "center",
   $alignItems = "center",
@@ -87,6 +87,7 @@ export const BoxWrap = styled.div<defaultStyleProps>`
   padding: ${({ $padding }) => $padding};
   margin: ${({ $margin }) => $margin};
   position: relative;
+  border-radius: 2px;
   background: #000000a6;
   box-shadow: 1px 1px 1px #0000005c;
 `;
