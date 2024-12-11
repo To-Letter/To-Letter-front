@@ -1,6 +1,6 @@
 import React from "react";
 import ModalBox from "@/components/atoms/ModalBox";
-import { HeaderBox, MainBox } from "@/components/atoms/Box";
+import { HeaderBox } from "@/components/atoms/Box";
 import AuthMenuTab from "@/components/molecules/AuthMenuTab";
 
 export default function layout({ children }: { children: React.ReactNode }) {
@@ -14,7 +14,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
       <HeaderBox>
         <AuthMenuTab />
       </HeaderBox>
-      <MainBox>{children}</MainBox>
+      {children}
     </ModalBox>
   );
 }
