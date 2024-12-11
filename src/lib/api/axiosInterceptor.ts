@@ -1,6 +1,6 @@
 import axios from "axios";
-import { AUTH_KEY } from "../constants/authkey";
-import sendApi from "./sendApi";
+import { AUTH_KEY } from "@/constants/authkey";
+import sendApi from "@/lib/api/sendApi";
 
 const axiosInterceptor = axios.create({
   baseURL: AUTH_KEY.apiUrl,
@@ -24,13 +24,13 @@ axiosInterceptor.interceptors.request.use(
     const accessToken =
       axiosInterceptor.defaults.headers.common["Authorization"];
 
-    // if (!accessToken) {
-    //   const newAccessToken = await getNewToken();
-    //   config.headers["Authorization"] = `Bearer ${newAccessToken}`;
-    //   axiosInterceptor.defaults.headers.common[
-    //     "Authorization"
-    //   ] = `Bearer ${newAccessToken}`;
-    // }
+    if (!accessToken) {
+      const newAccessToken = await getNewToken();
+      config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+      axiosInterceptor.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${newAccessToken}`;
+    }
 
     return config;
   },

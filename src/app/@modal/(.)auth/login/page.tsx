@@ -1,7 +1,7 @@
 "use client";
 
-import LoginForm from "@/components/account/LoginForm";
+import Login from "@/components/account/Login";
 
 export default function LoginModal() {
-  return <LoginForm />;
+  return <Login />;
 }

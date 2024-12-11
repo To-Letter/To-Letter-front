@@ -31,7 +31,7 @@ interface AddressData {
   jibunAddr: string;
 }
 
-function AddressModal() {
+function Address() {
   const router = useRouter();
   const [searchWord, setSearchWord] = useState<string>("");
   // const [pageCnt, setPageCnt] = useState<number>(0)
@@ -194,7 +194,7 @@ function AddressModal() {
   );
 }
 
-export default AddressModal;
+export default Address;
 
 const Box = styled.div``;
 

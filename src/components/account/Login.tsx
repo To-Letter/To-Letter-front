@@ -6,11 +6,12 @@ import ModalBox from "../atoms/ModalBox";
 import InputForm from "../molecules/InputForm";
 import Button from "../atoms/Button";
 import { Text } from "../atoms/Text";
-import { getKakaoURL, postLocalLogin } from "../../apis/controller/account";
+import { getKakaoURL, postLocalLogin } from "@/lib/api/controller/account";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
-import { accountModalState, emailState } from "../../recoil/accountAtom";
-import { myInfoState } from "../../recoil/myInfoAtom";
-import { loadingState } from "../../recoil/loadingAtom";
+import { emailState } from "@/store/recoil/accountAtom";
+import { myInfoState } from "@/store/recoil/accountAtom";
+import { loadingState } from "@/store/recoil/loadingAtom";
+import { useRouter } from "next/router";
 
 interface loginFormI {
   email: string;
@@ -24,15 +25,15 @@ interface LoginResponse {
   };
 }
 
-const LoginForm = () => {
+const Login = () => {
   const setEmail = useSetRecoilState(emailState);
   const setLoadingState = useSetRecoilState(loadingState);
-  const setModalState = useSetRecoilState(accountModalState);
   const [loginForm, setLoginForm] = useState<loginFormI>({
     email: "",
     password: "",
   });
   const resetMyInfo = useResetRecoilState(myInfoState);
+  const router = useRouter();
 
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
     setLoginForm((prev) => ({
@@ -57,18 +58,12 @@ const LoginForm = () => {
 
       if (res.data.responseCode === 200) {
         // 로그인 성공
-        setModalState({
-          isOpen: false,
-          type: null, // 로그인 타입으로 설정
-        });
+        router.push("/");
       } else if (res.data.responseCode === 403) {
         // 이메일 인증 미완료 계정
         setEmail(loginForm.email);
         alert("이메일 인증이 되지않은 계정입니다.");
-        setModalState({
-          isOpen: true,
-          type: "MailVerify",
-        });
+        router.push("/auth/verify");
       } else if (
         res.data.responseCode === 401 ||
         res.data.responseCode === 400
@@ -154,7 +149,7 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default Login;
 
 // 레이아웃을 위한 최소한의 스타일 컴포넌트만 유지
 const ContentContainer = styled.div`

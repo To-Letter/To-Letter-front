@@ -1,7 +1,7 @@
 "use client";
 
-import AddressForm from "@/components/account/AddressForm";
+import Address from "@/components/account/Address";
 
 export default function AddressModal() {
-  return <AddressForm />;
+  return <Address />;
 }
