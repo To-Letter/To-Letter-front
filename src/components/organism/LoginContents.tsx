@@ -10,7 +10,7 @@ interface loginFormI {
   password: string;
 }
 
-export default function Login() {
+export default function LoginContents() {
   const [loginForm, setLoginForm] = useState<loginFormI>({
     email: "",
     password: "",

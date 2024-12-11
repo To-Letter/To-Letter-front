@@ -1,7 +1,7 @@
 "use client";
 
-import Login from "@/components/organism/Login";
+import LoginContents from "@/components/organism/LoginContents";
 
 export default function LoginModal() {
-  return <Login />;
+  return <LoginContents />;
 }
