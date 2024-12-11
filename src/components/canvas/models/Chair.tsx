@@ -5,13 +5,12 @@ import { useLoader } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
-import { useSetRecoilState } from "recoil";
-import { accountModalState } from "../../recoil/accountAtom";
+import { useRouter } from "next/router";
 
 const Chair = () => {
   const chairglb = useLoader(GLTFLoader, "/models/chair.glb");
   const meshRef = useRef<THREE.Mesh>(null);
-  const setModalState = useSetRecoilState(accountModalState);
+  const router = useRouter();
 
   useEffect(() => {
     chairglb.scene.traverse((child) => {
@@ -35,10 +34,7 @@ const Chair = () => {
       castShadow
       receiveShadow
       onClick={() => {
-        setModalState({
-          isOpen: true,
-          type: "login", // 로그인 타입으로 설정
-        });
+        router.push("/auth/login");
       }}
     >
       <primitive object={chairglb.scene} />

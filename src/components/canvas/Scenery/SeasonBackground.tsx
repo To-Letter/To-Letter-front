@@ -3,10 +3,8 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useLoader } from "@react-three/fiber";
 import React, { useRef, useEffect, useState, useMemo } from "react";
-import { Plane } from "@react-three/drei";
 import {
   Group,
-  Mesh,
   MeshStandardMaterial,
   Object3DEventMap,
   SpotLight,
@@ -15,7 +13,7 @@ import {
 import { useHelper } from "@react-three/drei";
 import * as THREE from "three";
 import Winter from "./Winter";
-import { grassPosition, seasonFile } from "../../constants/seasonTree";
+import { grassPosition, seasonFile } from "@/constants/seasonTree";
 import Spring from "./Spring";
 import Summer from "./Summer";
 import Autumn from "./Autumn";
@@ -43,7 +41,7 @@ const SeasonBackground = ({
 
   // 월에 따른 계절 결정 (예: 12, 1, 2월 = 겨울)
   const seasonIndex = useMemo(() => {
-    let index = Math.floor((nowMonthValue % 12) / 3);
+    const index = Math.floor((nowMonthValue % 12) / 3);
     if (index === 0) return "winter";
     else if (index === 1) return "spring";
     else if (index === 2) return "summer";

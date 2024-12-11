@@ -7,11 +7,9 @@ import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
 import Calender from "./Calender";
 import Bookshelf from "./Bookshelf";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { toUserNicknameModalState } from "../../recoil/toUserNicknameAtom";
-import NewLetter from "./NewLetter";
-import { newLetterAlarmState } from "../../recoil/newLetterPopupState";
-import axiosInterceptor from "../../apis/axiosInterceptor";
+/* import NewLetter from "./NewLetter"; */
+import axiosInterceptor from "@/lib/axiosInterceptor";
+import { useRouter } from "next/router";
 
 // 연필통 색상 수정
 const meshColors: { [key: string]: string } = {
@@ -44,12 +42,12 @@ const Desk = () => {
   const deskRef = useRef<THREE.Mesh>(null);
   const pencilRef = useRef<THREE.Mesh>(null);
   const { gl } = useThree();
-  const setToUserNicknameModal = useSetRecoilState(toUserNicknameModalState);
-  const newLetterAlarm = useRecoilValue(newLetterAlarmState);
+  const router = useRouter();
+  /*   const newLetterAlarm = useRecoilValue(newLetterAlarmState); */
 
   // 모델 수정
   useEffect(() => {
-    console.log("newLetterAlarm", newLetterAlarm);
+    /*     console.log("newLetterAlarm", newLetterAlarm); */
     if (deskglb && deskglb.scene) {
       deskglb.scene.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {
@@ -88,19 +86,18 @@ const Desk = () => {
     }
   }, [deskglb, pencilglb]);
 
-  const handlePointerOver = (event: ThreeEvent<MouseEvent>) => {
+  const handlePointerOver = () => {
     gl.domElement.style.cursor = "pointer";
   };
 
-  const handlePointerOut = (event: ThreeEvent<MouseEvent>) => {
+  const handlePointerOut = () => {
     gl.domElement.style.cursor = "auto";
   };
 
   const toUserNicknameModalClick = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation(); // 이벤트 전파 방지
     if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
-      console.log("로그인 되어있어요!");
-      setToUserNicknameModal(true);
+      router.push("/letter/userconfirm");
     }
   };
 
@@ -113,7 +110,7 @@ const Desk = () => {
       <Bookshelf position={[1.1, -1.68, -2.7]} />
 
       {/**편지지 */}
-      {newLetterAlarm && <NewLetter />}
+      {/* {newLetterAlarm && <NewLetter />} */}
 
       {/* 책상 */}
       <mesh ref={deskRef} rotation-y={Math.PI} scale={5} position={[0, -5, -2]}>

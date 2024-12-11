@@ -5,20 +5,18 @@ import { ThreeEvent, useLoader } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
-import { useSetRecoilState } from "recoil";
-import { deleteLetterPopupState } from "../../recoil/deleteLetterPopupAtom";
-import axiosInterceptor from "../../apis/axiosInterceptor";
+import axiosInterceptor from "@/lib/axiosInterceptor";
+import { useRouter } from "next/router";
 
 const TrashBin = () => {
   const chairglb = useLoader(GLTFLoader, "/models/trashBin.glb");
   const meshRef = useRef<THREE.Mesh>(null);
-  // 편지 삭제 모달
-  const setDeleteLetterModalState = useSetRecoilState(deleteLetterPopupState);
+  const router = useRouter();
 
   const onClickTrashBin = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation(); // 이벤트 전파 방지
     if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
-      setDeleteLetterModalState(true);
+      router.push("/letter/letterdelete");
     }
   };
 

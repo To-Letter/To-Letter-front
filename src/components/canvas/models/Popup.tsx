@@ -2,8 +2,8 @@
 
 import React, { useEffect } from "react";
 import { Html } from "@react-three/drei";
-import { usePopup } from "../../context/PopupContext";
 import styled from "styled-components";
+import { useRouter } from "next/router";
 
 interface PopupProps {
   text: string;
@@ -11,12 +11,12 @@ interface PopupProps {
 }
 
 const Popup: React.FC<PopupProps> = ({ text, onClose }) => {
-  const { setActivePopup } = usePopup();
+  const router = useRouter();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if ((event.target as HTMLElement).closest(".popup") === null) {
-        setActivePopup(null);
+        router.back();
       }
     };
 
@@ -24,7 +24,7 @@ const Popup: React.FC<PopupProps> = ({ text, onClose }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [setActivePopup]);
+  }, [router]);
 
   return (
     <Html center>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import TimeBackground from "./TimeBackground";
 import SeasonBackground from "./SeasonBackground";
 import WeatherBackground from "./WeatherBackground";
-import { getCurrentWeather } from "../../utils/weatherApi";
+import { getCurrentWeather } from "@/utils/weatherApi";
 
 export interface locationI {
   lat: number;
@@ -12,7 +12,7 @@ export interface locationI {
 }
 
 const SceneryIndex = () => {
-  const [now, setNow] = useState<Date>(new Date());
+  const [now] = useState<Date>(new Date());
   const [weatherInfo, setWeatherInfo] = useState<any>("");
 
   const getWeather = async ({ lat, lng }: { lat: number; lng: number }) => {
@@ -31,7 +31,7 @@ const SceneryIndex = () => {
           const { latitude, longitude } = position.coords;
           getWeather({ lat: latitude, lng: longitude });
         },
-        (error) => {
+        () => {
           /**
            * 위치 정보 제공 여부가 크게 중요하지 않다고 판단, 기본 값 설정
            */

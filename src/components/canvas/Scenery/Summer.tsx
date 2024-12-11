@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLoader } from "@react-three/fiber";
-import { Group, MeshStandardMaterial, Object3DEventMap } from "three";
+import { Group, Object3DEventMap } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
-import { treePosition } from "../../constants/seasonTree";
-import { seasonFile } from "../../constants/seasonTree";
+import { treePosition } from "@/constants/seasonTree";
+import { seasonFile } from "@/constants/seasonTree";
 
 const meshColors: { [key: string]: string } = {
   //나무 가지
@@ -34,7 +34,7 @@ const Summer = () => {
     treeglb.scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
-        let meshColor = meshColors[mesh.name];
+        const meshColor = meshColors[mesh.name];
         if (meshColor === "#493414") {
           mesh.material = new THREE.MeshStandardMaterial({
             color: meshColor,

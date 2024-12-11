@@ -2,12 +2,11 @@
 
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useLoader } from "@react-three/fiber";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import * as THREE from "three";
 import { ThreeEvent } from "@react-three/fiber";
-import { receiveLetterBoxModalState } from "../../recoil/letterPopupAtom";
-import { useSetRecoilState } from "recoil";
-import axiosInterceptor from "../../apis/axiosInterceptor";
+import { useRouter } from "next/navigation";
+import axiosInterceptor from "@/lib/axiosInterceptor";
 
 interface BookSettings {
   color: string;
@@ -26,9 +25,16 @@ const Books = () => {
   // 모델 선언
   const booksglb = useLoader(GLTFLoader, "/models/books.glb");
   const booksRef = useRef<THREE.Mesh>(null);
+  const router = useRouter(); // 추가
 
-  const setReceiveLetterBoxModal = useSetRecoilState(
-    receiveLetterBoxModalState
+  const setReceiveLetterBoxModalClick = useCallback(
+    (event: ThreeEvent<MouseEvent>) => {
+      event.stopPropagation();
+      if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
+        router.push("/letter/mailbox");
+      }
+    },
+    [router]
   );
 
   useEffect(() => {
@@ -134,7 +140,7 @@ const Books = () => {
         }
       }
     });
-  }, [booksglb]);
+  }, [booksglb, setReceiveLetterBoxModalClick]);
 
   // 책속지
   const bookPages: BookPage[] = [
@@ -146,14 +152,6 @@ const Books = () => {
       args: [0.05, 0.93, 0.725],
     },
   ];
-
-  const setReceiveLetterBoxModalClick = (event: ThreeEvent<MouseEvent>) => {
-    event.stopPropagation(); // 이벤트 전파 방지
-    if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
-      console.log("로그인 되어있어요!");
-      setReceiveLetterBoxModal(true);
-    }
-  };
 
   return (
     <>

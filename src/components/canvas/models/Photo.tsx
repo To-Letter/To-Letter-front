@@ -3,10 +3,9 @@
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
 import Popup from "./Popup";
-import { usePopup } from "../../context/PopupContext";
-import { useSetRecoilState } from "recoil";
-import { shareLetterState } from "../../recoil/shareLetterAtom";
-import axiosInterceptor from "../../apis/axiosInterceptor";
+import axiosInterceptor from "@/lib/axiosInterceptor";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 const Photo = ({
   position,
@@ -20,29 +19,24 @@ const Photo = ({
   popupId: string;
 }) => {
   const texture = useLoader(TextureLoader, imageUrl);
-  const { activePopup, setActivePopup } = usePopup();
-  const setShareLetterRecoil = useSetRecoilState(shareLetterState);
+  const router = useRouter();
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   const handleClick = () => {
-    if (
-      popupId === "photo1" &&
-      axiosInterceptor.defaults.headers.common["Authorization"] !== null
-    ) {
-      setShareLetterRecoil(true);
+    const isLoggedIn =
+      axiosInterceptor.defaults.headers.common["Authorization"] !== null;
+
+    if (popupId === "photo1" && isLoggedIn) {
+      router.push("/share");
     } else {
-      setActivePopup(popupId);
+      setIsPopupVisible(true);
+      router.push("/photo");
     }
   };
 
   const handleClose = () => {
-    if (
-      popupId === "photo1" &&
-      axiosInterceptor.defaults.headers.common["Authorization"] !== null
-    ) {
-      setShareLetterRecoil(false);
-    } else {
-      setActivePopup(null);
-    }
+    setIsPopupVisible(false);
+    router.back();
   };
 
   return (
@@ -59,9 +53,7 @@ const Photo = ({
           <meshStandardMaterial color="white" />
         </mesh>
       </group>
-      {activePopup === popupId && (
-        <Popup text={popupText} onClose={handleClose} />
-      )}
+      {isPopupVisible && <Popup text={popupText} onClose={handleClose} />}
     </>
   );
 };

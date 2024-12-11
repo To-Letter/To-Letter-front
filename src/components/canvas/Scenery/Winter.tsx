@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLoader } from "@react-three/fiber";
 import { Group, Object3DEventMap } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
-import { treePosition } from "../../constants/seasonTree";
-import { seasonFile } from "../../constants/seasonTree";
+import { treePosition } from "@/constants/seasonTree";
+import { seasonFile } from "@/constants/seasonTree";
 
 const Winter = () => {
   const [treeClones, setTreeClones] = useState<Group<Object3DEventMap>[]>([]);
