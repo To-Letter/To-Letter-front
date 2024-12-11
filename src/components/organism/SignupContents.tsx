@@ -3,7 +3,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { ElementBox, MainBox, SectionBox } from "../atoms/Box";
 import InputForm from "../molecules/InputForm";
 import { Text } from "../atoms/Text";
-import Summary from "../molecules/summary";
+import SummaryTip from "../molecules/SummaryTip";
 import Button from "../atoms/Button";
 
 interface loginFormI {
@@ -58,7 +58,7 @@ export default function SignupContents() {
     <MainBox $direction="column" $alignItems="flex-start" $width="100%">
       <SectionBox $direction="column" $width="100%" $margin="24px 0">
         <InputForm
-          key="inputform-nickname"
+          keyValue="inputform-nickname"
           labelTitle="Nickname"
           name="nickname"
           type="text"
@@ -68,7 +68,7 @@ export default function SignupContents() {
           onClick={() => {}}
         />
         <InputForm
-          key="inputform-email"
+          keyValue="inputform-email"
           labelTitle="Email"
           name="email"
           type="text"
@@ -78,7 +78,7 @@ export default function SignupContents() {
           onClick={() => {}}
         />
         <InputForm
-          key="inputform-email"
+          keyValue="inputform-password"
           labelTitle="Password"
           name="password"
           type="password"
@@ -88,7 +88,7 @@ export default function SignupContents() {
         <ElementBox $justifyContent="space-between" $margin="16px 0 0">
           <ElementBox>
             <Text $color="#e9e9e9">MailboxAddress</Text>
-            <Summary
+            <SummaryTip
               key="addressTip"
               tipText={tipText.current}
               $margin="0 0 0 4px"

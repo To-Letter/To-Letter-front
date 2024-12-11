@@ -9,7 +9,7 @@ export default function AuthMenuTab() {
   return (
     <NavBox>
       <Tab
-        key="authTab-Login"
+        keyValue="authTab-Login"
         TabTitle="Login"
         tabOption="underline"
         onClick={() => router.push("/auth/login")}
@@ -19,7 +19,7 @@ export default function AuthMenuTab() {
         $active={pathname === "/auth/login"}
       />
       <Tab
-        key="authTab-Signup"
+        keyValue="authTab-Signup"
         TabTitle="Signup"
         tabOption="underline"
         onClick={() => router.push("/auth/signup")}

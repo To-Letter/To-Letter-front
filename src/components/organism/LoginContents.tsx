@@ -27,7 +27,7 @@ export default function LoginContents() {
     <MainBox $direction="column" $alignItems="flex-start" $width="100%">
       <SectionBox $direction="column" $width="100%" $margin="24px 0">
         <InputForm
-          key="inputform-email"
+          keyValue="inputform-email"
           labelTitle="Email"
           name="email"
           type="text"
@@ -35,7 +35,7 @@ export default function LoginContents() {
           isExistButton={false}
         />
         <InputForm
-          key="inputform-email"
+          keyValue="inputform-password"
           labelTitle="Password"
           name="password"
           type="password"

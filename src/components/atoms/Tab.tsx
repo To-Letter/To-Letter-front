@@ -10,7 +10,7 @@ interface defaultStyleProps {
 }
 
 interface props {
-  key: string;
+  keyValue: string;
   TabTitle: string;
   tabOption: "underline" | "highlight";
   onClick: () => void;
@@ -22,7 +22,7 @@ interface props {
 }
 
 /**
- * @param key component key(string)
+ * @param keyValue component key(string)
  * @param TabTitle 해당 tab menu title(string);
  * @param tabOption 밑줄 디자인(기본)의 메뉴인지, 박스 디자인의 메뉴인지 확인("underline" | "highlight")
  * @param onClick onClick event hdr, 각 탭에 따른 목적지 이동(() => void)
@@ -34,7 +34,7 @@ interface props {
  * @returns
  */
 export default function Tab({
-  key,
+  keyValue,
   TabTitle,
   tabOption = "underline",
   onClick = () => {},
@@ -47,7 +47,7 @@ export default function Tab({
   if (tabOption === "underline") {
     return (
       <UnderlineTab
-        key={key}
+        key={keyValue}
         onClick={onClick}
         $active={$active}
         $fontSize={$fontSize}
@@ -61,7 +61,7 @@ export default function Tab({
   } else {
     return (
       <HighlightTab
-        key={key}
+        key={keyValue}
         onClick={onClick}
         $active={$active}
         $fontSize={$fontSize}

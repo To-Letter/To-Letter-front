@@ -1,4 +1,3 @@
-
 import React from "react";
 import styled from "styled-components";
 
@@ -15,7 +14,6 @@ interface props {
   $left?: string;
 }
 
-
 /**
  * @param children (?)에 마우스를 올렸을 경우 뜨는 TipBox 안 문구(string)
  * @param $margin?: margin style(string), 기본 값 "auto"
@@ -23,7 +21,7 @@ interface props {
  * @param $left?: tipBox left 위치 조정 style(string), 기본 값 "50%"
  * @returns tipBox UI
  */
-export default function Summry({
+export default function SummaryTip({
   tipText = "",
   $margin = "auto",
   $bottom = "-88px",
@@ -38,7 +36,6 @@ export default function Summry({
     </SummryWrap>
   );
 }
-
 
 export const SummryWrap = styled.div<defaultStyleProps>`
   margin: ${({ $margin }) => $margin};
