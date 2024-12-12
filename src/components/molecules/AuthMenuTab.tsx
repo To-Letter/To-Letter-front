@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Tab from "@/components/atoms/Tab";
 import { usePathname, useRouter } from "next/navigation";
