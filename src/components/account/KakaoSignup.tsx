@@ -1,45 +1,37 @@
-"use client";
-
 import React, { ChangeEvent, useEffect, useState } from "react";
 import styled from "styled-components";
-import {
-  postLocalSignup,
-  getNicknameConfirm,
-  getEmialConfirm,
-} from "@/lib/api/controller/account";
-import { useRouter } from "next/navigation";
 import ToastMessage from "@/components/commonui/ToastMessage";
-import { useSetRecoilState } from "recoil";
+import {
+  getNicknameConfirm,
+  postKakaoSignup,
+} from "@/lib/api/controller/account";
+import { useRecoilValue } from "recoil";
 import { emailState } from "@/store/recoil/accountAtom";
+import { useRouter } from "next/router";
 
-interface loginFormI {
+interface kakaoLoginFormI {
   nickName: string;
-  email: string;
-  password: string;
   mailboxAddress: string;
 }
 interface defaultStyleProps {
   $direction?: "row" | "column";
   $justifyContent?: string;
   $alignItems?: string;
+  $margin?: string;
 }
 
-const Signup = () => {
-  const router = useRouter();
-  const setEmail = useSetRecoilState(emailState);
-  const [signupForm, setSignupForm] = useState<loginFormI>({
+const KakaoSignup: React.FC = () => {
+  const emailValue = useRecoilValue(emailState);
+  const [signupForm, setSignupForm] = useState<kakaoLoginFormI>({
     nickName: "",
-    email: "",
-    password: "",
     mailboxAddress: "",
   });
-  const [openAddressModal] = useState<boolean>(false);
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: "",
     visible: false,
   });
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
-  const [isEmailChecked, setIsEmailChecked] = useState(false);
+  const router = useRouter();
 
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
     setSignupForm((prev) => ({
@@ -65,22 +57,11 @@ const Signup = () => {
     }
   }, [router]);
 
-  useEffect(() => {}, [openAddressModal, signupForm.mailboxAddress]);
-
-  // 회원가입
-  const onClickSignup = async () => {
+  const onClickKakaoSignup = async () => {
     const conditions = [
       {
         check: signupForm.nickName !== "",
         message: "닉네임을 입력해주세요.",
-      },
-      {
-        check: signupForm.email !== "",
-        message: "이메일을 입력해주세요.",
-      },
-      {
-        check: signupForm.password !== "",
-        message: "비밀번호를 입력해주세요.",
       },
       {
         check: signupForm.mailboxAddress !== "",
@@ -89,10 +70,6 @@ const Signup = () => {
       {
         check: isNicknameChecked,
         message: "닉네임 중복 체크를 해주세요.",
-      },
-      {
-        check: isEmailChecked,
-        message: "이메일 중복 체크를 해주세요.",
       },
     ];
 
@@ -104,23 +81,25 @@ const Signup = () => {
     }
 
     try {
-      const res: any = await postLocalSignup({
-        nickname: signupForm.nickName,
-        email: signupForm.email,
-        loginType: "localLogin",
-        password: signupForm.password,
+      const res: any = await postKakaoSignup({
         address: signupForm.mailboxAddress,
+        email: emailValue,
+        nickname: signupForm.nickName,
       });
       if (res.data.responseCode === 200) {
-        setToast({
-          message: "이메일 인증 단계로 넘어갑니다.",
-          visible: true,
-        });
-        setEmail(signupForm.email);
-        router.push("/auth/verify");
+        alert("회원가입 성공! 로그인해 주세요.");
+        router.push("/auth/login");
+      } else if (res.data.responseCode === 401) {
+        alert(
+          "이메일이 유저정보와 일치하지 않습니다. 이메일을 다시 압력해주세요."
+        );
+        router.push("/auth/kakao");
+      } else if (res.data.responseCode === 403) {
+        alert("같은 이메일이 회원정보에 존재합니다.");
+        router.push("/auth/login");
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err: any) {
+      console.log("kakao error: " + err);
       setToast({ message: "입력란을 다시 확인해주세요.", visible: true });
     }
   };
@@ -134,7 +113,7 @@ const Signup = () => {
         const res: any = await getNicknameConfirm({
           nickname: signupForm.nickName,
         });
-        if (res.data.responseCode === 200) {
+        if (res.status === 200) {
           setToast({ message: "사용 가능한 닉네임입니다.", visible: true });
           setIsNicknameChecked(true);
         } else if (res.data.responseCode === 401) {
@@ -142,29 +121,7 @@ const Signup = () => {
           setIsNicknameChecked(false);
         }
       } catch (err: any) {
-        console.log("nickNameError : ", err);
-      }
-    }
-  };
-
-  // 이메일 중복확인
-  const onClickConfirmEmail = async () => {
-    if (signupForm.nickName === "") {
-      setToast({ message: "이메일을 입력해주세요.", visible: true });
-    } else {
-      try {
-        const res: any = await getEmialConfirm({
-          email: signupForm.email,
-        });
-        if (res.data.responseCode === 200) {
-          setToast({ message: "사용 가능한 이메일입니다.", visible: true });
-          setIsEmailChecked(true);
-        } else if (res.data.responseCode === 401) {
-          setToast({ message: "중복된 이메일입니다.", visible: true });
-          setIsNicknameChecked(false);
-        }
-      } catch (err) {
-        console.log("emailError : ", err);
+        console.log("ninameerror : ", err);
       }
     }
   };
@@ -180,22 +137,15 @@ const Signup = () => {
           <FormInput type="text" name="nickName" onChange={onChangeFormHdr} />
         </FormLabel>
         <FormLabel>
-          <Box $alignItems="center" $justifyContent="space-between">
-            Email
-            <Button onClick={onClickConfirmEmail}>중복 체크</Button>
-          </Box>
-          <FormInput type="text" name="email" onChange={onChangeFormHdr} />
+          Email
+          <FormInput type="text" name="email" value={emailValue} disabled />
         </FormLabel>
         <FormLabel>
-          Password
-          <FormInput
-            type="password"
-            name="password"
-            onChange={onChangeFormHdr}
-          />
-        </FormLabel>
-        <FormLabel>
-          <Box $alignItems="center" $justifyContent="space-between">
+          <Box
+            $alignItems="center"
+            $justifyContent="space-between"
+            $margin="8px 0 0 0"
+          >
             <Box $justifyContent="flex-start" $alignItems="center">
               MailboxAddress
               <MailBoxSummry>
@@ -208,12 +158,12 @@ const Signup = () => {
             </Box>
             <Button onClick={onClickOpenModal}>주소 입력</Button>
           </Box>
-          {signupForm.mailboxAddress && (
+          {signupForm.mailboxAddress !== "" && (
             <FormAddressInput>{signupForm.mailboxAddress}</FormAddressInput>
           )}
         </FormLabel>
       </SignupContent>
-      <SignupBtn onClick={onClickSignup}>Signup</SignupBtn>
+      <SignupBtn onClick={onClickKakaoSignup}>Signup</SignupBtn>
       {toast.visible && (
         <ToastMessage
           message={toast.message}
@@ -224,17 +174,18 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default KakaoSignup;
 
 export const Box = styled.div<defaultStyleProps>`
   display: flex;
   flex-direction: ${({ $direction }) => $direction};
   justify-content: ${({ $justifyContent }) => $justifyContent};
   align-items: ${({ $alignItems }) => $alignItems};
+  margin: ${({ $margin }) => $margin};
   position: relative;
 `;
 
-export const MailBoxSummry = styled.div`
+const MailBoxSummry = styled.div`
   margin-left: 8px;
   border-radius: 50%;
   border: 1px solid white;
@@ -252,7 +203,7 @@ export const MailBoxSummry = styled.div`
   }
 `;
 
-export const TipBox = styled.div`
+const TipBox = styled.div`
   display: none;
   position: absolute;
   bottom: -88px;
@@ -330,7 +281,7 @@ const FormInput = styled.input`
   }
 `;
 
-export const FormAddressInput = styled.div`
+const FormAddressInput = styled.div`
   border: none;
   background-color: transparent;
   border-bottom: 1px solid white;
@@ -341,7 +292,7 @@ export const FormAddressInput = styled.div`
   color: #ffffff;
 `;
 
-export const Button = styled.div`
+const Button = styled.div`
   width: 80px;
   border-radius: 1px;
   border: 1px solid #e9e9e9;

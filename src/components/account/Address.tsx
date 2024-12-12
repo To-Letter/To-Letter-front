@@ -75,7 +75,7 @@ function Address() {
         // const res = await axios.get(`https://business.juso.go.kr/addrlink/addrLinkApi.do?confmKey=${'U01TX0FVVEgyMDI0MDIxMzIwMjkyODExNDUxNDI='}&currentPage=${pageCnt}&countPerPage=10&keyword=${searchWord}&resultType=json`);
         const res = await axios.get(
           `https://business.juso.go.kr/addrlink/addrLinkApi.do?confmKey=${
-            process.env.REACT_APP_ADDRESS_API_KEY
+            process.env.NEXT_PUBLIC_ADDRESS_API_KEY
           }&currentPage=${
             common.currentPage + 1
           }&countPerPage=20&keyword=${searchWord}&resultType=json`
@@ -103,7 +103,7 @@ function Address() {
       try {
         // const res = await axios.get(`https://business.juso.go.kr/addrlink/addrLinkApi.do?confmKey=${'devU01TX0FVVEgyMDI0MDkwNDE5MDk0NDExNTA2MDU='}&currentPage=0&countPerPage=20&keyword=${searchWord}&resultType=json`);
         const res = await axios.get(
-          `https://business.juso.go.kr/addrlink/addrLinkApi.do?confmKey=${process.env.REACT_APP_ADDRESS_API_KEY}&currentPage=0&countPerPage=20&keyword=${searchWord}&resultType=json`
+          `https://business.juso.go.kr/addrlink/addrLinkApi.do?confmKey=${process.env.NEXT_PUBLIC_ADDRESS_API_KEY}&currentPage=0&countPerPage=20&keyword=${searchWord}&resultType=json`
         );
         if (res.data.results.common.errorCode === "0") {
           setAddrData(res.data.results.juso);
