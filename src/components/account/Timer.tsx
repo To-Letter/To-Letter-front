@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import styled from 'styled-components';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 
 interface props {
-  setVerifyMe: React.Dispatch<React.SetStateAction<boolean>>
+  setVerifyMe: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export default function Timer({setVerifyMe}: props) {
+export default function Timer({ setVerifyMe }: props) {
   const [timer, setTimer] = useState<number>(300); // 10분 = 600초
 
   const formatTime = (seconds: number) => {
@@ -24,11 +24,9 @@ export default function Timer({setVerifyMe}: props) {
       setTimer(300); // 타이머 초기화
     }
     return () => clearInterval(interval);
-  }, [ timer]);
+  }, [setVerifyMe, timer]);
 
-  return (
-    <TimerWrap>{formatTime(timer)}</TimerWrap>
-  )
+  return <TimerWrap>{formatTime(timer)}</TimerWrap>;
 }
 
 const TimerWrap = styled.div`

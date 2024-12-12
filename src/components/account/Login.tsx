@@ -103,14 +103,14 @@ const Login = () => {
     >
       <ContentContainer>
         <InputForm
-          key="email"
+          keyValue="email"
           labelTitle="Email"
           type="text"
           name="email"
           onChange={onChangeFormHdr}
         />
         <InputForm
-          key="password"
+          keyValue="password"
           labelTitle="Password"
           type="password"
           name="password"
