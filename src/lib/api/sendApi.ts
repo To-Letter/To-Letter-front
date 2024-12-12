@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AUTH_KEY } from "../constants/authkey";
+import { AUTH_KEY } from "@/constants/authkey";
 import axiosInterceptor from "./axiosInterceptor";
 
 export const sendApi = {

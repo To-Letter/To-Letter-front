@@ -1,6 +1,6 @@
 "use client";
 
-import StyledComponentsRegistry from "@/lib/reistry";
+import StyledComponentsRegistry from "@/lib/api/reistry";
 import { RecoilRoot } from "recoil";
 import LoadingSpinner from "@/components/commonui/LoadingSpinner";
 

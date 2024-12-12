@@ -5,7 +5,7 @@ import { ThreeEvent, useLoader } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { useRouter } from "next/navigation"; // 추가
-import axiosInterceptor from "@/lib/axiosInterceptor";
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 
 const Bed = () => {
   // 모델 선언

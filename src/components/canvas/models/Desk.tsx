@@ -8,7 +8,7 @@ import * as THREE from "three";
 import Calender from "./Calender";
 import Bookshelf from "./Bookshelf";
 /* import NewLetter from "./NewLetter"; */
-import axiosInterceptor from "@/lib/axiosInterceptor";
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useRouter } from "next/router";
 
 // 연필통 색상 수정

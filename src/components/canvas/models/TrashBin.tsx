@@ -5,7 +5,7 @@ import { ThreeEvent, useLoader } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
-import axiosInterceptor from "@/lib/axiosInterceptor";
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useRouter } from "next/router";
 
 const TrashBin = () => {

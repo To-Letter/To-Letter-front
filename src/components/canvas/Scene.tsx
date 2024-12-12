@@ -4,7 +4,7 @@ import Chair from "./models/Chair";
 import Desk from "./models/Desk";
 import Room from "./Room";
 import SceneryIndex from "./Scenery/SceneryIndex";
-import axiosInterceptor from "@/lib/axiosInterceptor"; // 경로만 수정
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 
 const Scene = () => {
   return (

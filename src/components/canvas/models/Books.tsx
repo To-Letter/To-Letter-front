@@ -6,7 +6,7 @@ import { useRef, useEffect, useCallback } from "react";
 import * as THREE from "three";
 import { ThreeEvent } from "@react-three/fiber";
 import { useRouter } from "next/navigation";
-import axiosInterceptor from "@/lib/axiosInterceptor";
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 
 interface BookSettings {
   color: string;

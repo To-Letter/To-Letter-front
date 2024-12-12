@@ -3,7 +3,7 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import Scene from "../components/canvas/Scene"; // 경로 수정
-import axiosInterceptor from "@/lib/axiosInterceptor"; // 경로 수정
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 
 export default function Home() {
   return (

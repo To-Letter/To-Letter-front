@@ -3,7 +3,7 @@
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
 import Popup from "./Popup";
-import axiosInterceptor from "@/lib/axiosInterceptor";
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useRouter } from "next/router";
 import { useState } from "react";
 

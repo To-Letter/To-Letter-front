@@ -2,7 +2,7 @@
 
 import { ThreeEvent } from "@react-three/fiber";
 import { useRouter } from "next/navigation";
-import axiosInterceptor from "@/lib/axiosInterceptor";
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 
 const Bookshelf = ({ position }: { position: [number, number, number] }) => {
   const shelfWidth = 1.5;

@@ -1,8 +1,7 @@
-import React from 'react';
-import { useRecoilValue } from 'recoil';
-import { loadingState } from '../recoil/loadingAtom';
-import styled, { keyframes } from 'styled-components';
-
+import React from "react";
+import { useRecoilValue } from "recoil";
+import { loadingState } from "@/store/recoil/loadingAtom";
+import styled, { keyframes } from "styled-components";
 
 const LoadingSpinner: React.FC = () => {
   const isLoading = useRecoilValue(loadingState); // Recoil에서 로딩 상태 가져오기
@@ -69,20 +68,21 @@ const Spinner = styled.div`
   left: 50%;
   margin-left: -17px;
   margin-top: -17px;
-  
-  &:after, &:before{
-    content: '';
+
+  &:after,
+  &:before {
+    content: "";
     position: fixed;
     border: 3px solid white;
     width: 30px;
     height: 30px;
   }
-  
-  &:after{
-    animation: ${spin} 2.5s linear infinite
+
+  &:after {
+    animation: ${spin} 2.5s linear infinite;
   }
-  
-  &:before{
+
+  &:before {
     width: 44px;
     height: 44px;
     margin-left: -7px;
