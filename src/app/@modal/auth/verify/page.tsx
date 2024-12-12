@@ -1,7 +1,7 @@
 "use client";
 
-import MailVerify from "@/components/account/MailVerify";
+import MailVerifyContents from "@/components/organism/auth/MailVerifyContents";
 
-export default function LoginModal() {
-  return <MailVerify />;
+export default function MailVerify() {
+  return <MailVerifyContents />;
 }
