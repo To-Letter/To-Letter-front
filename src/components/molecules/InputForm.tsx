@@ -10,6 +10,7 @@ interface props {
   name: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   value?: string;
+  readonly?: boolean;
   isExistButton?: boolean;
   buttonTitle?: string;
   onClick?: () => void;
@@ -24,6 +25,7 @@ interface props {
  * @param name input name(string)
  * @param onChange input onChange event hdr((e: ChangeEvent<HTMLInputElement>) => void)
  * @param value?: value, 기본 "" (string)
+ * @param readonly?: input tag 입력 차단, 기본 false(boolean)
  * @param isExistButton?: 폼 왼쪽에 버튼이 붙을 시, 기본 false(boolean)
  * @param buttonTitle?: 버튼 title, 기본 ""(string)
  * @param onClick?: 버튼 onclick envent(() => void)
@@ -37,6 +39,7 @@ export default function InputForm({
   name,
   onChange,
   value = "",
+  readonly = false,
   isExistButton = false,
   buttonTitle = "",
   onClick = () => {},
@@ -59,13 +62,19 @@ export default function InputForm({
           />
         </ElementBox>
         {value === "" ? (
-          <FormInput type={type} name={name} onChange={onChange} />
+          <FormInput
+            type={type}
+            name={name}
+            onChange={onChange}
+            readOnly={readonly}
+          />
         ) : (
           <FormInput
             value={value}
             type={type}
             name={name}
             onChange={onChange}
+            readOnly={readonly}
           />
         )}
       </FormLabel>
@@ -75,13 +84,19 @@ export default function InputForm({
       <FormLabel key={keyValue}>
         {labelTitle}
         {value === "" ? (
-          <FormInput type={type} name={name} onChange={onChange} />
+          <FormInput
+            type={type}
+            name={name}
+            onChange={onChange}
+            readOnly={readonly}
+          />
         ) : (
           <FormInput
             value={value}
             type={type}
             name={name}
             onChange={onChange}
+            readOnly={readonly}
           />
         )}
       </FormLabel>
