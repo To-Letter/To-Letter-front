@@ -8,7 +8,7 @@ import Button from "../atoms/Button";
 import { Text } from "../atoms/Text";
 import { getKakaoURL, postLocalLogin } from "@/lib/api/controller/account";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
-import { emailState } from "@/store/recoil/accountAtom";
+import { signupState } from "@/store/recoil/accountAtom";
 import { myInfoState } from "@/store/recoil/accountAtom";
 import { loadingState } from "@/store/recoil/loadingAtom";
 import { useRouter } from "next/router";
@@ -26,7 +26,7 @@ interface LoginResponse {
 }
 
 const Login = () => {
-  const setEmail = useSetRecoilState(emailState);
+  const setSignupForm = useSetRecoilState(signupState);
   const setLoadingState = useSetRecoilState(loadingState);
   const [loginForm, setLoginForm] = useState<loginFormI>({
     email: "",
@@ -61,7 +61,10 @@ const Login = () => {
         router.push("/");
       } else if (res.data.responseCode === 403) {
         // 이메일 인증 미완료 계정
-        setEmail(loginForm.email);
+        setSignupForm((prev) => ({
+          ...prev,
+          email: loginForm.email,
+        }));
         alert("이메일 인증이 되지않은 계정입니다.");
         router.push("/auth/verify");
       } else if (

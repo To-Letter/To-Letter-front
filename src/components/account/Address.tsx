@@ -11,6 +11,8 @@ import styled from "styled-components";
 import axios from "axios";
 import { useInView } from "react-intersection-observer";
 import { useRouter } from "next/router";
+import { signupState } from "@/store/recoil/accountAtom";
+import { useSetRecoilState } from "recoil";
 
 interface defaultStyleProps {
   margin?: string;
@@ -38,6 +40,7 @@ function Address() {
   const [addrData, setAddrData] = useState<AddressData[]>([]);
   const focusRef = useRef<HTMLDivElement>(null);
   const [isSearch, setIsSearch] = useState<boolean>(false);
+  const setSignupForm = useSetRecoilState(signupState);
   const [common, setCommon] = useState<commonI>({
     countPerPage: 20,
     currentPage: -1,
@@ -55,9 +58,16 @@ function Address() {
     },
   });
 
+  /**
+   * 검색어 선택시 유저의 주소를 회원가입 모달로 이동하는 함수
+   * @param selectedAddress : 유저가 선택한 주소
+   */
   const onClickAddress = (selectedAddress: string) => {
-    const encodedAddress = btoa(selectedAddress);
-    router.push(`/auth/signup?selected_address=${encodedAddress}`);
+    setSignupForm((prev) => ({
+      ...prev,
+      mailboxAddress: selectedAddress,
+    }));
+    router.push("/auth/signup");
   };
 
   useEffect(() => {

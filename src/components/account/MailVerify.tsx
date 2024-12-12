@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { postEmailVerify, getEmialAuth } from "@/lib/api/controller/account";
 import ToastMessage from "@/components/commonui/ToastMessage";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { emailState } from "@/store/recoil/accountAtom";
+import { signupState } from "@/store/recoil/accountAtom";
 import { emailVerifyAuthType } from "@/constants/emailVerify";
 import { loadingState } from "@/store/recoil/loadingAtom";
 import Timer from "./Timer";
@@ -16,7 +16,7 @@ interface defaultStyleProps {
 }
 
 const MailVerify: React.FC = () => {
-  const email = useRecoilValue(emailState);
+  const setSignupForm = useRecoilValue(signupState);
   const setLoding = useSetRecoilState(loadingState);
   const router = useRouter();
   const [verifyMe, setVerifyMe] = useState<boolean>(false);
@@ -35,7 +35,7 @@ const MailVerify: React.FC = () => {
   const authRequest = async () => {
     setLoding(true);
     try {
-      const res: any = await getEmialAuth({ email: email });
+      const res: any = await getEmialAuth({ email: setSignupForm.email });
       if (res.data.responseCode === 200) {
         setLoding(false);
         setAuthReqMessage(true);
@@ -77,7 +77,7 @@ const MailVerify: React.FC = () => {
       try {
         setLoding(true);
         const res: any = await postEmailVerify({
-          email: email,
+          email: setSignupForm.email,
           randomCode: mailKey,
           authType: emailVerifyAuthType.signup,
         });

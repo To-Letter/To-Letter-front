@@ -2,14 +2,14 @@ import { useEffect, useRef } from "react";
 import { postKakaoToken } from "@/lib/api/controller/account";
 import ProgressBar from "@/components/commonui/ProgressBar";
 import { useSetRecoilState } from "recoil";
-import { emailState } from "@/store/recoil/accountAtom";
+import { signupState } from "@/store/recoil/accountAtom";
 import { loadingState } from "@/store/recoil/loadingAtom";
 import { useRouter } from "next/router";
 
 const Redirection = () => {
   const setLoadingState = useSetRecoilState(loadingState);
   const code = new URL(window.location.href).searchParams.get("code");
-  const setEmail = useSetRecoilState(emailState);
+  const setSignupForm = useSetRecoilState(signupState);
   const router = useRouter();
 
   const hasFetched = useRef(false);
@@ -22,7 +22,10 @@ const Redirection = () => {
           if (res.data.responseCode === 200) {
             // 카카오 회원가입 성공
             setLoadingState(false);
-            setEmail(res.data.responseData.email);
+            setSignupForm((prev) => ({
+              ...prev,
+              email: res.data.responseData.email,
+            }));
             router.replace("/?modal=auth/kakao");
           } else if (res.data.responseCode === 201) {
             // 이미 카카오 회원가입 된 유저라 바로 로그인 처리
@@ -31,7 +34,10 @@ const Redirection = () => {
           } else if (res.data.responseCode === 400) {
             setLoadingState(false);
             // 2차 회원가입(닉네임, 주소)이 제대로 진행이 되지 않음.
-            setEmail(res.data.responseData.email);
+            setSignupForm((prev) => ({
+              ...prev,
+              email: res.data.responseData.email,
+            }));
             router.replace("/?modal=auth/kakao");
           } else if (res.data.responseCode === 401) {
             setLoadingState(false);
@@ -62,7 +68,7 @@ const Redirection = () => {
       hasFetched.current = true;
       OnClickKakaoToken();
     }
-  }, [code, router, setEmail, setLoadingState]);
+  }, [code, router, setLoadingState, setSignupForm]);
 
   return (
     <div>

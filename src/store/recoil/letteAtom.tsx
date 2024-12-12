@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
-interface individualLetterState {
+interface individualLetterType {
   isOpen: boolean;
   id: number;
   toUserNickname: string;
@@ -11,7 +11,7 @@ interface individualLetterState {
 }
 
 // 개별 편지함 모달창
-export const individualLetterState = atom<individualLetterState>({
+export const individualLetterState = atom<individualLetterType>({
   key: "individualLetterState", // 고유 키
   default: {
     isOpen: false,

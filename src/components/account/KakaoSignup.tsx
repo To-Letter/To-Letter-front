@@ -5,14 +5,10 @@ import {
   getNicknameConfirm,
   postKakaoSignup,
 } from "@/lib/api/controller/account";
-import { useRecoilValue } from "recoil";
-import { emailState } from "@/store/recoil/accountAtom";
+import { useRecoilState } from "recoil";
+import { signupState } from "@/store/recoil/accountAtom";
 import { useRouter } from "next/router";
 
-interface kakaoLoginFormI {
-  nickName: string;
-  mailboxAddress: string;
-}
 interface defaultStyleProps {
   $direction?: "row" | "column";
   $justifyContent?: string;
@@ -21,11 +17,7 @@ interface defaultStyleProps {
 }
 
 const KakaoSignup: React.FC = () => {
-  const emailValue = useRecoilValue(emailState);
-  const [signupForm, setSignupForm] = useState<kakaoLoginFormI>({
-    nickName: "",
-    mailboxAddress: "",
-  });
+  const [signupForm, setSignupForm] = useRecoilState(signupState);
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: "",
     visible: false,
@@ -45,17 +37,12 @@ const KakaoSignup: React.FC = () => {
   };
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const encodedAddress = searchParams.get("selected_address");
-    if (encodedAddress) {
-      const address = atob(encodedAddress);
-      setSignupForm((prev) => ({
-        ...prev,
-        mailboxAddress: address,
-      }));
-      router.replace("/auth/signup");
-    }
-  }, [router]);
+    setSignupForm((prev) => ({
+      ...prev,
+      mailboxAddress: signupForm.mailboxAddress,
+    }));
+    router.replace("/auth/signup");
+  }, [router, setSignupForm, signupForm.mailboxAddress]);
 
   const onClickKakaoSignup = async () => {
     const conditions = [
@@ -83,7 +70,7 @@ const KakaoSignup: React.FC = () => {
     try {
       const res: any = await postKakaoSignup({
         address: signupForm.mailboxAddress,
-        email: emailValue,
+        email: signupForm.email,
         nickname: signupForm.nickName,
       });
       if (res.data.responseCode === 200) {
@@ -138,7 +125,12 @@ const KakaoSignup: React.FC = () => {
         </FormLabel>
         <FormLabel>
           Email
-          <FormInput type="text" name="email" value={emailValue} disabled />
+          <FormInput
+            type="text"
+            name="email"
+            value={signupForm.email}
+            disabled
+          />
         </FormLabel>
         <FormLabel>
           <Box

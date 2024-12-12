@@ -9,15 +9,9 @@ import {
 } from "@/lib/api/controller/account";
 import { useRouter } from "next/navigation";
 import ToastMessage from "@/components/commonui/ToastMessage";
-import { useSetRecoilState } from "recoil";
-import { emailState } from "@/store/recoil/accountAtom";
+import { useRecoilState } from "recoil";
+import { signupState } from "@/store/recoil/accountAtom";
 
-interface loginFormI {
-  nickName: string;
-  email: string;
-  password: string;
-  mailboxAddress: string;
-}
 interface defaultStyleProps {
   $direction?: "row" | "column";
   $justifyContent?: string;
@@ -26,14 +20,7 @@ interface defaultStyleProps {
 
 const Signup = () => {
   const router = useRouter();
-  const setEmail = useSetRecoilState(emailState);
-  const [signupForm, setSignupForm] = useState<loginFormI>({
-    nickName: "",
-    email: "",
-    password: "",
-    mailboxAddress: "",
-  });
-  const [openAddressModal] = useState<boolean>(false);
+  const [signupForm, setSignupForm] = useRecoilState(signupState);
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: "",
     visible: false,
@@ -63,9 +50,7 @@ const Signup = () => {
       }));
       router.replace("/auth/signup");
     }
-  }, [router]);
-
-  useEffect(() => {}, [openAddressModal, signupForm.mailboxAddress]);
+  }, [router, setSignupForm]);
 
   // 회원가입
   const onClickSignup = async () => {
@@ -116,7 +101,6 @@ const Signup = () => {
           message: "이메일 인증 단계로 넘어갑니다.",
           visible: true,
         });
-        setEmail(signupForm.email);
         router.push("/auth/verify");
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

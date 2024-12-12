@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
-interface myInfoI {
+interface myInfoType {
   isLogin: boolean;
   address: string;
   email: string;
@@ -8,13 +8,24 @@ interface myInfoI {
   loginType: "localLogin" | "kakaoLogin" | "";
 }
 
-// 이메일 입력값 상태
-export const emailState = atom<string>({
-  key: "emailState", // 고유 키
-  default: "", // 유저가 입력한 이메일 값
+interface SignupType {
+  nickName: string;
+  email: string;
+  password: string;
+  mailboxAddress: string;
+}
+
+export const signupState = atom<SignupType>({
+  key: "signupState",
+  default: {
+    nickName: "",
+    email: "",
+    password: "",
+    mailboxAddress: "",
+  },
 });
 
-export const myInfoState = atom<myInfoI>({
+export const myInfoState = atom<myInfoType>({
   key: "myInfoState",
   default: {
     isLogin: false,
