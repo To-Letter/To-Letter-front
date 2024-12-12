@@ -1,10 +1,10 @@
 import { useRouter } from "next/navigation";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import { ElementBox, MainBox, SectionBox } from "../atoms/Box";
-import InputForm from "../molecules/InputForm";
-import { Text } from "../atoms/Text";
-import SummaryTip from "../molecules/SummaryTip";
-import Button from "../atoms/Button";
+import { ElementBox, MainBox, SectionBox } from "../../atoms/Box";
+import InputForm from "../../molecules/InputForm";
+import { Text } from "../../atoms/Text";
+import SummaryTip from "../../molecules/SummaryTip";
+import Button from "../../atoms/Button";
 import { useRecoilState } from "recoil";
 import { signupState } from "@/store/recoil/accountAtom";
 import styled from "styled-components";

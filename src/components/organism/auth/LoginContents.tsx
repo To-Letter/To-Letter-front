@@ -1,9 +1,9 @@
 import React, { ChangeEvent, useState } from "react";
 
-import InputForm from "../molecules/InputForm";
-import Button from "../atoms/Button";
-import { Text } from "../atoms/Text";
-import { MainBox, SectionBox } from "../atoms/Box";
+import InputForm from "../../molecules/InputForm";
+import Button from "../../atoms/Button";
+import { Text } from "../../atoms/Text";
+import { MainBox, SectionBox } from "../../atoms/Box";
 
 interface loginFormI {
   email: string;

@@ -11,8 +11,8 @@ import styled from "styled-components";
 import axios from "axios";
 import { useInView } from "react-intersection-observer";
 import { useRouter } from "next/navigation";
-import AddressListItem from "../molecules/AddressListItem";
-import { ElementBox, MainBox, SectionBox } from "../atoms/Box";
+import AddressListItem from "../../molecules/AddressListItem";
+import { ElementBox, MainBox, SectionBox } from "../../atoms/Box";
 import { signupState } from "@/store/recoil/accountAtom";
 import { useSetRecoilState } from "recoil";
 
