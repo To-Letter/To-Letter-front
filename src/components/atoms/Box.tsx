@@ -10,6 +10,8 @@ interface defaultStyleProps {
   $padding?: string;
   $margin?: string;
   $border?: string;
+  $backgroundColor?: string;
+  $borderRadius?: string;
 }
 
 /**
@@ -25,6 +27,8 @@ const flexMixin = css<defaultStyleProps>`
   padding: ${({ $padding }) => $padding};
   margin: ${({ $margin }) => $margin};
   border: ${({ $border }) => $border};
+  background-color: ${({ $backgroundColor }) => $backgroundColor};
+  border-radius: ${({ $borderRadius }) => $borderRadius};
 `;
 
 /**
@@ -43,6 +47,8 @@ const BaseBox = styled.div<defaultStyleProps>`
  * @param $padding?: string;
  * @param $margin?: string;
  * @param $border?: string;
+ * @param $backgroundColor?: string;
+ * @param $borderRadius?: string;
  * @returns header제외 전체 콘텐츠에 대한 main Box(main tag)
  */
 export const MainBox = styled(BaseBox).attrs({ as: "main" })``;
@@ -56,6 +62,8 @@ export const MainBox = styled(BaseBox).attrs({ as: "main" })``;
  * @param $padding?: string;
  * @param $margin?: string;
  * @param $border?: string;
+ * @param $backgroundColor?: string;
+ * @param $borderRadius?: string;
  * @returns header 콘텐츠에 대한 header Box(header tag)
  */
 export const HeaderBox = styled(BaseBox).attrs({ as: "header" })``;
@@ -69,6 +77,8 @@ export const HeaderBox = styled(BaseBox).attrs({ as: "header" })``;
  * @param $padding?: string;
  * @param $margin?: string;
  * @param $border?: string;
+ * @param $backgroundColor?: string;
+ * @param $borderRadius?: string;
  * @returns header 안의 nav 콘텐츠에 대한 nav Box(nav tag)
  */
 export const NavBox = styled(BaseBox).attrs({ as: "nav" })``;
@@ -81,6 +91,8 @@ export const NavBox = styled(BaseBox).attrs({ as: "nav" })``;
  * @param $padding?: string;
  * @param $margin?: string;
  * @param $border?: string;
+ * @param $backgroundColor?: string;
+ * @param $borderRadius?: string;
  * @returns 각각의 내용 콘텐츠에 대한 Section용 Box(section tag)
  */
 export const SectionBox = styled(BaseBox).attrs({ as: "section" })``;
@@ -94,6 +106,8 @@ export const SectionBox = styled(BaseBox).attrs({ as: "section" })``;
  * @param $padding?: string;
  * @param $margin?: string;
  * @param $border?: string;
+ * @param $backgroundColor?: string;
+ * @param $borderRadius?: string;
  * @returns 구역 나눌 때 사용하는 Box(div tag)
  */
 export const ElementBox = styled(BaseBox)``;

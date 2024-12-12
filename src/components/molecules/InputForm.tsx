@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Button from "../atoms/Button";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useEffect } from "react";
 import { ElementBox } from "../atoms/Box";
 
 interface props {
@@ -9,6 +9,7 @@ interface props {
   type: string;
   name: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
   isExistButton?: boolean;
   buttonTitle?: string;
   onClick?: () => void;
@@ -21,6 +22,7 @@ interface props {
  * @param type input type(string)
  * @param name input name(string)
  * @param onChange input onChange event hdr((e: ChangeEvent<HTMLInputElement>) => void)
+ * @param value?: value, 기본 "" (string)
  * @param isExistButton?: 폼 왼쪽에 버튼이 붙을 시, 기본 false(boolean)
  * @param buttonTitle?: 버튼 title, 기본 ""(string)
  * @param onClick?: 버튼 onclick envent(() => void)
@@ -32,10 +34,14 @@ export default function InputForm({
   type,
   name,
   onChange,
+  value = "",
   isExistButton = false,
   buttonTitle = "",
   onClick = () => {},
 }: props) {
+  useEffect(() => {
+    console.log("value", value);
+  }, []);
   if (isExistButton) {
     return (
       <FormLabel key={keyValue}>
@@ -48,14 +54,32 @@ export default function InputForm({
             onClick={onClick}
           />
         </ElementBox>
-        <FormInput type={type} name={name} onChange={onChange} />
+        {value === "" ? (
+          <FormInput type={type} name={name} onChange={onChange} />
+        ) : (
+          <FormInput
+            value={value}
+            type={type}
+            name={name}
+            onChange={onChange}
+          />
+        )}
       </FormLabel>
     );
   } else {
     return (
       <FormLabel key={keyValue}>
         {labelTitle}
-        <FormInput type={type} name={name} onChange={onChange} />
+        {value === "" ? (
+          <FormInput type={type} name={name} onChange={onChange} />
+        ) : (
+          <FormInput
+            value={value}
+            type={type}
+            name={name}
+            onChange={onChange}
+          />
+        )}
       </FormLabel>
     );
   }

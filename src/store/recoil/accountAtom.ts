@@ -9,7 +9,7 @@ interface myInfoType {
 }
 
 interface SignupType {
-  nickName: string;
+  nickname: string;
   email: string;
   password: string;
   mailboxAddress: string;
@@ -18,7 +18,7 @@ interface SignupType {
 export const signupState = atom<SignupType>({
   key: "signupState",
   default: {
-    nickName: "",
+    nickname: "",
     email: "",
     password: "",
     mailboxAddress: "",

@@ -5,22 +5,13 @@ import InputForm from "../molecules/InputForm";
 import { Text } from "../atoms/Text";
 import SummaryTip from "../molecules/SummaryTip";
 import Button from "../atoms/Button";
-
-interface loginFormI {
-  nickname: string;
-  email: string;
-  password: string;
-  mailboxAddress: string;
-}
+import { useRecoilState } from "recoil";
+import { signupState } from "@/store/recoil/accountAtom";
+import styled from "styled-components";
 
 export default function SignupContents() {
   const router = useRouter();
-  const [signupForm, setSignupForm] = useState<loginFormI>({
-    nickname: "",
-    email: "",
-    password: "",
-    mailboxAddress: "",
-  });
+  const [signupForm, setSignupForm] = useRecoilState(signupState);
   //   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
   //   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const tipText = useRef<string>(
@@ -35,6 +26,7 @@ export default function SignupContents() {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+    console.log(signupForm);
   };
 
   const onClickOpenModal = () => {
@@ -42,17 +34,13 @@ export default function SignupContents() {
   };
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const encodedAddress = searchParams.get("selected_address");
-    if (encodedAddress) {
-      const address = atob(encodedAddress);
-      setSignupForm((prev) => ({
-        ...prev,
-        mailboxAddress: address,
-      }));
-      router.replace("/auth/signup");
-    }
-  }, [router]);
+    console.log("확인", signupForm);
+  }, [
+    signupForm.nickname,
+    signupForm.email,
+    signupForm.password,
+    signupForm.mailboxAddress,
+  ]);
 
   return (
     <MainBox $direction="column" $alignItems="flex-start" $width="100%">
@@ -63,6 +51,7 @@ export default function SignupContents() {
           name="nickname"
           type="text"
           onChange={onChangeFormHdr}
+          value={signupForm.nickname}
           isExistButton={true}
           buttonTitle="중복 체크"
           onClick={() => {}}
@@ -73,6 +62,7 @@ export default function SignupContents() {
           name="email"
           type="text"
           onChange={onChangeFormHdr}
+          value={signupForm.email}
           isExistButton={true}
           buttonTitle="중복 체크"
           onClick={() => {}}
@@ -83,6 +73,7 @@ export default function SignupContents() {
           name="password"
           type="password"
           onChange={onChangeFormHdr}
+          value={signupForm.password}
           isExistButton={false}
         />
         <ElementBox $justifyContent="space-between" $margin="16px 0 0">
@@ -102,6 +93,17 @@ export default function SignupContents() {
             onClick={onClickOpenModal}
           />
         </ElementBox>
+        {signupForm.mailboxAddress && (
+          <FormAddressInput
+            $width="100%"
+            $padding="8px 0"
+            $margin="8px 0 0 0"
+            $border="none"
+            $backgroundColor="transparent"
+          >
+            {signupForm.mailboxAddress}
+          </FormAddressInput>
+        )}
       </SectionBox>
       <SectionBox $direction="column" $width="100%">
         <Button
@@ -114,3 +116,9 @@ export default function SignupContents() {
     </MainBox>
   );
 }
+
+const FormAddressInput = styled(ElementBox)`
+  border-bottom: 1px solid white;
+  font-size: 16px;
+  color: #ffffff;
+`;
