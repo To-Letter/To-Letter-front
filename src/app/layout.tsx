@@ -6,8 +6,10 @@ import LoadingSpinner from "@/components/commonui/LoadingSpinner";
 
 export default function RootLayout({
   children,
+  modal,
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   return (
     <html lang="ko">
@@ -16,6 +18,7 @@ export default function RootLayout({
           <StyledComponentsRegistry>
             <LoadingSpinner />
             {children}
+            {modal}
           </StyledComponentsRegistry>
         </RecoilRoot>
       </body>
