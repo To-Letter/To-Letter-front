@@ -13,6 +13,7 @@ interface props {
   isExistButton?: boolean;
   buttonTitle?: string;
   onClick?: () => void;
+  $disable?: boolean;
 }
 
 /**
@@ -26,6 +27,7 @@ interface props {
  * @param isExistButton?: 폼 왼쪽에 버튼이 붙을 시, 기본 false(boolean)
  * @param buttonTitle?: 버튼 title, 기본 ""(string)
  * @param onClick?: 버튼 onclick envent(() => void)
+ * @param $disable?: 버튼 disable 처리, 기본 값 false
  * @returns
  */
 export default function InputForm({
@@ -38,6 +40,7 @@ export default function InputForm({
   isExistButton = false,
   buttonTitle = "",
   onClick = () => {},
+  $disable = false,
 }: props) {
   useEffect(() => {
     console.log("value", value);
@@ -50,6 +53,7 @@ export default function InputForm({
           <Button
             $width="80px"
             $padding="2px 0"
+            $disable={$disable}
             title={buttonTitle}
             onClick={onClick}
           />

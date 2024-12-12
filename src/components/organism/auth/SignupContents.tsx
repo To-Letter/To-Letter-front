@@ -12,8 +12,8 @@ import styled from "styled-components";
 export default function SignupContents() {
   const router = useRouter();
   const [signupForm, setSignupForm] = useRecoilState(signupState);
-  //   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
-  //   const [isEmailChecked, setIsEmailChecked] = useState(false);
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+  const [isEmailChecked, setIsEmailChecked] = useState(false);
   const tipText = useRef<string>(
     `
     To Letter가 우편 배송 기간을 계산할 때 사용하는 도로명 주소
@@ -26,6 +26,8 @@ export default function SignupContents() {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+    if (e.target.name === "nickname") setIsNicknameChecked(false);
+    else if (e.target.name === "email") setIsEmailChecked(false);
     console.log(signupForm);
   };
 
@@ -40,6 +42,8 @@ export default function SignupContents() {
     signupForm.email,
     signupForm.password,
     signupForm.mailboxAddress,
+    isNicknameChecked,
+    isEmailChecked,
   ]);
 
   return (
@@ -54,7 +58,10 @@ export default function SignupContents() {
           value={signupForm.nickname}
           isExistButton={true}
           buttonTitle="중복 체크"
-          onClick={() => {}}
+          onClick={() => {
+            setIsNicknameChecked(true);
+          }}
+          $disable={isNicknameChecked}
         />
         <InputForm
           keyValue="inputform-email"
@@ -65,7 +72,10 @@ export default function SignupContents() {
           value={signupForm.email}
           isExistButton={true}
           buttonTitle="중복 체크"
-          onClick={() => {}}
+          onClick={() => {
+            setIsEmailChecked(true);
+          }}
+          $disable={isEmailChecked}
         />
         <InputForm
           keyValue="inputform-password"

@@ -4,6 +4,7 @@ import styled from "styled-components";
 interface props {
   title: string;
   onClick: () => void;
+  $disable?: boolean;
   $width?: string;
   $fontSize?: string;
   $padding?: string;
@@ -11,6 +12,7 @@ interface props {
 }
 
 interface defaultStyleProps {
+  $disable?: boolean;
   $width?: string;
   $fontSize?: string;
   $padding?: string;
@@ -20,6 +22,7 @@ interface defaultStyleProps {
 /**
  * @param title 버튼 TEXT(String)
  * @param onClick onClick event(()=>void)
+ * @param $disable? disable 처리, 기본 값 false
  * @param $width? width Style(String), 기본 값 "100%"
  * @param $fontSize? fontSize Style(String), 기본 값 "16px"
  * @param $margin? margin Style(String), 기본 값 "0"
@@ -29,6 +32,7 @@ interface defaultStyleProps {
 export default function Button({
   title,
   onClick,
+  $disable = false,
   $width = "100%",
   $fontSize = "16px",
   $margin = "0",
@@ -37,6 +41,8 @@ export default function Button({
   return (
     <ButtonWrap
       onClick={onClick}
+      disabled={$disable}
+      $disable={$disable}
       $width={$width}
       $fontSize={$fontSize}
       $margin={$margin}
@@ -60,4 +66,5 @@ const ButtonWrap = styled.button<defaultStyleProps>`
   background-color: #262523;
   border-radius: 1px;
   cursor: pointer;
+  ${({ $disable }) => $disable && `color: #818181; border: 1px solid #818181;`};
 `;
