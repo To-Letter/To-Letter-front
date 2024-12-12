@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import Box from "../atoms/ModalBox";
 import Button from "../atoms/Button";
 import { ChangeEvent } from "react";
+import { ElementBox } from "../atoms/Box";
 
 interface props {
-  key: string;
+  keyValue: string;
   labelTitle: string;
   type: string;
   name: string;
@@ -15,8 +15,8 @@ interface props {
 }
 
 /**
- * 
- * @param key component key(string)
+ *
+ * @param keyValue component key(string)
  * @param labelTitle 해당 inputform name(string);
  * @param type input type(string)
  * @param name input name(string)
@@ -24,10 +24,10 @@ interface props {
  * @param isExistButton?: 폼 왼쪽에 버튼이 붙을 시, 기본 false(boolean)
  * @param buttonTitle?: 버튼 title, 기본 ""(string)
  * @param onClick?: 버튼 onclick envent(() => void)
- * @returns 
+ * @returns
  */
 export default function InputForm({
-  key,
+  keyValue,
   labelTitle,
   type,
   name,
@@ -38,17 +38,22 @@ export default function InputForm({
 }: props) {
   if (isExistButton) {
     return (
-      <FormLabel key={key}>
-        <Box $alignItems="center" $justifyContent="space-between">
+      <FormLabel key={keyValue}>
+        <ElementBox $alignItems="center" $justifyContent="space-between">
           {labelTitle}
-          <Button title={buttonTitle} onClick={onClick} />
-        </Box>
+          <Button
+            $width="80px"
+            $padding="2px 0"
+            title={buttonTitle}
+            onClick={onClick}
+          />
+        </ElementBox>
         <FormInput type={type} name={name} onChange={onChange} />
       </FormLabel>
     );
   } else {
     return (
-      <FormLabel key={key}>
+      <FormLabel key={keyValue}>
         {labelTitle}
         <FormInput type={type} name={name} onChange={onChange} />
       </FormLabel>
