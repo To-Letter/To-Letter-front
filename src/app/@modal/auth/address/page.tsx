@@ -1,7 +1,6 @@
-"use client";
+import AddressContents from "@/components/organism/auth/AddressContents";
+import React from "react";
 
-import Address from "@/components/account/Address";
-
-export default function AddressModal() {
-  return <Address />;
+export default function page() {
+  return <AddressContents />;
 }

@@ -13,8 +13,8 @@ import { useInView } from "react-intersection-observer";
 import { useRouter } from "next/navigation";
 import AddressListItem from "../../molecules/AddressListItem";
 import { ElementBox, MainBox, SectionBox } from "../../atoms/Box";
-import { signupState } from "@/store/recoil/accountAtom";
-import { useSetRecoilState } from "recoil";
+import { myInfoState, signupState } from "@/store/recoil/accountAtom";
+import { useRecoilState } from "recoil";
 
 interface commonI {
   countPerPage: number;
@@ -30,7 +30,8 @@ interface AddressData {
 
 function AddressContents() {
   const router = useRouter();
-  const setSignupForm = useSetRecoilState(signupState);
+  const [signupForm, setSignupForm] = useRecoilState(signupState);
+  const [myInfo, setMyInfo] = useRecoilState(myInfoState);
   const [searchWord, setSearchWord] = useState<string>("");
   const [addrData, setAddrData] = useState<AddressData[]>([]);
   const focusRef = useRef<HTMLDivElement>(null);
@@ -61,9 +62,13 @@ function AddressContents() {
       ...prev,
       mailboxAddress: selectedAddress,
     }));
+    setMyInfo((prev) => ({
+      ...prev,
+      address: selectedAddress,
+    }));
 
-    // kakao/local/myPage 분기 필요
-    router.push("/auth/signup");
+    // kakao/local/myPage 분기
+    router.push(`/auth/${signupForm.type}`);
   };
 
   useEffect(() => {

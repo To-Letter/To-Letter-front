@@ -13,6 +13,7 @@ interface SignupType {
   email: string;
   password: string;
   mailboxAddress: string;
+  type: "signup" | "kakao" | "myInfo";
 }
 
 export const signupState = atom<SignupType>({
@@ -22,6 +23,7 @@ export const signupState = atom<SignupType>({
     email: "",
     password: "",
     mailboxAddress: "",
+    type: "signup",
   },
 });
 

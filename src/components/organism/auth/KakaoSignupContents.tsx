@@ -31,7 +31,11 @@ export default function KakaoSignupContents() {
   };
 
   const onClickOpenModal = () => {
-    router.push("/auth/signup/address");
+    setSignupForm((prev) => ({
+      ...prev,
+      type: "kakao",
+    }));
+    router.push("/auth/address");
   };
 
   useEffect(() => {
