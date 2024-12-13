@@ -5,7 +5,6 @@ interface myInfoType {
   address: string;
   email: string;
   nickname: string;
-  loginType: "localLogin" | "kakaoLogin" | "";
 }
 
 interface SignupType {
@@ -13,7 +12,6 @@ interface SignupType {
   email: string;
   password: string;
   mailboxAddress: string;
-  type: "signup" | "kakao" | "myInfo";
 }
 
 export const signupState = atom<SignupType>({
@@ -23,7 +21,6 @@ export const signupState = atom<SignupType>({
     email: "",
     password: "",
     mailboxAddress: "",
-    type: "signup",
   },
 });
 
@@ -34,6 +31,5 @@ export const myInfoState = atom<myInfoType>({
     address: "",
     email: "",
     nickname: "",
-    loginType: "",
   },
 });
