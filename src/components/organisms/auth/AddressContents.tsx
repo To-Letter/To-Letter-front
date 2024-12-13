@@ -67,8 +67,7 @@ function AddressContents() {
       address: selectedAddress,
     }));
 
-    // kakao/local/myPage 분기
-    router.push(`/auth/${signupForm.type}`);
+    router.back();
   };
 
   useEffect(() => {

@@ -31,9 +31,15 @@ export const tabState = atom<"received" | "send">({
 });
 
 // 편지 받는 사람의 닉네임 상태를 관리하는 Recoil atom
-export const toUserNicknameState = atom<string>({
+export const nicknameState = atom<string>({
   key: "toUserNicknameState", // 고유 키
   default: "", // 초기값 ""
+});
+
+// 편지 내용을 관리하는 recoil
+export const letterContentState = atom<string>({
+  key: "letterContentState", // 고유 키
+  default: "", // 초기값 false
 });
 
 /**  new letter 도착 alarm  상태 */

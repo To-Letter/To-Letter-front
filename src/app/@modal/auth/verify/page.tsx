@@ -1,6 +1,6 @@
 "use client";
 
-import MailVerifyContents from "@/components/organism/auth/MailVerifyContents";
+import MailVerifyContents from "@/components/organisms/auth/MailVerifyContents";
 
 export default function MailVerify() {
   return <MailVerifyContents />;

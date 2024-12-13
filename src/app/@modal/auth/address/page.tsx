@@ -1,4 +1,4 @@
-import AddressContents from "@/components/organism/auth/AddressContents";
+import AddressContents from "@/components/organisms/auth/AddressContents";
 import React from "react";
 
 export default function page() {
