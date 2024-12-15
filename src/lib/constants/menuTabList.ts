@@ -1,7 +1,7 @@
 export interface menuTabDataI {
   title: string;
   path: string;
-  ableUserRole?: "kakao" | "local" | "all";
+  userRoleAble?: "local" | "all";
 }
 
 export interface menuI {
@@ -37,8 +37,13 @@ export const menuList: menuListI = {
     category: "myPageTab",
     tabOption: "underline",
     menuTabData: [
-      { title: "MyPage", path: "/mypage" },
-      { title: "MyInfo", path: "/mypage/myInfo" },
+      { title: "MyInfo", path: "/mypage/myinfo", userRoleAble: "all" },
+      {
+        title: "Account",
+        path: "/mypage/accountchange",
+        userRoleAble: "local",
+      },
+      { title: "End Letter", path: "/mypage/letterend", userRoleAble: "all" },
     ],
   },
 };

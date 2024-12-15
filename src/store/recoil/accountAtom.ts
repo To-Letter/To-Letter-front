@@ -5,6 +5,7 @@ interface myInfoType {
   address: string;
   email: string;
   nickname: string;
+  userRole: "local" | "kakao";
 }
 
 interface SignupType {
@@ -27,9 +28,10 @@ export const signupState = atom<SignupType>({
 export const myInfoState = atom<myInfoType>({
   key: "myInfoState",
   default: {
-    isLogin: false,
-    address: "",
-    email: "",
-    nickname: "",
+    isLogin: true,
+    address: "경기도 군포시 한세로 30",
+    email: "test@test.com",
+    nickname: "test",
+    userRole: "local",
   },
 });
