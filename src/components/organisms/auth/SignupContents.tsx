@@ -32,10 +32,6 @@ export default function SignupContents() {
   };
 
   const onClickOpenModal = () => {
-    setSignupForm((prev) => ({
-      ...prev,
-      type: "signup",
-    }));
     router.push("/auth/address");
   };
 

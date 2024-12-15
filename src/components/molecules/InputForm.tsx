@@ -45,9 +45,6 @@ export default function InputForm({
   onClick = () => {},
   $disable = false,
 }: props) {
-  useEffect(() => {
-    console.log("value", value);
-  }, []);
   if (isExistButton) {
     return (
       <FormLabel key={keyValue}>
@@ -120,6 +117,9 @@ const FormInput = styled.input`
   font-size: 20px;
   margin-top: 8px;
   color: #ffffff;
+  &[readonly] {
+    color: #838383;
+  }
   &:focus {
     outline: none; /* 기본 outline 제거 */
     box-shadow: none; /* 기본 box-shadow 제거 */
