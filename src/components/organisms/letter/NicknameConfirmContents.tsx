@@ -2,7 +2,7 @@ import React, { ChangeEvent, useState } from "react";
 import styled from "styled-components";
 import ToastMessage from "@/components/commonui/ToastMessage";
 import { useSetRecoilState, useRecoilState } from "recoil";
-import { nicknameState } from "@/store/recoil/letterAtom";
+import { nicknameAndContentsState } from "@/store/recoil/letterAtom";
 import { loadingState } from "@/store/recoil/loadingAtom";
 import { getNicknameConfirm } from "@/lib/api/controller/account";
 import { useRouter } from "next/router";
@@ -22,8 +22,10 @@ const NicknameConfirmContents: React.FC = () => {
     message: "",
     visible: false,
   });
-  /* 받는 사람 닉네임을 관리하는 reocil */
-  const [toUserNickname, setToUserNickname] = useRecoilState(nicknameState);
+  /* 받는 사람 닉네임과 편지내용을 관리하는 reocil */
+  const [nicknameAndContents, setNicknameAndContents] = useRecoilState(
+    nicknameAndContentsState
+  );
   /* 로딩 상태를 관리하는 reocil */
   const setLoding = useSetRecoilState(loadingState);
 
@@ -31,7 +33,7 @@ const NicknameConfirmContents: React.FC = () => {
    * 사용자가 닉네임을 입력하면 닉네임 recoil에 상태 업데이트 함수
    */
   const onChangeToUserNicknameHdr = (e: ChangeEvent<HTMLInputElement>) => {
-    setToUserNickname(e.target.value);
+    setNicknameAndContents({ nickname: e.target.value, contents: "" });
   };
 
   /**
@@ -40,7 +42,9 @@ const NicknameConfirmContents: React.FC = () => {
   const authToUseNickname = async () => {
     setLoding(true);
     try {
-      const res: any = await getNicknameConfirm({ nickname: toUserNickname });
+      const res: any = await getNicknameConfirm({
+        nickname: nicknameAndContents.nickname,
+      });
       if (res.data.responseCode === 200) {
         // 보내는 유저 닉네임이 존재X
         setIsNicknameChecked(false);

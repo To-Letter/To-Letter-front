@@ -2,9 +2,10 @@ import React, { useMemo } from "react";
 import styled from "styled-components";
 import { useSetRecoilState } from "recoil";
 import { deleteLetter } from "@/lib/api/controller/letter";
-import { deleteLetterPopupState } from "../../recoil/deleteLetterPopupAtom";
-import { individualLetterState } from "../../recoil/letterPopupAtom";
+import { individualLetterState } from "@/store/recoil/letterAtom";
 import { useRouter } from "next/router";
+
+type StatusCode = 200 | 401 | 403;
 
 interface defaultStyleProps {
   $direction?: "row" | "column";
@@ -14,7 +15,7 @@ interface defaultStyleProps {
 
 interface propsI {
   mailIds: number[];
-  setIsConfirmPopup: React.Dispatch<React.SetStateAction<boolean>>;
+  onClose: () => void;
   type: "received" | "send";
   setSearchTerm?: React.Dispatch<React.SetStateAction<string>> | null;
   setDeleteLetter?: React.Dispatch<React.SetStateAction<boolean>> | null;
@@ -22,7 +23,7 @@ interface propsI {
 
 const ConfirmDelete = ({
   mailIds,
-  setIsConfirmPopup,
+  onClose,
   type = "received",
   setSearchTerm = null,
   setDeleteLetter = null,
@@ -37,38 +38,45 @@ const ConfirmDelete = ({
     }
   }, [type]);
 
+  const STATUS_MESSAGES = {
+    200: "편지를 버렸습니다.",
+    401: "편지가 존재하지 않습니다.",
+    403: "편지의 주인이 아닙니다.",
+  } as const;
+
   const onClickConfirm = async () => {
     try {
       const res = await deleteLetter({ letterIds: mailIds, letterType: type });
-      if (res.data.responseCode === 200) {
-        // 편지 삭제 성공
-        alert("편지를 버렸습니다.");
-      } else if (res.data.responseCode === 401) {
-        // 메일 삭제 실패 / 메일(letterId)이 없음
-        alert("편지가 존재하지 않습니다.");
-      } else if (res.data.responseCode === 403) {
-        // 메일 삭제 실패 / 메일 주인이 아님
-        alert("편지의 주인이 아닙니다.");
+      const statusCode = res.data.responseCode as StatusCode;
+      const message = STATUS_MESSAGES[statusCode];
+
+      if (message) {
+        alert(message);
+      } else {
+        alert("알 수 없는 오류가 발생했습니다.");
       }
     } catch (error) {
-      console.log("onClickConfirm-deleteLetter error: ", error);
-    }
-    setIndividualLetterInfo({
-      isOpen: false,
-      id: -9999,
-      toUserNickname: "",
-      letterContent: "",
-      fromUserNickname: "",
-      onDelete: false,
-      tab: type,
-    });
-    setIsConfirmPopup(false);
-    router.push("/letter/individualletter");
-    if (setSearchTerm !== null) {
-      setSearchTerm("");
-    }
-    if (setDeleteLetter !== null) {
-      setDeleteLetter((prev) => !prev);
+      console.error("편지 삭제 중 오류 발생:", error);
+      alert("편지 삭제 중 오류가 발생했습니다.");
+    } finally {
+      setIndividualLetterInfo({
+        isOpen: false,
+        id: -9999,
+        toUserNickname: "",
+        letterContent: "",
+        fromUserNickname: "",
+        onDelete: false,
+        tab: type,
+      });
+
+      router.push("/letter/letterdelete");
+
+      if (setSearchTerm !== null) {
+        setSearchTerm("");
+      }
+      if (setDeleteLetter !== null) {
+        setDeleteLetter((prev) => !prev);
+      }
     }
   };
 
@@ -80,7 +88,7 @@ const ConfirmDelete = ({
             <FormLabel>
               <Box $alignItems="center" $justifyContent="center">
                 <Text>{message}</Text>
-                <Exit onClick={() => setIsConfirmPopup(false)}>X</Exit>
+                <Exit onClick={onClose}>X</Exit>
               </Box>
             </FormLabel>
           </NicknameAuthContent>
@@ -201,7 +209,7 @@ const Exit = styled.div`
   cursor: pointer;
 `;
 
-const FormInput = styled.input`
+/* const FormInput = styled.input`
   border: none;
   background-color: transparent;
   border-bottom: 1px solid white;
@@ -211,8 +219,8 @@ const FormInput = styled.input`
   margin-top: 8px;
   color: #ffffff;
   &:focus {
-    outline: none; /* 기본 outline 제거 */
-    box-shadow: none; /* 기본 box-shadow 제거 */
+    outline: none; 
+    box-shadow: none;
   }
   &:-internal-autofill-selected {
     border: none;
@@ -234,7 +242,7 @@ const FormInput = styled.input`
     transition: background-color 5000s ease-in-out 0s;
     border-bottom: 1px solid white;
   }
-`;
+`; */
 
 const LetterBtn = styled.div`
   width: 100%;

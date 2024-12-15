@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import { IoTrashBinSharp } from "react-icons/io5";
-import useDebounce from "../../hook/useDebounce";
-import { getReceiveLetter, getSendLetter } from "../../apis/controller/letter";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { individualLetterState } from "../../recoil/letterPopupAtom";
-import { deleteLetterPopupState } from "../../recoil/deleteLetterPopupAtom";
+import useDebounce from "@/hooks/useDebounce";
+import { getReceiveLetter, getSendLetter } from "@/lib/api/controller/letter";
+import { useRecoilState } from "recoil";
+import { individualLetterState } from "@/store/recoil/letterAtom";
 import ConfirmDelete from "./ConfirmDelete";
 import { CgPlayListCheck } from "react-icons/cg";
-import useThrottle from "../../hook/useThrottle";
-import { formatDate } from "../../utils/formatDate";
+import useThrottle from "@/hooks/useThrottle";
+import { formatDate } from "@/utils/formatDate";
+import { useRouter } from "next/router";
 
 interface Mail {
   id: number;
@@ -19,21 +19,21 @@ interface Mail {
 }
 
 const DeleteLetterModal: React.FC = () => {
+  const router = useRouter();
+  const { confirm } = router.query;
   const [mails, setMails] = useState<Mail[]>([]);
   const [receiveMails, setReceiveMails] = useState<Mail[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [checkedState, setCheckedState] = useState<boolean[]>([]);
   const debouncedSearchTerm = useDebounce(searchTerm, 300); // 300ms delay
   const [sendMails, setSendMails] = useState<Mail[]>([]);
-  const [isConfirmPopup, setIsConfirmPopup] = useState<boolean>(false);
   const [deleteLetterIds, setDeleteLetterIds] = useState<number[]>([]);
   const [individualLetterInfo, setIndividualLetterInfo] = useRecoilState(
     individualLetterState
   );
   const [tab, setTab] = useState<"received" | "send">(individualLetterInfo.tab); // "received" or "send"
-  const setDeleteLetterPopup = useSetRecoilState(deleteLetterPopupState);
-  const [receivePage, setReceivePage] = useState(0);
-  const [sendPage, setSendPage] = useState(0);
+  const [, setReceivePage] = useState(0);
+  const [, setSendPage] = useState(0);
   const [receiveHasMore, setReceiveHasMore] = useState(true);
   const [sendHasMore, setSendHasMore] = useState(true);
   // 삭제 완료 확인
@@ -53,6 +53,26 @@ const DeleteLetterModal: React.FC = () => {
     searchFilter(tab);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, debouncedSearchTerm, receiveMails, sendMails]);
+
+  const openConfirmModal = () => {
+    if (deleteLetterIds.length === 0) {
+      alert("삭제할 편지를 선택해주세요.");
+      return;
+    }
+
+    // URL에는 모달의 상태만 관리
+    router.push(
+      {
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          confirm: "true",
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
 
   // 받은 편지함
   const getAllReceiveLetter = async (pageNumber = 0) => {
@@ -249,7 +269,7 @@ const DeleteLetterModal: React.FC = () => {
             >
               보낸 편지함
             </Tab>
-            <Exit onClick={() => setDeleteLetterPopup(false)}>X</Exit>
+            <Exit onClick={() => router.push("/")}>X</Exit>
           </Header>
           <SearchBar
             placeholder="메일 검색"
@@ -278,15 +298,24 @@ const DeleteLetterModal: React.FC = () => {
           <LetterAllCheck onClick={handleSelectAllClick}>
             <CgPlayListCheck />
           </LetterAllCheck>
-          <LetterWriteButton onClick={() => setIsConfirmPopup((prev) => !prev)}>
+          <LetterWriteButton onClick={openConfirmModal}>
             <IoTrashBinSharp />
           </LetterWriteButton>
         </MailboxWrap>
       </ModalContent>
-      {isConfirmPopup && (
+      {confirm === "true" && (
         <ConfirmDelete
-          mailIds={deleteLetterIds}
-          setIsConfirmPopup={setIsConfirmPopup}
+          mailIds={deleteLetterIds} // state로 관리되는 ID들만 전달
+          onClose={() => {
+            router.push(
+              {
+                pathname: router.pathname,
+                query: { ...router.query, confirm: undefined },
+              },
+              undefined,
+              { shallow: true }
+            );
+          }}
           type={tab}
           setSearchTerm={setSearchTerm}
           setDeleteLetter={setDeleteLetter}

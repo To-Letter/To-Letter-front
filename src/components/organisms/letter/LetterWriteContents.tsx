@@ -4,9 +4,8 @@ import { IoIosMail } from "react-icons/io"; // 메일 버튼
 import { IoMdClose } from "react-icons/io";
 import ToastMessage from "@/components/commonui/ToastMessage";
 /* import { useUser } from "@/hooks/useUser"; 차후 수정하고 반영 */
-import { useRecoilState, useRecoilValue } from "recoil";
-import { letterContentState } from "@/store/recoil/letterAtom";
-import { nicknameState } from "@/store/recoil/letterAtom";
+import { useRecoilState } from "recoil";
+import { nicknameAndContentsState } from "@/store/recoil/letterAtom";
 import { useRouter } from "next/router";
 
 const LetterWriteContents: React.FC = () => {
@@ -20,10 +19,10 @@ const LetterWriteContents: React.FC = () => {
     message: "",
     visible: false,
   });
-  /** api통신에 필요한 받는 유저 닉네임 recoil */
-  const toUserNickname = useRecoilValue(nicknameState);
-  /** api통신에 필요한 편지내용 recoil */
-  const [letterContent, setLetterContent] = useRecoilState(letterContentState);
+  /* 받는 사람 닉네임과 편지내용을 관리하는 reocil */
+  const [nicknameAndContents, setNicknameAndContents] = useRecoilState(
+    nicknameAndContentsState
+  );
 
   /** 모달 외부 클릭시 모달 닫히게 하는 함수 */
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -36,12 +35,12 @@ const LetterWriteContents: React.FC = () => {
   /** 편지 내용 변경시 편지내용 recoil에 업데이트 하는 함수 */
   const onChangeContents = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const contents = event.target.value;
-    setLetterContent(contents);
+    setNicknameAndContents({ nickname: "", contents: contents });
   };
 
   /** 편지 내용이 있는 경우 편지 보내기 모달로 이동하는 함수 */
   const moveSendLetterModal = () => {
-    if (letterContent !== "") {
+    if (nicknameAndContents.contents !== "") {
       router.push("/letter/lettersend");
     } else {
       setToast({ message: "편지에 내용을 써주세요.", visible: true });
@@ -87,10 +86,10 @@ const LetterWriteContents: React.FC = () => {
       </CloseButton>
       <PopupInner>
         <ToInputWrapper>
-          <ToInput>{`To. ${toUserNickname}`}</ToInput>
+          <ToInput>{`To. ${nicknameAndContents.nickname}`}</ToInput>
         </ToInputWrapper>
         <StyledTextarea
-          value={letterContent}
+          value={nicknameAndContents.contents}
           ref={textareaRef}
           onChange={onChangeContents}
           placeholder="Write your letter here..."

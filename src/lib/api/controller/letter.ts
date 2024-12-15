@@ -1,4 +1,4 @@
-import sendApi from "../../sendApi";
+import sendApi from "@/lib/api/sendApi";
 
 // 편지 보내기
 export const sendLetter = async (sendLetterData: {

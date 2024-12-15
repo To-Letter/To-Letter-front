@@ -1,17 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import ToastMessage from "../ToastMessage";
-import { useSetRecoilState, useRecoilValue, useRecoilState } from "recoil";
-import { loadingState } from "../../recoil/loadingAtom";
-import {
-  letterContentState,
-  sendLetterModalState,
-} from "../../recoil/letterPopupAtom";
-import { sendLetter } from "../../apis/controller/letter";
-import {
-  toUserNicknameState,
-  toUserNicknameModalState,
-} from "../../recoil/toUserNicknameAtom";
+import ToastMessage from "@/components/commonui/ToastMessage";
+import { useSetRecoilState, useRecoilState } from "recoil";
+import { loadingState } from "@/store/recoil/loadingAtom";
+import { sendLetter } from "@/lib/api/controller/letter";
+import { nicknameAndContentsState } from "@/store/recoil/letterAtom";
+import { useRouter } from "next/router";
 
 interface defaultStyleProps {
   $direction?: "row" | "column";
@@ -19,24 +13,30 @@ interface defaultStyleProps {
   $alignItems?: string;
 }
 
-const SendLetterModal: React.FC = () => {
-  const setLoding = useSetRecoilState(loadingState);
-  const setSendLetterModal = useSetRecoilState(sendLetterModalState);
-  const setToUserNicknameModal = useSetRecoilState(toUserNicknameModalState);
-  const [letterContent, setLetterContent] = useRecoilState(letterContentState);
-  const toUserNickname = useRecoilValue(toUserNicknameState);
+const LetterSendContents: React.FC = () => {
+  const router = useRouter();
+  /* 토스트 메시지를 관리하는 state */
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: "",
     visible: false,
   });
+  /* 보낸 편지함에 저장 여부를 관리하는 state */
   const [checked, setChecked] = useState(false);
+  /* 로딩 상태를 관리하는 reocil */
+  const setLoding = useSetRecoilState(loadingState);
+  /* 받는 사람 닉네임과 편지내용을 관리하는 reocil */
+  const [nicknameAndContents, setNicknameAndContents] = useRecoilState(
+    nicknameAndContentsState
+  );
 
+  /** 보낸 편지함에 저장 여부를 관리하는 함수 */
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(event.target.checked);
   };
 
+  /** 편지 보내기 함수 */
   const letterSend = async () => {
-    if (letterContent === "") {
+    if (nicknameAndContents.contents === "") {
       setToast({
         message: "편지 내용을 입력해주세요.",
         visible: true,
@@ -44,19 +44,18 @@ const SendLetterModal: React.FC = () => {
     }
     setLoding(true);
     try {
-      let res: any = await sendLetter({
-        contents: letterContent,
+      const res: any = await sendLetter({
+        contents: nicknameAndContents.contents,
         saveLetterCheck: checked,
-        toUserNickname: toUserNickname,
+        toUserNickname: nicknameAndContents.nickname,
       });
       if (res.data.responseCode === 200) {
-        setSendLetterModal(false);
-        setLetterContent(""); // 내용 초기화
+        router.push("/");
+        setNicknameAndContents({ nickname: "", contents: "" }); // 닉네임, 내용 초기화
         setLoding(false);
         alert("편지 보내기를 완료하였습니다!");
       } else if (res.data.responseCode === 403) {
-        setSendLetterModal(false);
-        setToUserNicknameModal(true);
+        router.push("/letter/userconfirm");
         setLoding(false);
         alert("존재하지 않는 유저입니다. 다시 닉네임을 확인해주세요.");
       }
@@ -95,7 +94,7 @@ const SendLetterModal: React.FC = () => {
           </SendLetterModalContent>
           <BtnWrap>
             <SendBtn onClick={letterSend}>예</SendBtn>
-            <SendBtn onClick={() => setSendLetterModal(false)}>아니요</SendBtn>
+            <SendBtn onClick={() => router.push("/")}>아니요</SendBtn>
           </BtnWrap>
           {toast.visible && (
             <ToastMessage
@@ -241,4 +240,4 @@ const SendBtn = styled.div`
   cursor: pointer;
 `;
 
-export default SendLetterModal;
+export default LetterSendContents;
