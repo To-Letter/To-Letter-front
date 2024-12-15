@@ -1,7 +1,7 @@
 import React from "react";
 import ModalBox from "@/components/atoms/ModalBox";
 import { HeaderBox } from "@/components/atoms/Box";
-import AuthMenuTab from "@/components/molecules/AuthMenuTab";
+import MenuTab from "@/components/molecules/MenuTab";
 
 export default function layout({ children }: { children: React.ReactNode }) {
   return (
@@ -12,7 +12,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
       $alignItems="flex-start;"
     >
       <HeaderBox>
-        <AuthMenuTab />
+        <MenuTab />
       </HeaderBox>
       {children}
     </ModalBox>
