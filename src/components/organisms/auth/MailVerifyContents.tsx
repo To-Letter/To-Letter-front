@@ -1,5 +1,6 @@
-import { ElementBox, MainBox, SectionBox } from "@/components/atoms/Box";
+import { MainBox, SectionBox } from "@/components/atoms/Box";
 import Button from "@/components/atoms/Button";
+import ToastMessage from "@/components/atoms/ToastMessage";
 import Timer from "@/components/molecules/Timer";
 import Verify from "@/components/molecules/Verify";
 import { useRouter } from "next/navigation";
@@ -11,12 +12,21 @@ export default function MailVerifyContents() {
   const [verifyMe, setVerifyMe] = useState<boolean>(false);
   //사용자가 메일로 받은 인증키 입력 관리
   const [mailKey, setMailKey] = useState<string>("");
+  // 토스트 메시지 데이터 관리
+  const [toast, setToast] = useState<{ message: string; visible: boolean }>({
+    message: "",
+    visible: false,
+  });
 
   /**
    * 서버 통신 함수 async 달아야함
    */
   const fecthMailVerify = () => {
     setVerifyMe(true);
+    setToast({
+      message: "인증 코드를 발송하였습니다.",
+      visible: true,
+    });
   };
   const onChangeMailKey = (e: ChangeEvent<HTMLInputElement>) => {
     setMailKey(e.target.value);
@@ -59,9 +69,12 @@ export default function MailVerifyContents() {
           }}
         />
       </SectionBox>
-      {/**
-       * 토스트 메시지 자리
-       */}
+      {toast.visible && (
+        <ToastMessage
+          message={toast.message}
+          onClose={() => setToast({ ...toast, visible: false })}
+        />
+      )}
     </MainBox>
   );
 }

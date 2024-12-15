@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import ToastMessage from "@/components/commonui/ToastMessage";
+import ToastMessage from "@/components/atoms/ToastMessage";
 import { useSetRecoilState, useRecoilState } from "recoil";
 import { loadingState } from "@/store/recoil/loadingAtom";
 import { sendLetter } from "@/lib/api/controller/letter";

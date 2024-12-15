@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { IoIosMail } from "react-icons/io"; // 메일 버튼
 import { IoMdClose } from "react-icons/io";
-import ToastMessage from "@/components/commonui/ToastMessage";
+import ToastMessage from "@/components/atoms/ToastMessage";
 /* import { useUser } from "@/hooks/useUser"; 차후 수정하고 반영 */
 import { useRecoilState } from "recoil";
 import { nicknameAndContentsState } from "@/store/recoil/letterAtom";

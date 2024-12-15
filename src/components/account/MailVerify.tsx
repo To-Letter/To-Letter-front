@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from "react";
 import styled from "styled-components";
 import { postEmailVerify, getEmialAuth } from "@/lib/api/controller/account";
-import ToastMessage from "@/components/commonui/ToastMessage";
+import ToastMessage from "@/components/atoms/ToastMessage";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { signupState } from "@/store/recoil/accountAtom";
 import { emailVerifyAuthType } from "@/constants/emailVerify";

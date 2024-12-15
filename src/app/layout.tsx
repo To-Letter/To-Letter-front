@@ -2,7 +2,7 @@
 
 import StyledComponentsRegistry from "@/lib/api/reistry";
 import { RecoilRoot } from "recoil";
-import LoadingSpinner from "@/components/commonui/LoadingSpinner";
+import LoadingSpinner from "@/components/atoms/LoadingSpinner";
 
 export default function RootLayout({
   children,

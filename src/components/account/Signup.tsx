@@ -8,7 +8,7 @@ import {
   getEmialConfirm,
 } from "@/lib/api/controller/account";
 import { useRouter } from "next/navigation";
-import ToastMessage from "@/components/commonui/ToastMessage";
+import ToastMessage from "@/components/atoms/ToastMessage";
 import { useRecoilState } from "recoil";
 import { signupState } from "@/store/recoil/accountAtom";
 

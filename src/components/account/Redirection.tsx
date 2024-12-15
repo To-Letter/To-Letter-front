@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { postKakaoToken } from "@/lib/api/controller/account";
-import ProgressBar from "@/components/commonui/ProgressBar";
+import ProgressBar from "@/components/atoms/ProgressBar";
 import { useSetRecoilState } from "recoil";
 import { signupState } from "@/store/recoil/accountAtom";
 import { loadingState } from "@/store/recoil/loadingAtom";
