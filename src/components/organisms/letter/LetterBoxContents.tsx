@@ -1,21 +1,17 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import { IoIosMail } from "react-icons/io"; // 메일 버튼
-import useDebounce from "../../hook/useDebounce";
+import useDebounce from "@/hooks/useDebounce";
 import {
   getReceiveLetter,
   getSendLetter,
   getLetterReading,
-} from "../../apis/controller/letter";
-import {
-  individualLetterState,
-  receiveLetterBoxModalState,
-  tabState,
-} from "../../recoil/letterPopupAtom";
+} from "@/lib/api/controller/letter";
+import { individualLetterState, tabState } from "@/store/recoil/letterAtom";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { toUserNicknameModalState } from "../../recoil/toUserNicknameAtom";
-import useThrottle from "../../hook/useThrottle";
-import axiosInterceptor from "../../apis/axiosInterceptor";
+import useThrottle from "@/hooks/useThrottle";
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
+import { useRouter } from "next/router";
 
 interface Mail {
   id: number;
@@ -25,54 +21,35 @@ interface Mail {
   viewCheck: boolean;
 }
 const Mailbox: React.FC = () => {
-  // mail state
+  const router = useRouter();
+  /** 모달 외부 클릭 감지를 위한 Ref **/
+  const modalRef = useRef<HTMLDivElement>(null);
+  /** 메일 리스트내에 스크롤을 위한 Ref **/
+  const listRef = useRef<HTMLDivElement>(null);
+  /** 메일 리스트 관리 state **/
   const [mails, setMails] = useState<Mail[]>([]);
+  /** 받은 편지 리스트 관리 state **/
   const [receiveMails, setReceiveMails] = useState<Mail[]>([]);
+  /** 보낸 편지 리스트 관리 state **/
   const [sendMails, setSendMails] = useState<Mail[]>([]);
-  // page state
-  const [receivePage, setReceivePage] = useState(0);
-  const [sendPage, setSendPage] = useState(0);
+  /** 무한스크롤을 위한 받은 편지 페이지 관리 state **/
+  const [, setReceivePage] = useState(0);
+  /** 무한스크롤을 위한 보낸 편지 페이지 관리 state **/
+  const [, setSendPage] = useState(0);
+  /** 무한스크롤을 위한 받은 편지 페이지 마지막 여부 관리 state **/
   const [receiveHasMore, setReceiveHasMore] = useState(true);
+  /** 무한스크롤을 위한 보낸 편지 페이지 마지막 여부 관리 state **/
   const [sendHasMore, setSendHasMore] = useState(true);
-  // search state
+  /** 검색어 관리 state **/
   const [searchTerm, setSearchTerm] = useState("");
-  const debouncedSearchTerm = useDebounce(searchTerm, 300); // 300ms delay
-  // recoil state
-  const setToUserNicknameModal = useSetRecoilState(toUserNicknameModalState);
+  /** 검색어 디바운스 훅 **/
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+  /** 개별 편지 정보 관리 state **/
   const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
-  const setReceiveLetterBoxModal = useSetRecoilState(
-    receiveLetterBoxModalState
-  );
+  /* 탭 관리 state */
   const [tab, setTab] = useRecoilState(tabState);
 
-  const modalRef = useRef<HTMLDivElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    getAllReceiveLetter();
-    getAllSendLetter();
-  }, []);
-  useEffect(() => {
-    searchFilter(tab);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab, debouncedSearchTerm, receiveMails, sendMails]);
-  // 모달 외부 클릭 감지 닫기
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
-      ) {
-        setReceiveLetterBoxModal(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [setReceiveLetterBoxModal]);
-
-  // 시간 format
+  /** 시간 format 함수 **/
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
 
@@ -85,7 +62,7 @@ const Mailbox: React.FC = () => {
     return `${year}-${month}-${day} ${hours}시 ${minutes}분`;
   };
 
-  // 받은 편지함
+  /** 받은 편지함 데이터 조회 함수 **/
   const getAllReceiveLetter = async (pageNumber = 0) => {
     try {
       const res = await getReceiveLetter({
@@ -115,7 +92,7 @@ const Mailbox: React.FC = () => {
     }
   };
 
-  // 보낸 편지함
+  /** 보낸 편지함 데이터 조회 함수 **/
   const getAllSendLetter = async (pageNumber = 0) => {
     try {
       const res = await getSendLetter({
@@ -144,7 +121,7 @@ const Mailbox: React.FC = () => {
     }
   };
 
-  // 검색어 필터링
+  /** tab상태에 따른 필터링 함수 **/
   const searchFilter = (type: string) => {
     if (type === "received") {
       const filteredMails = receiveMails.filter(
@@ -163,27 +140,28 @@ const Mailbox: React.FC = () => {
     }
   };
 
+  /** 검색어 변경 업데이트 이벤트 핸들러 함수 **/
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
+  /** 탭 변경 이벤트 핸들러 함수 **/
   const handleTabChange = (newTab: "received" | "send") => {
     setTab(newTab);
   };
 
-  // 편지 쓰기 모달창 이동 이벤트
+  /** 편지 쓰기 모달창 이동 함수 **/
   const toUserNicknameModalClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     event.stopPropagation();
     // 이벤트 전파 방지
     if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
-      setReceiveLetterBoxModal(false);
-      setToUserNicknameModal(true);
+      router.push("/letter/userconfirm");
     }
   };
 
-  // 메일 아이템 클릭 이벤트(개별 편지 팝업창)
+  /** 개별 메일 아이템 클릭 이벤트(개별 편지 팝업창) **/
   const handleMailItemClick = async (mail: Mail) => {
     setIndividualLetterInfo((prev) => ({
       ...prev,
@@ -198,7 +176,7 @@ const Mailbox: React.FC = () => {
     await getLetterReading(mail.id);
   };
 
-  // 스크롤 이벤트 핸들러
+  /** 무한 스크롤 이벤트 핸들러 함수 **/
   const handleScroll = useCallback(
     useThrottle(() => {
       if (listRef.current) {
@@ -223,6 +201,33 @@ const Mailbox: React.FC = () => {
     [receiveHasMore, sendHasMore, tab]
   );
 
+  /** 초기 메일 리스트 조회 **/
+  useEffect(() => {
+    getAllReceiveLetter();
+    getAllSendLetter();
+  }, []);
+  /** tab상태에 따른 필터링 이벤트 감지 **/
+  useEffect(() => {
+    searchFilter(tab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab, debouncedSearchTerm, receiveMails, sendMails]);
+  /** 모달 외부 클릭 시닫기 **/
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        router.push("/");
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [router]);
+
+  /** 무한 스크롤 이벤트 감지 **/
   useEffect(() => {
     const currentRef = listRef.current;
     if (currentRef) {
@@ -231,6 +236,7 @@ const Mailbox: React.FC = () => {
     }
   }, [handleScroll]);
 
+  /** 탭 변경 시 스크롤 위치 초기화 **/
   useEffect(() => {
     if (listRef.current) {
       listRef.current.scrollTop = 0;
@@ -254,7 +260,7 @@ const Mailbox: React.FC = () => {
             >
               보낸 편지함
             </Tab>
-            <Exit onClick={() => setReceiveLetterBoxModal(false)}>X</Exit>
+            <Exit onClick={() => router.push("/")}>X</Exit>
           </Header>
           <SearchBar
             placeholder="메일 검색"

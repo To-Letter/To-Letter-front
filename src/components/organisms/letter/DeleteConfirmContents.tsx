@@ -28,8 +28,9 @@ const ConfirmDelete = ({
   setSearchTerm = null,
   setDeleteLetter = null,
 }: propsI) => {
-  const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
   const router = useRouter();
+
+  /** 편지 삭제 메시지 **/
   const message = useMemo(() => {
     if (type === "received") {
       return `선택한 편지를 버립니다.`;
@@ -38,12 +39,17 @@ const ConfirmDelete = ({
     }
   }, [type]);
 
+  /** 편지 삭제 api status code **/
   const STATUS_MESSAGES = {
     200: "편지를 버렸습니다.",
     401: "편지가 존재하지 않습니다.",
     403: "편지의 주인이 아닙니다.",
   } as const;
 
+  /* 개별 편지 내용 recoil */
+  const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
+
+  /** 편지 삭제 확인 버튼 클릭 시 실행 함수 **/
   const onClickConfirm = async () => {
     try {
       const res = await deleteLetter({ letterIds: mailIds, letterType: type });

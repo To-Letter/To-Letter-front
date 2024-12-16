@@ -30,8 +30,8 @@ interface AddressData {
 
 function AddressContents() {
   const router = useRouter();
-  const [signupForm, setSignupForm] = useRecoilState(signupState);
-  const [myInfo, setMyInfo] = useRecoilState(myInfoState);
+  const [, setSignupForm] = useRecoilState(signupState);
+  const [, setMyInfo] = useRecoilState(myInfoState);
   const [searchWord, setSearchWord] = useState<string>("");
   const [addrData, setAddrData] = useState<AddressData[]>([]);
   const focusRef = useRef<HTMLDivElement>(null);
