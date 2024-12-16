@@ -3,6 +3,6 @@
 
 import LetterDeleteContents from "@/components/organisms/letter/LetterDeleteContents";
 
-export default function LetterWriteModal() {
+export default function LetterDeleteModal() {
   return <LetterDeleteContents />;
 }

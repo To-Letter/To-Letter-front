@@ -11,7 +11,7 @@ export default function MailVerifyContents() {
   // 인증요청 버튼 클릭했는지 여부
   const [verifyMe, setVerifyMe] = useState<boolean>(false);
   //사용자가 메일로 받은 인증키 입력 관리
-  const [mailKey, setMailKey] = useState<string>("");
+  const [, setMailKey] = useState<string>("");
   // 토스트 메시지 데이터 관리
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: "",

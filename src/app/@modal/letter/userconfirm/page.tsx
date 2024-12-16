@@ -3,6 +3,6 @@
 
 import NicknameConfirmContents from "@/components/organisms/letter/NicknameConfirmContents";
 
-export default function LetterWriteModal() {
+export default function UserConfirmModal() {
   return <NicknameConfirmContents />;
 }

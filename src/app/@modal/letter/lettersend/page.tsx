@@ -3,6 +3,6 @@
 
 import LetterSendContents from "@/components/organisms/letter/LetterSendContents";
 
-export default function LetterWriteModal() {
+export default function LetterSendModal() {
   return <LetterSendContents />;
 }

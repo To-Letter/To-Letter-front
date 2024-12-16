@@ -1,9 +1,9 @@
-import React from 'react'
-import { useSetRecoilState } from 'recoil';
-import styled from 'styled-components';
-import { newLetterPopupState } from '../../recoil/newLetterPopupState';
-import { individualLetterState } from '../../recoil/letterPopupAtom';
-import { formatDate } from '../../utils/formatDate';
+import React from "react";
+import { useSetRecoilState } from "recoil";
+import styled from "styled-components";
+import { individualLetterState } from "@/store/recoil/letterAtom";
+import { formatDate } from "../../../utils/formatDate";
+import { useRouter } from "next/router";
 
 interface Mail {
   id: number;
@@ -12,49 +12,48 @@ interface Mail {
   timeReceived: string;
 }
 
-const mails = [{
-  id: 1,
-  sender: "sd",
-  timeReceived: "2024-11-27T12:34:56",
-  subject:"허거덩"
-}]
-export default function NewLetterModal() {
-  const setNewLetterPopup = useSetRecoilState(newLetterPopupState)
+const mails = [
+  {
+    id: 1,
+    sender: "sd",
+    timeReceived: "2024-11-27T12:34:56",
+    subject: "허거덩",
+  },
+];
+export default function NewLetterContents() {
+  const router = useRouter();
+  /* 개별 편지 내용 recoil */
   const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
 
-    // 메일 아이템 클릭 이벤트(개별 편지 팝업창)
-    const handleMailItemClick = (mail: Mail) => {
-      setIndividualLetterInfo({
-        isOpen: true,
-        id: mail.id,
-        toUserNickname: mail.sender,
-        letterContent: mail.subject,
-        fromUserNickname: mail.sender,
-        onDelete: true,
-        tab: 'received'
-      });
-    };
+  /** 메일 아이템 클릭 이벤트(개별 편지 팝업창) */
+  const handleMailItemClick = (mail: Mail) => {
+    setIndividualLetterInfo({
+      isOpen: true,
+      id: mail.id,
+      toUserNickname: mail.sender,
+      letterContent: mail.subject,
+      fromUserNickname: mail.sender,
+      onDelete: true,
+      tab: "received",
+    });
+  };
 
   return (
     <ModalOverlay>
       <ModalContent>
         <MailboxWrap>
           <Header>
-            <Tab>
-              새로 도착한 편지
-            </Tab>
-            <Exit onClick={() => setNewLetterPopup(false)}>X</Exit>
+            <Tab>새로 도착한 편지</Tab>
+            <Exit onClick={() => router.push("/")}>X</Exit>
           </Header>
 
           <MailList>
-            {mails.map((mail, index) => (
+            {mails.map((mail) => (
               <MailItem key={mail.id}>
                 <MailItemColumnWrap onClick={() => handleMailItemClick(mail)}>
                   <MailItemRowWrap>
                     <Sender>{mail.sender}</Sender>
-                    <TimeReceived>
-                      {formatDate(mail.timeReceived)}
-                    </TimeReceived>
+                    <TimeReceived>{formatDate(mail.timeReceived)}</TimeReceived>
                   </MailItemRowWrap>
                   <Subject>{mail.subject}</Subject>
                 </MailItemColumnWrap>
@@ -65,7 +64,7 @@ export default function NewLetterModal() {
       </ModalContent>
     </ModalOverlay>
   );
-};
+}
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -115,7 +114,7 @@ const Tab = styled.div`
   font-size: 18px;
   padding: 10px 20px;
   background-color: rgba(75, 75, 75, 0.1);
-  color:#fff;
+  color: #fff;
   border: none;
   cursor: default;
 `;
@@ -158,7 +157,6 @@ const MailItem = styled.div`
   border-bottom: 1px solid #ddd;
   cursor: pointer;
 `;
-
 
 const MailItemColumnWrap = styled.div`
   display: flex;

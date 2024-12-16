@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import styled from "styled-components";
 import { IoIosMail } from "react-icons/io"; // 메일 버튼
 import useDebounce from "@/hooks/useDebounce";
@@ -63,7 +69,7 @@ const Mailbox: React.FC = () => {
   };
 
   /** 받은 편지함 데이터 조회 함수 **/
-  const getAllReceiveLetter = async (pageNumber = 0) => {
+  const getAllReceiveLetter = useCallback(async (pageNumber = 0) => {
     try {
       const res = await getReceiveLetter({
         page: pageNumber,
@@ -90,10 +96,10 @@ const Mailbox: React.FC = () => {
     } catch (err) {
       console.log(err);
     }
-  };
+  }, []);
 
   /** 보낸 편지함 데이터 조회 함수 **/
-  const getAllSendLetter = async (pageNumber = 0) => {
+  const getAllSendLetter = useCallback(async (pageNumber = 0) => {
     try {
       const res = await getSendLetter({
         page: pageNumber,
@@ -119,7 +125,7 @@ const Mailbox: React.FC = () => {
     } catch (err) {
       console.log(err);
     }
-  };
+  }, []);
 
   /** tab상태에 따른 필터링 함수 **/
   const searchFilter = (type: string) => {
@@ -177,35 +183,38 @@ const Mailbox: React.FC = () => {
   };
 
   /** 무한 스크롤 이벤트 핸들러 함수 **/
-  const handleScroll = useCallback(
-    useThrottle(() => {
-      if (listRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = listRef.current;
-        if (scrollTop + clientHeight >= scrollHeight - 5) {
-          if (tab === "received" && receiveHasMore) {
-            setReceivePage((prevPage) => {
-              const nextPage = prevPage + 1;
-              getAllReceiveLetter(nextPage);
-              return nextPage;
-            });
-          } else if (tab === "send" && sendHasMore) {
-            setSendPage((prevPage) => {
-              const nextPage = prevPage + 1;
-              getAllSendLetter(nextPage);
-              return nextPage;
-            });
-          }
+  const throttledScrollHandler = useThrottle(() => {
+    if (listRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+      if (scrollTop + clientHeight >= scrollHeight - 5) {
+        if (tab === "received" && receiveHasMore) {
+          setReceivePage((prevPage) => {
+            const nextPage = prevPage + 1;
+            getAllReceiveLetter(nextPage);
+            return nextPage;
+          });
+        } else if (tab === "send" && sendHasMore) {
+          setSendPage((prevPage) => {
+            const nextPage = prevPage + 1;
+            getAllSendLetter(nextPage);
+            return nextPage;
+          });
         }
       }
-    }, 100),
-    [receiveHasMore, sendHasMore, tab]
+    }
+  }, 100);
+
+  /** throttle된 함수를 useMemo로 메모이제이션 */
+  const handleScroll = useMemo(
+    () => throttledScrollHandler,
+    [throttledScrollHandler]
   );
 
   /** 초기 메일 리스트 조회 **/
   useEffect(() => {
     getAllReceiveLetter();
     getAllSendLetter();
-  }, []);
+  }, [getAllReceiveLetter, getAllSendLetter]);
   /** tab상태에 따른 필터링 이벤트 감지 **/
   useEffect(() => {
     searchFilter(tab);

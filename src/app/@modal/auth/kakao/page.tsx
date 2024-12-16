@@ -1,6 +1,7 @@
-import KakaoSignupContents from "@/components/organisms/auth/KakaoSignupContents";
-import React from "react";
+"use client";
 
-export default function page() {
+import KakaoSignupContents from "@/components/organisms/auth/KakaoSignupContents";
+
+export default function KakaoSignupModal() {
   return <KakaoSignupContents />;
 }

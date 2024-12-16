@@ -13,6 +13,7 @@ const LetterWriteContents: React.FC = () => {
   /** 이벤트 관리를 위한 Ref */
   const popupRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const textareaCurrent = textareaRef.current; // ref 값을 effect 내부 변수로 저장
   /*   const { myInfo } = useUser(); */
   /* 토스트 메시지를 관리하는 state */
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
@@ -50,26 +51,26 @@ const LetterWriteContents: React.FC = () => {
   /** 편지 내용 스크롤 이벤트 관리 */
   useEffect(() => {
     const handleWheel = (event: WheelEvent) => {
-      if (textareaRef.current) {
+      if (textareaCurrent) {
         event.preventDefault();
         const lineHeight = parseFloat(
-          window.getComputedStyle(textareaRef.current).lineHeight
+          window.getComputedStyle(textareaCurrent).lineHeight
         );
-        textareaRef.current.scrollTop +=
+        textareaCurrent.scrollTop +=
           event.deltaY > 0 ? lineHeight : -lineHeight;
       }
     };
 
-    if (textareaRef.current) {
-      textareaRef.current.addEventListener("wheel", handleWheel);
+    if (textareaCurrent) {
+      textareaCurrent.addEventListener("wheel", handleWheel);
     }
 
     return () => {
-      if (textareaRef.current) {
-        textareaRef.current.removeEventListener("wheel", handleWheel);
+      if (textareaCurrent) {
+        textareaCurrent.removeEventListener("wheel", handleWheel);
       }
     };
-  }, []);
+  }, [textareaCurrent]);
 
   /** 모달 외부 클릭 감지 함수 */
   useEffect(() => {

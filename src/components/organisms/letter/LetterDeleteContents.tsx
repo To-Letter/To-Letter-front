@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import styled from "styled-components";
 import { IoTrashBinSharp } from "react-icons/io5";
 import useDebounce from "@/hooks/useDebounce";
@@ -18,7 +18,7 @@ interface Mail {
   timeReceived: string;
 }
 
-const DeleteLetterModal: React.FC = () => {
+const LetterDeleteContents: React.FC = () => {
   const router = useRouter();
   /* 편지 삭제 확인 모달을 관리하는 query */
   const { confirm } = router.query;
@@ -55,13 +55,12 @@ const DeleteLetterModal: React.FC = () => {
   /* 편지 삭제 모달 탭 관리 state */
   const [tab, setTab] = useState<"received" | "send">(individualLetterInfo.tab); // "received" or "send"
 
-  /** 편지 삭제 버튼 클릭 시 실행 함수 **/
+  /** 편지 삭제 버튼 클릭 시 실행 함수 */
   const openConfirmModal = () => {
     if (deleteLetterIds.length === 0) {
       alert("삭제할 편지를 선택해주세요.");
       return;
     }
-    // URL에는 모달의 상태만 관리
     router.push(
       {
         pathname: router.pathname,
@@ -75,7 +74,7 @@ const DeleteLetterModal: React.FC = () => {
     );
   };
 
-  /** 받은 편지함 데이터 로드 **/
+  /** 받은 편지함 데이터 로드 */
   const getAllReceiveLetter = async (pageNumber = 0) => {
     try {
       const res = await getReceiveLetter({
@@ -104,7 +103,7 @@ const DeleteLetterModal: React.FC = () => {
     }
   };
 
-  /** 보낸 편지함 데이터 로드 함수 **/
+  /** 보낸 편지함 데이터 로드 함수 */
   const getAllSendLetter = async (pageNumber = 0) => {
     try {
       const res = await getSendLetter({
@@ -133,7 +132,7 @@ const DeleteLetterModal: React.FC = () => {
     }
   };
 
-  /** tab에 따른 검색어 필터링 함수 **/
+  /** tab에 따른 검색어 필터링 함수 */
   const searchFilter = (type: string) => {
     if (type === "received") {
       const filteredMails = receiveMails.filter(
@@ -152,42 +151,45 @@ const DeleteLetterModal: React.FC = () => {
     }
   };
 
-  /* 검색어 변경 시 업데이트 함수 */
+  /** 검색어 변경 시 업데이트 함수 */
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
-  /** 편지 삭제 모달 탭 변경 시 업데이트 함수 **/
+  /** 편지 삭제 모달 탭 변경 시 업데이트 함수 */
   const handleTabChange = (newTab: "received" | "send") => {
     setTab(newTab);
   };
 
-  /* 스크롤 이벤트 핸들러 */
-  const handleScroll = useCallback(
-    useThrottle(() => {
-      if (listRef.current) {
-        const { scrollTop, scrollHeight, clientHeight } = listRef.current;
-        if (scrollTop + clientHeight >= scrollHeight - 5) {
-          if (tab === "received" && receiveHasMore) {
-            setReceivePage((prevPage) => {
-              const nextPage = prevPage + 1;
-              getAllReceiveLetter(nextPage);
-              return nextPage;
-            });
-          } else if (tab === "send" && sendHasMore) {
-            setSendPage((prevPage) => {
-              const nextPage = prevPage + 1;
-              getAllSendLetter(nextPage);
-              return nextPage;
-            });
-          }
+  /** 무한 스크롤 이벤트 핸들러 함수 **/
+  const throttledScrollHandler = useThrottle(() => {
+    if (listRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+      if (scrollTop + clientHeight >= scrollHeight - 5) {
+        if (tab === "received" && receiveHasMore) {
+          setReceivePage((prevPage) => {
+            const nextPage = prevPage + 1;
+            getAllReceiveLetter(nextPage);
+            return nextPage;
+          });
+        } else if (tab === "send" && sendHasMore) {
+          setSendPage((prevPage) => {
+            const nextPage = prevPage + 1;
+            getAllSendLetter(nextPage);
+            return nextPage;
+          });
         }
       }
-    }, 100),
-    [receiveHasMore, sendHasMore, tab]
+    }
+  }, 100);
+
+  /** throttle된 함수를 useMemo로 메모이제이션 */
+  const handleScroll = useMemo(
+    () => throttledScrollHandler,
+    [throttledScrollHandler]
   );
 
-  /** 메일 아이템 클릭 이벤트(개별 편지 팝업창) **/
+  /** 메일 아이템 클릭 이벤트(개별 편지 팝업창) */
   const handleMailItemClick = (mail: Mail) => {
     setIndividualLetterInfo({
       isOpen: true,
@@ -200,7 +202,7 @@ const DeleteLetterModal: React.FC = () => {
     });
   };
 
-  /** 전체 선택 버튼 클릭 시 실행 함수 **/
+  /** 전체 선택 버튼 클릭 시 실행 함수 */
   const handleSelectAllClick = () => {
     const allChecked = checkedState.every(Boolean); // 모든 체크박스가 체크되어 있는지 확인
     const newCheckedState = new Array(mails.length).fill(!allChecked);
@@ -222,7 +224,7 @@ const DeleteLetterModal: React.FC = () => {
     }
   };
 
-  /** 체크박스 상태 변경 시 id값 업데이트 함수 **/
+  /** 체크박스 상태 변경 시 id값 업데이트 함수 */
   const handleCheckboxChange = (index: number) => {
     const updatedCheckedState = checkedState.map((item, idx) =>
       idx === index ? !item : item
@@ -241,7 +243,7 @@ const DeleteLetterModal: React.FC = () => {
     }
   };
 
-  /* 편지 삭제 모달 초기화 및 데이터 로드 */
+  /** 편지 삭제 모달 초기화 및 데이터 로드 */
   useEffect(() => {
     setReceiveMails([]);
     setSendMails([]);
@@ -249,20 +251,20 @@ const DeleteLetterModal: React.FC = () => {
     getAllSendLetter();
   }, [deleteLetter, individualLetterInfo.id]);
 
-  /** 편지 삭제 모달 탭 변경 시 검색어 필터링 **/
+  /** 편지 삭제 모달 탭 변경 시 검색어 필터링 */
   useEffect(() => {
     searchFilter(tab);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, debouncedSearchTerm, receiveMails, sendMails]);
 
-  /** 편지 삭제 모달 탭 변경 시 스크롤 초기화 **/
+  /** 편지 삭제 모달 탭 변경 시 스크롤 초기화 */
   useEffect(() => {
     if (listRef.current) {
       listRef.current.scrollTop = 0;
     }
   }, [tab]);
 
-  /* 스크롤 이벤트 핸들러 */
+  /** 스크롤 이벤트 핸들러 */
   useEffect(() => {
     const currentRef = listRef.current;
     if (currentRef) {
@@ -565,4 +567,4 @@ const TimeReceived = styled.div`
   color: #888;
 `;
 
-export default DeleteLetterModal;
+export default LetterDeleteContents;

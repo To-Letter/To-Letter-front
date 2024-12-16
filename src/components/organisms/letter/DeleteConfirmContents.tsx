@@ -21,7 +21,7 @@ interface propsI {
   setDeleteLetter?: React.Dispatch<React.SetStateAction<boolean>> | null;
 }
 
-const ConfirmDelete = ({
+const DeleteConfirmContents = ({
   mailIds,
   onClose,
   type = "received",
@@ -263,4 +263,4 @@ const LetterBtn = styled.div`
   cursor: pointer;
 `;
 
-export default ConfirmDelete;
+export default DeleteConfirmContents;

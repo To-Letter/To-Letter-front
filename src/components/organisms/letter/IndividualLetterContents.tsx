@@ -1,55 +1,54 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { IoMdClose } from "react-icons/io";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import {
-  individualLetterState,
-  receiveLetterBoxModalState,
-  tabState,
-} from "../../recoil/letterPopupAtom";
+import { individualLetterState, tabState } from "@/store/recoil/letterAtom";
 import { FaTrash } from "react-icons/fa";
-import useThrottle from "../../hook/useThrottle";
-import { loadingState } from "../../recoil/loadingAtom";
-import { deleteLetter } from "../../apis/controller/letter";
-import ConfirmDelete from "./ConfirmDelete";
-import { deleteLetterPopupState } from "../../recoil/deleteLetterPopupAtom";
+import useThrottle from "@/hooks/useThrottle";
+import { loadingState } from "@/store/recoil/loadingAtom";
+import DeleteConfirmContents from "@/components/organisms/letter/DeleteConfirmContents";
+import { useRouter } from "next/router";
 
-const IndividualLetterPopup = () => {
-  const popupRef = useRef<HTMLDivElement>(null);
-  const innerRef = useRef<HTMLDivElement>(null);
+const IndividualLetterContents = () => {
+  const router = useRouter();
+  /** 편지 삭제 확인 모달을 관리하는 query **/
+  const { confirm } = router.query;
+  /** 모달창 외부 클릭시 반응을 위한 ref **/
+  const modalRef = useRef<HTMLDivElement>(null);
+  /** 편지 내용 스크롤을 위한 ref **/
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [individualLetterInfo, setIndividualLetterInfo] = useRecoilState(
-    individualLetterState
-  );
-  const setReceiveLetterBoxModal = useSetRecoilState(
-    receiveLetterBoxModalState
-  );
-  const [tab, setTab] = useRecoilState(tabState);
-
-  // 편지 내용 상태와 페이지
+  /** 무한 스크롤을 위한 편지 내용 상태와 페이지 관리 state **/
   const [content, setContent] = useState<string>("");
   const [page, setPage] = useState(0);
   const pageSize = 1000;
-
+  /** 배경 편지지 이미지 로드 여부 관리 state **/
   const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
-  const [isConfirmPopup, setIsConfirmPopup] = useState<boolean>(false);
+  /** 개별 편지 정보 관리 recoil **/
+  const [individualLetterInfo, setIndividualLetterInfo] = useRecoilState(
+    individualLetterState
+  );
+  /** 편지 탭 관리 recoil **/
+  const [, setTab] = useRecoilState(tabState);
+  /** 로딩 상태 관리 recoil **/
   const setLoadingState = useSetRecoilState(loadingState);
 
-
-  useEffect(() => {
-    // 초기 페이지 로드
-    setContent("");
-    setPage(0);
-    loadMoreContent(0);
-  }, [individualLetterInfo.letterContent]);
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
-      closeModal();
-    }
+  /** 편지 삭제 버튼 클릭 시 실행 함수 */
+  const openConfirmModal = () => {
+    router.push(
+      {
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          confirm: "true",
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
   };
 
-  const closeModal = () => {
+  /** 모달창 닫기 버튼 함수 */
+  const closeModal = useCallback(() => {
     if (individualLetterInfo.tab === "send") {
       setTab("send");
     } else {
@@ -64,17 +63,33 @@ const IndividualLetterPopup = () => {
       onDelete: false,
       tab: "received",
     });
-  };
+  }, [individualLetterInfo.tab, setIndividualLetterInfo, setTab]);
 
-  // 페이지 단위로 내용 로드
-  const loadMoreContent = (pageNum: number) => {
-    const start = pageNum * pageSize;
-    const end = start + pageSize;
-    const newContent = individualLetterInfo.letterContent.slice(start, end);
-    setContent((prevContent) => prevContent + newContent);
-  };
+  /** 모달창 외부 클릭시 반응을 위한 함수 */
+  const handleClickOutside = useCallback(
+    (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        closeModal();
+      }
+    },
+    [closeModal]
+  );
 
-  // 스크롤 이벤트 핸들러
+  /** 편지 내용 무한 스크롤 적용을 위한 함수 */
+  const loadMoreContent = useCallback(
+    (pageNum: number) => {
+      const start = pageNum * pageSize;
+      const end = start + pageSize;
+      const newContent = individualLetterInfo.letterContent.slice(start, end);
+      setContent((prevContent) => prevContent + newContent);
+    },
+    [individualLetterInfo.letterContent]
+  );
+
+  /** 스크롤 이벤트 핸들러 */
   const handleScroll = useThrottle(() => {
     if (textareaRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = textareaRef.current;
@@ -86,6 +101,14 @@ const IndividualLetterPopup = () => {
     }
   }, 100);
 
+  /** 편지 내용 및 무한 스크롤 초기화 */
+  useEffect(() => {
+    setContent("");
+    setPage(0);
+    loadMoreContent(0);
+  }, [individualLetterInfo.letterContent, loadMoreContent]);
+
+  /** 스크롤 이벤트 핸들러 적용 */
   useEffect(() => {
     const currentRef = textareaRef.current;
 
@@ -100,13 +123,15 @@ const IndividualLetterPopup = () => {
     };
   }, [handleScroll]);
 
+  /** 모달창 외부 클릭시 반응을 위한 함수 */
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [handleClickOutside]);
 
+  /** 배경 편지지 이미지 로드 여부 관리 */
   useEffect(() => {
     setLoadingState(true);
     const img = new Image();
@@ -115,17 +140,17 @@ const IndividualLetterPopup = () => {
       setIsImageLoaded(true);
       setLoadingState(false);
     };
-  }, []);
+  }, [setLoadingState]);
 
   return isImageLoaded ? (
-    <Popup ref={popupRef}>
+    <Popup ref={modalRef}>
       <BackButtonWrapper onClick={closeModal}>
         <BackIcon src="images/back_arrow_icon.png" alt="Back" />
       </BackButtonWrapper>
       <CloseButton onClick={closeModal}>
         <IoMdClose />
       </CloseButton>
-      <PopupInner ref={innerRef}>
+      <PopupInner>
         <ToInputWrapper>
           <ToInput>{`To. ${individualLetterInfo.toUserNickname}`}</ToInput>
         </ToInputWrapper>
@@ -141,14 +166,23 @@ const IndividualLetterPopup = () => {
       </PopupInner>
       <FromText>From. {individualLetterInfo.fromUserNickname}</FromText>
       {individualLetterInfo.onDelete && (
-        <DeleteButton onClick={() => setIsConfirmPopup(true)}>
+        <DeleteButton onClick={() => openConfirmModal}>
           <FaTrash />
         </DeleteButton>
       )}
-      {isConfirmPopup && (
-        <ConfirmDelete
+      {confirm === "true" && (
+        <DeleteConfirmContents
           mailIds={[individualLetterInfo.id]}
-          setIsConfirmPopup={setIsConfirmPopup}
+          onClose={() => {
+            router.push(
+              {
+                pathname: router.pathname,
+                query: { ...router.query, confirm: undefined },
+              },
+              undefined,
+              { shallow: true }
+            );
+          }}
           type={individualLetterInfo.tab}
         />
       )}
@@ -314,4 +348,4 @@ const BackIcon = styled.img`
   height: 20px;
 `;
 
-export default IndividualLetterPopup;
+export default IndividualLetterContents;
