@@ -1,20 +1,20 @@
 import React, { ChangeEvent, useRef, useState } from "react";
 import { styled } from "styled-components";
-import { useRecoilState } from "recoil";
-import { myInfoState } from "@/store/recoil/accountAtom";
 import { useRouter } from "next/navigation";
 import { ElementBox, MainBox, SectionBox } from "@/components/atoms/Box";
 import Button from "@/components/atoms/Button";
 import InputForm from "@/components/molecules/InputForm";
 import SummaryTip from "@/components/molecules/SummaryTip";
 import { Text } from "@/components/atoms/Text";
+import { useUser } from "@/hooks/useUser";
 
 export default function MyInfoContents() {
   const router = useRouter();
-  //닉네임 중복 체크
+  /** 닉네임 중복 체크 */
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
-  //차후 useUser로 변환 필요
-  const [myInfoForm, setMyInfoForm] = useRecoilState(myInfoState);
+  /** 유저 정보 관리 */
+  const { myInfo, updateMyInfo } = useUser();
+  /** 주소 팁 텍스트 */
   const tipText = useRef<string>(
     `
     To Letter가 우편 배송 기간을 계산할 때 사용하는 도로명 주소
@@ -23,10 +23,9 @@ export default function MyInfoContents() {
   );
 
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
-    setMyInfoForm((prev) => ({
-      ...prev,
+    updateMyInfo({
       [e.target.name]: e.target.value,
-    }));
+    });
     if (e.target.name === "nickname") setIsNicknameChecked(false);
   };
 
@@ -42,7 +41,7 @@ export default function MyInfoContents() {
           labelTitle="Email"
           name="email"
           type="text"
-          value={myInfoForm.email}
+          value={myInfo.email}
           onChange={onChangeFormHdr}
           isExistButton={false}
           readonly={true}
@@ -55,7 +54,7 @@ export default function MyInfoContents() {
           onChange={onChangeFormHdr}
           isExistButton={true}
           buttonTitle="중복 체크"
-          value={myInfoForm.nickname}
+          value={myInfo.nickname}
           onClick={() => {
             setIsNicknameChecked(true);
           }}
@@ -78,7 +77,7 @@ export default function MyInfoContents() {
             onClick={onClickOpenModal}
           />
         </ElementBox>
-        {myInfoForm.address && (
+        {myInfo.address && (
           <FormAddressInput
             $width="100%"
             $padding="8px 0"
@@ -86,7 +85,7 @@ export default function MyInfoContents() {
             $border="none"
             $backgroundColor="transparent"
           >
-            {myInfoForm.address}
+            {myInfo.address}
           </FormAddressInput>
         )}
       </SectionBox>

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { IoIosMail } from "react-icons/io"; // 메일 버튼
 import { IoMdClose } from "react-icons/io";
 import ToastMessage from "@/components/atoms/ToastMessage";
-/* import { useUser } from "@/hooks/useUser"; 차후 수정하고 반영 */
+import { useUser } from "@/hooks/useUser";
 import { useRecoilState } from "recoil";
 import { nicknameAndContentsState } from "@/store/recoil/letterAtom";
 import { useRouter } from "next/router";
@@ -11,11 +11,12 @@ import { useRouter } from "next/router";
 const LetterWriteContents: React.FC = () => {
   const router = useRouter();
   /** 이벤트 관리를 위한 Ref */
-  const popupRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const textareaCurrent = textareaRef.current; // ref 값을 effect 내부 변수로 저장
-  /*   const { myInfo } = useUser(); */
-  /* 토스트 메시지를 관리하는 state */
+  const textareaCurrent = textareaRef.current;
+  /** 유저 정보 관리 */
+  const { myInfo } = useUser();
+  /** 토스트 메시지를 관리하는 state */
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: "",
     visible: false,
@@ -28,7 +29,7 @@ const LetterWriteContents: React.FC = () => {
   /** 모달 외부 클릭시 모달 닫히게 하는 함수 */
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleClickOutside = (event: MouseEvent) => {
-    if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+    if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       router.push("/");
     }
   };
@@ -81,7 +82,7 @@ const LetterWriteContents: React.FC = () => {
   }, [handleClickOutside]);
 
   return (
-    <Popup ref={popupRef}>
+    <Popup ref={modalRef}>
       <CloseButton onClick={() => router.push("/")}>
         <IoMdClose />
       </CloseButton>
@@ -97,7 +98,7 @@ const LetterWriteContents: React.FC = () => {
           spellCheck={false}
         />
       </PopupInner>
-      {/* <FromText>From. {myInfo.nickname}</FromText> */}
+      <FromText>From. {myInfo.nickname}</FromText>
       <SendButton onClick={moveSendLetterModal}>
         <IoIosMail />
       </SendButton>
@@ -246,12 +247,12 @@ const CloseButton = styled.button`
   }
 `;
 
-/* const FromText = styled.div`
+const FromText = styled.div`
   position: absolute;
   bottom: 29px;
   right: 67px;
   font-family: "Handwriting", sans-serif;
   font-size: 18px;
-`; */
+`;
 
 export default LetterWriteContents;
