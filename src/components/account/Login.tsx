@@ -11,7 +11,7 @@ import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { signupState } from "@/store/recoil/accountAtom";
 import { myInfoState } from "@/store/recoil/accountAtom";
 import { loadingState } from "@/store/recoil/loadingAtom";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface loginFormI {
   email: string;

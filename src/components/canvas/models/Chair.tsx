@@ -5,7 +5,7 @@ import { useLoader } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const Chair = () => {
   const chairglb = useLoader(GLTFLoader, "/models/chair.glb");

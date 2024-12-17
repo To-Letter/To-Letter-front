@@ -7,7 +7,7 @@ import { signupState } from "@/store/recoil/accountAtom";
 import { emailVerifyAuthType } from "@/constants/emailVerify";
 import { loadingState } from "@/store/recoil/loadingAtom";
 import Timer from "./Timer";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface defaultStyleProps {
   $direction?: "row" | "column";

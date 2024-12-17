@@ -4,7 +4,7 @@ import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
 import Popup from "./Popup";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const Photo = ({

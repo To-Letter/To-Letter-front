@@ -9,7 +9,7 @@ import DeleteConfirmContents from "./DeleteConfirmContents";
 import { CgPlayListCheck } from "react-icons/cg";
 import useThrottle from "@/hooks/useThrottle";
 import { formatDate } from "@/utils/formatDate";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface Mail {
   id: number;

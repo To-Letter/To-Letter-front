@@ -6,7 +6,7 @@ import ToastMessage from "@/components/atoms/ToastMessage";
 import { useUser } from "@/hooks/useUser";
 import { useRecoilState } from "recoil";
 import { nicknameAndContentsState } from "@/store/recoil/letterAtom";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const LetterWriteContents: React.FC = () => {
   const router = useRouter();

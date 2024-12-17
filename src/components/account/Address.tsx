@@ -10,7 +10,7 @@ import React, {
 import styled from "styled-components";
 import axios from "axios";
 import { useInView } from "react-intersection-observer";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { signupState } from "@/store/recoil/accountAtom";
 import { useSetRecoilState } from "recoil";
 

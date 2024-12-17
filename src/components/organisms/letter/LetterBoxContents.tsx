@@ -17,7 +17,7 @@ import { individualLetterState, tabState } from "@/store/recoil/letterAtom";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import useThrottle from "@/hooks/useThrottle";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface Mail {
   id: number;

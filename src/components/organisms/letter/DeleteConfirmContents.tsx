@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useSetRecoilState } from "recoil";
 import { deleteLetter } from "@/lib/api/controller/letter";
 import { individualLetterState } from "@/store/recoil/letterAtom";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 type StatusCode = 200 | 401 | 403;
 

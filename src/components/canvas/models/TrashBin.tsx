@@ -6,7 +6,7 @@ import { useRef, useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const TrashBin = () => {
   const chairglb = useLoader(GLTFLoader, "/models/trashBin.glb");

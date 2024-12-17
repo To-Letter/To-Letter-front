@@ -9,7 +9,7 @@ import Calender from "./Calender";
 import Bookshelf from "./Bookshelf";
 /* import NewLetter from "./NewLetter"; */
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 // 연필통 색상 수정
 const meshColors: { [key: string]: string } = {

@@ -7,7 +7,7 @@ import { FaTrash } from "react-icons/fa";
 import useThrottle from "@/hooks/useThrottle";
 import { loadingState } from "@/store/recoil/loadingAtom";
 import DeleteConfirmContents from "@/components/organisms/letter/DeleteConfirmContents";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const IndividualLetterContents = () => {
   const router = useRouter();

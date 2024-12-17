@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { Html } from "@react-three/drei";
 import styled from "styled-components";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface PopupProps {
   text: string;

@@ -7,7 +7,7 @@ import {
 } from "@/lib/api/controller/account";
 import { useRecoilState } from "recoil";
 import { signupState } from "@/store/recoil/accountAtom";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface defaultStyleProps {
   $direction?: "row" | "column";

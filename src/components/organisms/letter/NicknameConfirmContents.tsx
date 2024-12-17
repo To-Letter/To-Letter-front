@@ -5,7 +5,7 @@ import { useSetRecoilState, useRecoilState } from "recoil";
 import { nicknameAndContentsState } from "@/store/recoil/letterAtom";
 import { loadingState } from "@/store/recoil/loadingAtom";
 import { getNicknameConfirm } from "@/lib/api/controller/account";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface defaultStyleProps {
   $direction?: "row" | "column";

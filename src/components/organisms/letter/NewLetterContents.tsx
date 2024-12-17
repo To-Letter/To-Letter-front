@@ -3,7 +3,7 @@ import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { individualLetterState } from "@/store/recoil/letterAtom";
 import { formatDate } from "../../../utils/formatDate";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 interface Mail {
   id: number;
