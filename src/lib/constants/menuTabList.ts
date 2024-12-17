@@ -13,6 +13,7 @@ export interface menuI {
 interface menuListI {
   auth: menuI;
   mypage: menuI;
+  letterbox: menuI;
 }
 
 /**
@@ -22,7 +23,7 @@ interface menuListI {
  * @tabOption underline, highlight 중 하나
  * @menuTabData 메뉴 탭 데이터 배열{title: string, path: string}
  * @title 메뉴 탭 이름
- * @path 메뉴 탭 경로
+ * @path 메뉴 탭 경로 중첩 경로일 경우 menuListI에서 찾아서 firstPath, secondPath 중 하나
  */
 export const menuList: menuListI = {
   auth: {
@@ -44,6 +45,14 @@ export const menuList: menuListI = {
         userRoleAble: "local",
       },
       { title: "End Letter", path: "/mypage/letterend", userRoleAble: "all" },
+    ],
+  },
+  letterbox: {
+    category: "letterboxTab",
+    tabOption: "highlight",
+    menuTabData: [
+      { title: "받은 편지함", path: "/letter/letterbox/receive" },
+      { title: "보낸 편지함", path: "/letter/letterbox/send" },
     ],
   },
 };
