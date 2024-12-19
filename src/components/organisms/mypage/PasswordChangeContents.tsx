@@ -1,17 +1,15 @@
+"use client";
 import React, { ChangeEvent, useState } from "react";
-import styled from "styled-components";
 import ToastMessage from "@/components/atoms/ToastMessage";
 import { loadingState } from "@/store/recoil/loadingAtom";
 import { useSetRecoilState } from "recoil";
 import { patchPasswordUpdate } from "@/lib/api/controller/account";
 import { useUser } from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
-
-interface defaultStyleProps {
-  $direction?: "row" | "column";
-  $justifyContent?: string;
-  $alignItems?: string;
-}
+import { MainBox, SectionBox } from "@/components/atoms/Box";
+import { Text } from "@/components/atoms/Text";
+import Button from "@/components/atoms/Button";
+import InputForm from "@/components/molecules/InputForm";
 
 export default function PasswordChangeContents() {
   const router = useRouter();
@@ -89,139 +87,51 @@ export default function PasswordChangeContents() {
   };
 
   return (
-    <ChangePasswordWrap>
-      <Content>
-        <FormLabel>
-          변경 비밀번호
-          <FormInput type="password" onChange={onChangeFirstPass} />
-        </FormLabel>
-        <FormLabel>
-          변경 비밀번호 확인
-          <FormInput type="password" onChange={onChangeSecondPass} />
-          <EmialText>
-            {checkSamePass
-              ? "비밀번호가 동일합니다."
-              : "비밀번호가 동일하지 않습니다."}
-          </EmialText>
-        </FormLabel>
-      </Content>
-      <ChangeBtn onClick={submitChangePass}>비밀번호 변경</ChangeBtn>
-      {toast.visible && (
-        <ToastMessage
-          message={toast.message}
-          onClose={() => setToast({ ...toast, visible: false })}
+    <MainBox
+      $width="100%"
+      $height="380px"
+      $direction="column"
+      $alignItems="center"
+      $justifyContent="flex-start"
+    >
+      <SectionBox
+        $width="100%"
+        $direction="column"
+        $alignItems="flex-start"
+        $justifyContent="center"
+        $margin="24px 0"
+      >
+        <InputForm
+          keyValue={"password"}
+          labelTitle="변경 비밀번호"
+          type="password"
+          name="password"
+          onChange={onChangeFirstPass}
         />
-      )}
-    </ChangePasswordWrap>
+        <InputForm
+          keyValue={"password"}
+          labelTitle="변경 비밀번호 확인"
+          type="password"
+          name="password"
+          onChange={onChangeSecondPass}
+        />
+        <Text $color="#e9e9e9" $fontSize="10px" $margin="0 0 24px 0">
+          {checkSamePass
+            ? "비밀번호가 동일합니다."
+            : "비밀번호가 동일하지 않습니다."}
+        </Text>
+        <Button
+          title="비밀번호 변경"
+          $padding="8px 0"
+          onClick={submitChangePass}
+        />
+        {toast.visible && (
+          <ToastMessage
+            message={toast.message}
+            onClose={() => setToast({ ...toast, visible: false })}
+          />
+        )}
+      </SectionBox>
+    </MainBox>
   );
 }
-
-const ChangePasswordWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 380px;
-  align-items: center;
-  justify-content: start;
-  width: calc(100% - 80px);
-  margin: 12px 40px 20px 40px;
-`;
-
-export const Box = styled.div<defaultStyleProps>`
-  display: flex;
-  flex-direction: ${({ $direction }) => $direction};
-  justify-content: ${({ $justifyContent }) => $justifyContent};
-  align-items: ${({ $alignItems }) => $alignItems};
-  position: relative;
-`;
-
-export const SignupWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  width: calc(100% - 80px);
-  margin: 12px 40px 20px 40px;
-`;
-
-export const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  margin: 16px 0;
-  width: 100%;
-`;
-
-export const FormLabel = styled.label`
-  display: flex;
-  flex-direction: column;
-  margin: 8px 0;
-  width: 100%;
-  color: #cecece;
-`;
-
-export const FormInput = styled.input`
-  border: none;
-  background-color: transparent;
-  border-bottom: 1px solid white;
-  width: 100%;
-  height: 28px;
-  font-size: 20px;
-  margin-top: 8px;
-  color: #ffffff;
-  &:focus {
-    outline: none; /* 기본 outline 제거 */
-    box-shadow: none; /* 기본 box-shadow 제거 */
-  }
-  &:-internal-autofill-selected {
-    border: none;
-    background-color: transparent;
-    border-bottom: 1px solid white;
-    width: 100%;
-    height: 28px;
-    font-size: 20px;
-    margin-top: 8px;
-    color: #ffffff;
-  }
-  &:-webkit-autofill,
-  &:-webkit-autofill:hover,
-  &:-webkit-autofill:focus {
-    border: none;
-    -webkit-text-fill-color: #ffffff !important;
-    -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
-    background-color: transparent !important;
-    transition: background-color 5000s ease-in-out 0s;
-    border-bottom: 1px solid white;
-  }
-`;
-
-export const Button = styled.div`
-  width: 80px;
-  border-radius: 1px;
-  border: 1px solid #e9e9e9;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2px 0;
-  color: #e9e9e9;
-  background-color: #262523;
-  cursor: pointer;
-`;
-
-export const ChangeBtn = styled.div`
-  width: 100%;
-  border: 1px solid #e9e9e9;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 0;
-  margin-bottom: 16px;
-  color: #e9e9e9;
-  background-color: #262523;
-  cursor: pointer;
-`;
-
-export const EmialText = styled.div`
-  margin-top: 10px;
-  font-size: 10px;
-`;

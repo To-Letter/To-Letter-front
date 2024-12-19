@@ -1,6 +1,10 @@
-import styled from "styled-components";
+"use client";
+
 import { useUser } from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
+import { MainBox } from "@/components/atoms/Box";
+import { Text } from "@/components/atoms/Text";
+import Button from "@/components/atoms/Button";
 
 export default function LetterEndContents() {
   const router = useRouter();
@@ -10,50 +14,28 @@ export default function LetterEndContents() {
   /** 회원 탈퇴 버튼 클릭 시 이동 */
   const onClickButton = () => {
     if (myInfo.userRole === "local") {
-      router.push("/mypage/localuserdelete");
+      router.push("/mypage/letterend/localuserdelete");
     } else {
-      router.push("/mypage/kakaouserdelete");
+      router.push("/mypage/letterend/kakaouserdelete");
     }
   };
 
   return (
-    <UserDeleteWrap>
-      <Text>이제 편지는 안쓸래요!</Text>
-      <Button onClick={onClickButton}>버튼을 눌러 회원 탈퇴</Button>
-    </UserDeleteWrap>
+    <MainBox
+      $direction="column"
+      $alignItems="center"
+      $justifyContent="center"
+      $width="100%"
+      $height="380px"
+    >
+      <Text $color="#cecece" $fontSize="16px" $margin="16px 40px 40px 40px">
+        이제 편지는 안쓸래요!
+      </Text>
+      <Button
+        title="버튼을 눌러 회원 탈퇴"
+        $padding="8px 0"
+        onClick={onClickButton}
+      />
+    </MainBox>
   );
 }
-
-const UserDeleteWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 380px;
-  align-items: center;
-  justify-content: center;
-  width: calc(100% - 80px);
-  margin: 12px 40px 20px 40px;
-`;
-
-const Text = styled.div`
-  font-size: 16px;
-  color: #cecece;
-  padding: 16px 40px 40px 40px;
-  line-height: 24px;
-  text-align: center; /* 텍스트 가운데 정렬 */
-  white-space: pre-wrap; /* 줄바꿈을 포함한 공백 처리를 자연스럽게 */
-  word-break: break-word; /* 단어가 너무 길면 줄바꿈 */
-`;
-
-const Button = styled.div`
-  width: 100%;
-  border: 1px solid #e9e9e9;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 0;
-  margin-bottom: 16px;
-  color: #e9e9e9;
-  background-color: #262523;
-
-  cursor: pointer;
-`;

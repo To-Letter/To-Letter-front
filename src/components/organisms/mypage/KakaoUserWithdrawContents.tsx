@@ -4,6 +4,7 @@ import ProgressBar from "@/components/atoms/ProgressBar";
 import { useSetRecoilState } from "recoil";
 import { loadingState } from "@/store/recoil/loadingAtom";
 import { useRouter } from "next/navigation";
+import { MainBox } from "@/components/atoms/Box";
 
 const KakaoUserWithdrawContents = () => {
   const router = useRouter();
@@ -46,9 +47,9 @@ const KakaoUserWithdrawContents = () => {
   }, [code, router, setLoding]);
 
   return (
-    <div>
+    <MainBox $width="100vw" $height="100vh">
       <ProgressBar />
-    </div>
+    </MainBox>
   );
 };
 

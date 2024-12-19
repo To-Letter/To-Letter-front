@@ -1,5 +1,5 @@
+"use client";
 import React, { ChangeEvent, useState } from "react";
-import styled from "styled-components";
 import Timer from "../../account/Timer";
 import ToastMessage from "@/components/atoms/ToastMessage";
 import { loadingState } from "@/store/recoil/loadingAtom";
@@ -8,12 +8,10 @@ import { getFindMailAuth, postEmailVerify } from "@/lib/api/controller/account";
 import { useUser } from "@/hooks/useUser";
 import { emailVerifyAuthType } from "@/constants/emailVerify";
 import { useRouter } from "next/navigation";
-
-interface defaultStyleProps {
-  $direction?: "row" | "column";
-  $justifyContent?: string;
-  $alignItems?: string;
-}
+import Verify from "@/components/molecules/Verify";
+import Button from "@/components/atoms/Button";
+import { Text } from "@/components/atoms/Text";
+import { MainBox, SectionBox } from "@/components/atoms/Box";
 
 export default function PasswordMailVerifyContents() {
   const router = useRouter();
@@ -32,7 +30,7 @@ export default function PasswordMailVerifyContents() {
   const setLoding = useSetRecoilState(loadingState);
 
   /** 인증 번호 입력 업데이트 함수 */
-  const onChangeMailKeyHdr = (e: ChangeEvent<HTMLInputElement>) => {
+  const onChangeMailKey = (e: ChangeEvent<HTMLInputElement>) => {
     setMailKey(e.target.value);
   };
 
@@ -56,7 +54,7 @@ export default function PasswordMailVerifyContents() {
 
         if (res.data.responseCode === 201) {
           setLoding(false);
-          router.push("/mypage/passwordchange");
+          router.push("/mypage/passwordmailverify/passwordchange");
           setToast({ message: "이메일 확인 성공!", visible: true });
         } else if (res.data.responseCode === 401) {
           setLoding(false);
@@ -117,138 +115,40 @@ export default function PasswordMailVerifyContents() {
   };
 
   return (
-    <ChangePasswordWrap>
-      <Content>
-        <Text>비밀번호 변경</Text>
-        <FormLabel>
-          <Box $alignItems="center" $justifyContent="space-between">
-            이메일 인증
-            {verifyMe ? (
-              <Timer setVerifyMe={setVerifyMe} />
-            ) : (
-              <Button onClick={authRequest}>인증 요청</Button>
-            )}
-          </Box>
-          <FormInput type="text" onChange={onChangeMailKeyHdr} />
-          <EmialText>
-            {verifyMe && "이메일 인증코드가 발송되었습니다."}
-          </EmialText>
-        </FormLabel>
-      </Content>
-      <ChangeBtn onClick={onClickMailVerify}>인증 코드 확인</ChangeBtn>
+    <MainBox
+      $direction="column"
+      $alignItems="flex-start"
+      $width="100%"
+      $height="380px"
+    >
+      <SectionBox $direction="column" $width="100%" $margin="24px 0">
+        <Text $color="#cecece" $fontSize="20px" $margin="0 0 8px 0">
+          비밀번호 변경
+        </Text>
+        <Verify onChangeMailKey={onChangeMailKey} message={verifyMe}>
+          {verifyMe ? (
+            <Timer setVerifyMe={setVerifyMe} />
+          ) : (
+            <Button
+              title="인증 요청"
+              $width="80px"
+              $padding="2px 0"
+              onClick={authRequest}
+            />
+          )}
+        </Verify>
+      </SectionBox>
+      <Button
+        title="인증 코드 확인"
+        $padding="8px"
+        onClick={onClickMailVerify}
+      />
       {toast.visible && (
         <ToastMessage
           message={toast.message}
           onClose={() => setToast({ ...toast, visible: false })}
         />
       )}
-    </ChangePasswordWrap>
+    </MainBox>
   );
 }
-
-const ChangePasswordWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 380px;
-  align-items: center;
-  justify-content: start;
-  width: calc(100% - 80px);
-  margin: 12px 40px 20px 40px;
-`;
-
-export const Box = styled.div<defaultStyleProps>`
-  display: flex;
-  flex-direction: ${({ $direction }) => $direction};
-  justify-content: ${({ $justifyContent }) => $justifyContent};
-  align-items: ${({ $alignItems }) => $alignItems};
-  position: relative;
-`;
-
-const Text = styled.div`
-  font-size: 20px;
-  color: #cecece;
-  line-height: 24px;
-  text-align: center; /* 텍스트 가운데 정렬 */
-`;
-export const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  margin: 16px 0;
-  width: 100%;
-`;
-
-export const FormLabel = styled.label`
-  display: flex;
-  flex-direction: column;
-  margin: 8px 0;
-  width: 100%;
-  color: #cecece;
-`;
-
-export const FormInput = styled.input`
-  border: none;
-  background-color: transparent;
-  border-bottom: 1px solid white;
-  width: 100%;
-  height: 28px;
-  font-size: 20px;
-  margin-top: 8px;
-  color: #ffffff;
-  &:focus {
-    outline: none; /* 기본 outline 제거 */
-    box-shadow: none; /* 기본 box-shadow 제거 */
-  }
-  &:-internal-autofill-selected {
-    border: none;
-    background-color: transparent;
-    border-bottom: 1px solid white;
-    width: 100%;
-    height: 28px;
-    font-size: 20px;
-    margin-top: 8px;
-    color: #ffffff;
-  }
-  &:-webkit-autofill,
-  &:-webkit-autofill:hover,
-  &:-webkit-autofill:focus {
-    border: none;
-    -webkit-text-fill-color: #ffffff !important;
-    -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
-    background-color: transparent !important;
-    transition: background-color 5000s ease-in-out 0s;
-    border-bottom: 1px solid white;
-  }
-`;
-
-export const Button = styled.div`
-  width: 80px;
-  border-radius: 1px;
-  border: 1px solid #e9e9e9;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2px 0;
-  color: #e9e9e9;
-  background-color: #262523;
-  cursor: pointer;
-`;
-
-export const ChangeBtn = styled.div`
-  width: 100%;
-  border: 1px solid #e9e9e9;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 0;
-  margin-bottom: 16px;
-  color: #e9e9e9;
-  background-color: #262523;
-  cursor: pointer;
-`;
-
-export const EmialText = styled.div`
-  margin-top: 10px;
-  font-size: 10px;
-`;
