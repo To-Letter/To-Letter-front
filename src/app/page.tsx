@@ -4,6 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import Scene from "../components/canvas/Scene"; // 경로 수정
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
+import "@/style/globals.css";
 
 export default function Home() {
   return (
