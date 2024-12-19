@@ -26,21 +26,44 @@ export default function MenuTab() {
   ) as MenuListKeys;
   const { category, menuTabData, tabOption } = menuList[pathKey];
 
-  return (
-    <NavBox>
-      {menuTabData.map(({ title, path }: menuTabDataI) => (
-        <Tab
-          key={`${category}-${title}`}
-          keyValue={`tab-${category}-${title}`}
-          TabTitle={title}
-          tabOption={tabOption}
-          onClick={() => router.push(`${path}`)}
-          $fontWeight="bold"
-          $padding="0 2px 4px 0"
-          $margin="0 24px 0 0"
-          $active={pathname.includes(path)}
-        />
-      ))}
-    </NavBox>
-  );
+  if (tabOption === "underline") {
+    return (
+      <NavBox>
+        {menuTabData.map(({ title, path }: menuTabDataI) => (
+          <Tab
+            key={`${category}-${title}`}
+            keyValue={`tab-${category}-${title}`}
+            TabTitle={title}
+            tabOption={tabOption}
+            onClick={() => router.push(`${path}`)}
+            $fontWeight="bold"
+            $padding="0 2px 4px 0"
+            $margin="0 24px 0 0"
+            $active={pathname.includes(path)}
+          />
+        ))}
+      </NavBox>
+    );
+  } else {
+    return (
+      <NavBox
+        $width="100%"
+        $padding="8px 0"
+        $justifyContent="center"
+        $alignItems="center"
+      >
+        {menuTabData.map(({ title, path }: menuTabDataI) => (
+          <Tab
+            key={`${category}-${title}`}
+            keyValue={`tab-${category}-${title}`}
+            TabTitle={title}
+            tabOption={tabOption}
+            onClick={() => router.push(`${path}`)}
+            $fontWeight="bold"
+            $active={pathname.includes(path)}
+          />
+        ))}
+      </NavBox>
+    );
+  }
 }
