@@ -22,6 +22,7 @@ export default function MyInfoContents() {
     `
   );
 
+  /** 유저 정보 업데이트 함수 */
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
     updateMyInfo({
       [e.target.name]: e.target.value,
@@ -29,6 +30,7 @@ export default function MyInfoContents() {
     if (e.target.name === "nickname") setIsNicknameChecked(false);
   };
 
+  /** 주소 입력 모달 열기 함수 */
   const onClickOpenModal = () => {
     router.push("/auth/address");
   };

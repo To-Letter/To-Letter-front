@@ -41,7 +41,7 @@ export const menuList: menuListI = {
       { title: "MyInfo", path: "/mypage/myinfo", userRoleAble: "all" },
       {
         title: "Account",
-        path: "/mypage/accountchange",
+        path: "/mypage/passwordmailverify",
         userRoleAble: "local",
       },
       { title: "End Letter", path: "/mypage/letterend", userRoleAble: "all" },
