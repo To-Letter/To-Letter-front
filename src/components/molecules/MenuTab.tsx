@@ -38,7 +38,7 @@ export default function MenuTab() {
           $fontWeight="bold"
           $padding="0 2px 4px 0"
           $margin="0 24px 0 0"
-          $active={pathname === `${path}`}
+          $active={pathname.includes(path)}
         />
       ))}
     </NavBox>
