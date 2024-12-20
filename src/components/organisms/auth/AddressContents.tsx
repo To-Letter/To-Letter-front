@@ -30,17 +30,7 @@ interface AddressData {
 
 function AddressContents() {
   const router = useRouter();
-  const [, setSignupForm] = useRecoilState(signupState);
-  const [, setMyInfo] = useRecoilState(myInfoState);
-  const [searchWord, setSearchWord] = useState<string>("");
-  const [addrData, setAddrData] = useState<AddressData[]>([]);
-  const focusRef = useRef<HTMLDivElement>(null);
-  const [isSearch, setIsSearch] = useState<boolean>(false);
-  const [common, setCommon] = useState<commonI>({
-    countPerPage: 20,
-    currentPage: -1,
-    totalCount: 0,
-  });
+  /** 주소 데이터 무한 스크롤 */
   const [ref] = useInView({
     threshold: 1,
     onChange: (inView) => {
@@ -52,6 +42,24 @@ function AddressContents() {
       }
     },
   });
+  /** 스크롤 초기화 ref */
+  const focusRef = useRef<HTMLDivElement>(null);
+  /** 검색어 관리 state */
+  const [searchWord, setSearchWord] = useState<string>("");
+  /** 주소 데이터 관리 state */
+  const [addrData, setAddrData] = useState<AddressData[]>([]);
+  /** 검색 여부 관리 state */
+  const [isSearch, setIsSearch] = useState<boolean>(false);
+  /** 주소 모달 데이터 페이지 관리 state */
+  const [common, setCommon] = useState<commonI>({
+    countPerPage: 20,
+    currentPage: -1,
+    totalCount: 0,
+  });
+  /** 회원가입 정보 관리 recoil */
+  const [, setSignupForm] = useRecoilState(signupState);
+  /** 유저 정보 관리 recoil */
+  const [, setMyInfo] = useRecoilState(myInfoState);
 
   /**
    * 유저가 선택한 주소 값
@@ -69,12 +77,6 @@ function AddressContents() {
 
     router.back();
   };
-
-  useEffect(() => {
-    if (focusRef.current) {
-      focusRef.current.scrollTop = 0;
-    }
-  }, [isSearch]);
 
   /**
    * 검색어에 대한 추가 데이터 요청 함수
@@ -152,6 +154,12 @@ function AddressContents() {
       fetchAddress();
     }
   };
+
+  useEffect(() => {
+    if (focusRef.current) {
+      focusRef.current.scrollTop = 0;
+    }
+  }, [isSearch]);
 
   return (
     <MainBox $width="100%" $height="calc(100% - 48px)" $direction="column">

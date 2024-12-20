@@ -1,5 +1,6 @@
 import { MainBox, SectionBox } from "@/components/atoms/Box";
 import Button from "@/components/atoms/Button";
+import { Text } from "@/components/atoms/Text";
 import ToastMessage from "@/components/atoms/ToastMessage";
 import Timer from "@/components/molecules/Timer";
 import Verify from "@/components/molecules/Verify";
@@ -146,6 +147,9 @@ export default function MailVerifyContents() {
           onClick={submitSignup}
         />
       </SectionBox>
+      <Text $color="#e9e9e9" $fontSize="10px" $margin="0 0 24px 0">
+        {authReqMessage && "이메일 인증코드가 발송되었습니다."}
+      </Text>
       {toast.visible && (
         <ToastMessage
           message={toast.message}
