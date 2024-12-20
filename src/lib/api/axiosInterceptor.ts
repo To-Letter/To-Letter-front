@@ -2,6 +2,9 @@ import axios from "axios";
 import { AUTH_KEY } from "@/constants/authkey";
 import sendApi from "@/lib/api/sendApi";
 
+/**
+ * axios 인터셉터 생성
+ */
 const axiosInterceptor = axios.create({
   baseURL: AUTH_KEY.apiUrl,
   withCredentials: true,
@@ -11,14 +14,19 @@ const axiosInterceptor = axios.create({
   },
 });
 
-// 재발급 토큰 요청 함수
+/**
+ * 재발급 토큰 요청 함수
+ * @returns accessToken
+ */
 async function getNewToken() {
   const response = await sendApi.post(`${AUTH_KEY.apiUrl}/auth/reissue`);
 
   return response.headers["Authorization"];
 }
 
-// 요청 인터셉터
+/**
+ * 요청 인터셉터
+ */
 axiosInterceptor.interceptors.request.use(
   async (config: any) => {
     const accessToken =
@@ -39,7 +47,9 @@ axiosInterceptor.interceptors.request.use(
   }
 );
 
-// 응답 인터셉터
+/**
+ * 응답 인터셉터
+ */
 axiosInterceptor.interceptors.response.use(
   (response: any) => {
     return response;
@@ -47,10 +57,9 @@ axiosInterceptor.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // 에러 코드에 따른 처리
     if (
-      (error.response?.data.code === 1002 || // Empty string token
-        error.response?.data.code === 1003) && // Expired token
+      (error.response?.data.code === 1002 ||
+        error.response?.data.code === 1003) &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true;

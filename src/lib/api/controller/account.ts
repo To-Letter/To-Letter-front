@@ -1,6 +1,9 @@
 import sendApi from "@/lib/api/sendApi";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
 
+/**
+ * 토큰 삭제 함수
+ * */
 const clearTokens = () => {
   // Authorization 헤더 삭제
   delete axiosInterceptor.defaults.headers.common["Authorization"];
@@ -10,6 +13,12 @@ const clearTokens = () => {
     "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 };
 
+/**
+ * 로그인 요청
+ * @param email 이메일
+ * @param password 비밀번호
+ * @returns response
+ */
 export const postLocalLogin = async (loginData: {
   email: string;
   password?: string;
@@ -33,7 +42,15 @@ export const postLocalLogin = async (loginData: {
   return response;
 };
 
-// 회원가입
+/**
+ * 회원가입 요청
+ * @param nickname 닉네임
+ * @param email 이메일
+ * @param loginType 로그인 타입
+ * @param password 비밀번호
+ * @param address 주소
+ * @returns response
+ */
 export const postLocalSignup = async (signupData: {
   nickname: string;
   email: string;
@@ -52,7 +69,11 @@ export const postLocalSignup = async (signupData: {
   return response;
 };
 
-// 닉네임 중복확인
+/**
+ * 닉네임 중복확인 요청
+ * @param nickname 닉네임
+ * @returns response
+ */
 export const getNicknameConfirm = async (nickname: { nickname: string }) => {
   const queryString = `?userNickname=${encodeURIComponent(nickname.nickname)}`;
   const response: any = await sendApi.get(
@@ -62,7 +83,11 @@ export const getNicknameConfirm = async (nickname: { nickname: string }) => {
   return response;
 };
 
-// 이메일 중복확인
+/**
+ * 이메일 중복확인 요청
+ * @param email 이메일
+ * @returns response
+ */
 export const getEmialConfirm = async (email: { email: string }) => {
   const queryString = `?userEmail=${encodeURIComponent(email.email)}`;
   const response: any = await sendApi.get(
@@ -72,7 +97,11 @@ export const getEmialConfirm = async (email: { email: string }) => {
   return response;
 };
 
-// 회원가입을 위한 이메일 인증코드 발송
+/**
+ * 회원가입을 위한 이메일 인증코드 발송 요청
+ * @param email 이메일
+ * @returns response
+ */
 export const getEmialAuth = async (email: { email: string }) => {
   const queryString = `?toEmail=${encodeURIComponent(email.email)}`;
   const response: any = await sendApi.get(`/users/email/auth${queryString}`);
@@ -85,7 +114,7 @@ export const getEmialAuth = async (email: { email: string }) => {
  * @param email: string;
  * @param randomCode: string;
  * @param authType: string;
- * @returns
+ * @returns response
  */
 export const postEmailVerify = async (emailData: {
   email: string;
@@ -104,7 +133,7 @@ export const postEmailVerify = async (emailData: {
 /**
  * 비밀번호 변경을 위한 이메일 인증코드 발송
  * @param email: 이메일 값
- * @returns 결과
+ * @returns response
  */
 export const getFindMailAuth = async (email: string) => {
   const queryString = `?email=${encodeURIComponent(email)}`;
@@ -117,7 +146,7 @@ export const getFindMailAuth = async (email: string) => {
 
 /**
  * kakao Login Api Part - 인가코드 가져오기
- * @returns 결과
+ * @returns response
  */
 export const getKakaoURL = async () => {
   const response: any = await sendApi.get("/kakao/su/auth");
@@ -128,7 +157,7 @@ export const getKakaoURL = async () => {
 /**
  * 인가코드 전달 및 카카오 정보로 1차 회원가입 진행
  * @param code: 전달 받은 코드 값
- * @returns 결과
+ * @returns response
  */
 export const postKakaoToken = async (code: { code: string }) => {
   const queryString = `?code=${encodeURIComponent(code.code)}`;
@@ -163,7 +192,7 @@ export const postKakaoToken = async (code: { code: string }) => {
  * @param address: 주소 값;
  * @param email: 이메일 값;
  * @param nickname: 닉넥임;
- * @returns 결과
+ * @returns response
  */
 export const postKakaoSignup = async (kakaoSignupData: {
   address: string;
@@ -181,7 +210,7 @@ export const postKakaoSignup = async (kakaoSignupData: {
 
 /**
  * 로그아웃 처리
- * @returns 결과
+ * @returns response
  */
 export const getLogout = async () => {
   const response: any = await sendApi.get(`/users/logout`);
@@ -195,7 +224,7 @@ export const getLogout = async () => {
  * 유저 정보 업데이트
  * @param address-주소 값
  * @param nickname-닉네임
- * @returns 결과
+ * @returns response
  */
 export const patchUserInfoUpdate = async (updateData: {
   address: string;
@@ -209,7 +238,12 @@ export const patchUserInfoUpdate = async (updateData: {
   return response;
 };
 
-// 비밀번호 변경
+/**
+ * 비밀번호 변경 요청
+ * @param changePassword 변경 비밀번호
+ * @param email 이메일
+ * @returns response
+ */
 export const patchPasswordUpdate = async ({
   changePassword,
   email,
@@ -232,7 +266,7 @@ export const patchPasswordUpdate = async ({
  * 로컬 회원 탈퇴
  * @param email 로그인 이메일
  * @param passworf 비밀번호
- * @returns 결과값 200 성공/그외 실패
+ * @returns response 200 성공/그외 실패
  */
 export const deleteLocalUser = async ({
   email,
@@ -253,7 +287,7 @@ export const deleteLocalUser = async ({
 
 /**
  * kakao 회원 탈퇴를 위한 인가코드 가져오기
- * @returns 결과
+ * @returns response
  */
 export const getKakaoDeleteURL = async () => {
   const response: any = await sendApi.get("/kakao/su/auth/delete");
@@ -264,7 +298,7 @@ export const getKakaoDeleteURL = async () => {
 /**
  * 인가코드 전달 받아  회원 탈퇴 진행
  * @param code: 전달 받은 코드 값
- * @returns 결과
+ * @returns response
  */
 export const deleteKakaoUser = async ({ code }: { code: string }) => {
   const queryString = `?code=${encodeURIComponent(code)}`;

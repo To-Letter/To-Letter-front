@@ -2,12 +2,14 @@ import axios from "axios";
 import { AUTH_KEY } from "@/constants/authkey";
 import axiosInterceptor from "./axiosInterceptor";
 
+/**
+ * api 요청 로직 + 인터셉터 적용
+ */
 export const sendApi = {
   get: (url: string) => {
     const accessToken =
       axiosInterceptor.defaults.headers.common["Authorization"];
 
-    // accessToken 존재시 즉, 로그인한 상태
     if (accessToken !== null) {
       return axiosInterceptor.get(AUTH_KEY.apiUrl + url);
     } else {

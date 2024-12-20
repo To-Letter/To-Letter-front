@@ -1,4 +1,6 @@
-// types/letter.ts 또는 components/organisms/letter/types.ts
+/**
+ * 편지 데이터 타입
+ */
 export interface Mail {
   id: number;
   sender: string;
