@@ -10,9 +10,15 @@ interface PopupProps {
   onClose: () => void;
 }
 
+/**
+ * 팝업 컴포넌트
+ * @param {string} text 팝업 텍스트
+ * @param {function} onClose 팝업 닫기 함수
+ *  */
 const Popup: React.FC<PopupProps> = ({ text, onClose }) => {
   const router = useRouter();
 
+  /** 팝업 외부 클릭 감지 이벤트 */
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if ((event.target as HTMLElement).closest(".popup") === null) {

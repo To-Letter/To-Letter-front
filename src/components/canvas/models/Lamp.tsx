@@ -2,17 +2,15 @@
 
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useLoader } from "@react-three/fiber";
-import { useRef, useEffect } from "react";
+import { useEffect } from "react";
 import * as THREE from "three";
 
 const Lamp = () => {
-  // 모델 선언
+  /** 램프 glb모델 */
   const lampglb = useLoader(GLTFLoader, "/models/desklamp.glb");
-  const lampRef = useRef<THREE.Mesh>(null);
 
+  /** 램프 모델 style 변경 */
   useEffect(() => {
-    // 램프 모델 조정
-    // 램프 세부 색상 객체
     const materialMap: { [key: string]: string } = {
       Cube: "#76503D",
       Cube001: "#2B1B0E",
@@ -42,12 +40,7 @@ const Lamp = () => {
   return (
     <>
       {/* 램프 */}
-      <mesh
-        ref={lampRef}
-        rotation-y={-Math.PI / 2}
-        scale={0.4}
-        position={[-6.5, -2.1, -2.8]}
-      >
+      <mesh rotation-y={-Math.PI / 2} scale={0.4} position={[-6.5, -2.1, -2.8]}>
         <primitive object={lampglb.scene} />
       </mesh>
     </>

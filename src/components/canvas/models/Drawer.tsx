@@ -2,14 +2,14 @@
 
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useLoader } from "@react-three/fiber";
-import { useRef, useEffect } from "react";
+import { useEffect } from "react";
 import * as THREE from "three";
 
 const Drawer = () => {
-  // 모델 선언
+  /** 서랍 glb모델 */
   const drawerglb = useLoader(GLTFLoader, "/models/drawer.glb");
-  const drawerRef = useRef<THREE.Mesh>(null);
 
+  /** 서랍 모델 style 변경 */
   useEffect(() => {
     // Node1이 원형 배경
     // Node2~6부터 서랍장
@@ -17,12 +17,11 @@ const Drawer = () => {
     const drawerNode = Array.from({ length: 5 }, (_, i) => `Node${i + 2}`);
     const drawerBookNode = Array.from({ length: 8 }, (_, i) => `Node${i + 7}`);
 
-    // 서랍 모델 조정
     drawerglb.scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
-        mesh.castShadow = true; // 그림자 생성
-        mesh.receiveShadow = true; // 그림자 수신
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
         if (drawerNode.includes(mesh.name)) {
           mesh.material = new THREE.MeshStandardMaterial({
             color: "#7b5d54",
@@ -38,12 +37,7 @@ const Drawer = () => {
   return (
     <>
       {/* 서랍 */}
-      <mesh
-        ref={drawerRef}
-        rotation-y={-Math.PI / 2}
-        scale={5}
-        position={[-8.5, -4.955, 4.5]}
-      >
+      <mesh rotation-y={-Math.PI / 2} scale={5} position={[-8.5, -4.955, 4.5]}>
         <primitive object={drawerglb.scene} />
       </mesh>
     </>

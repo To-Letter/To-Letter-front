@@ -1,12 +1,18 @@
 "use client";
 
-import { useLoader } from "@react-three/fiber";
+import { useLoader, useThree } from "@react-three/fiber";
 import { TextureLoader } from "three";
 import Popup from "./Popup";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+/** 사진
+ * @param {[number, number, number]} position 사진 위치
+ * @param {string} imageUrl 사진 이미지 경로
+ * @param {string} popupText 팝업 텍스트
+ * @param {string} popupId 팝업 아이디
+ */
 const Photo = ({
   position,
   imageUrl,
@@ -18,11 +24,15 @@ const Photo = ({
   popupText: string;
   popupId: string;
 }) => {
-  const texture = useLoader(TextureLoader, imageUrl);
   const router = useRouter();
+  const { gl } = useThree();
+  /** 사진 텍스처 */
+  const texture = useLoader(TextureLoader, imageUrl);
+  /** 팝업 상태 */
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
-  const handleClick = () => {
+  /** 사진 클릭 함수 */
+  const onClickphoto = () => {
     const isLoggedIn =
       axiosInterceptor.defaults.headers.common["Authorization"] !== null;
 
@@ -34,16 +44,32 @@ const Photo = ({
     }
   };
 
+  /** 팝업 닫기 함수 */
   const handleClose = () => {
     setIsPopupVisible(false);
     router.back();
   };
 
+  /** 마우스 커서 포인터로 변경 */
+  const handlePointerOver = () => {
+    gl.domElement.style.cursor = "pointer";
+  };
+
+  /** 마우스 커서 기본으로 변경 */
+  const handlePointerOut = () => {
+    gl.domElement.style.cursor = "auto";
+  };
+
   return (
     <>
-      <group position={position} rotation={[0, 0, 0]} onClick={handleClick}>
+      <group position={position} rotation={[0, 0, 0]} onClick={onClickphoto}>
         {/* Photo */}
-        <mesh castShadow receiveShadow>
+        <mesh
+          castShadow
+          receiveShadow
+          onPointerOver={handlePointerOver}
+          onPointerOut={handlePointerOut}
+        >
           <planeGeometry args={[0.6, 0.8]} />
           <meshStandardMaterial map={texture} />
         </mesh>

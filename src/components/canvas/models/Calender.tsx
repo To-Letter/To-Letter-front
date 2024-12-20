@@ -1,20 +1,13 @@
 "use client";
 
-import { useRef, useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Text } from "@react-three/drei";
 
 const Calendar = () => {
+  /** 현재 날짜 */
   const [date, setDate] = useState(new Date());
-  const monthRef = useRef();
-  const dayRef = useRef();
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setDate(new Date());
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
+  /** 월 이름 */
   const monthNames = [
     "JAN",
     "FEB",
@@ -29,20 +22,30 @@ const Calendar = () => {
     "NOV",
     "DEC",
   ];
+  /** 월 이름 */
   const month = monthNames[date.getMonth()];
+  /** 일 */
   const day = date.getDate();
 
   // 요일에 따라 dayText 색상 변경
   const dayColor = useMemo(() => {
     const dayOfWeek = date.getDay();
     if (dayOfWeek === 0) {
-      return "red"; // 일요일
+      return "red";
     } else if (dayOfWeek === 6) {
-      return "blue"; // 토요일
+      return "blue";
     } else {
-      return "black"; // 평일
+      return "black";
     }
   }, [date]);
+
+  /** 1초마다 현재 날짜 업데이트 */
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDate(new Date());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <group>
@@ -79,7 +82,6 @@ const Calendar = () => {
 
       {/* month text */}
       <Text
-        ref={monthRef}
         position={[-2, -1.2, -2.33]}
         rotation={[-Math.PI / 10, 0, 0]}
         fontSize={0.28}
@@ -90,7 +92,6 @@ const Calendar = () => {
 
       {/* day text */}
       <Text
-        ref={dayRef}
         position={[-2.02, -1.6, -2.2]}
         rotation={[-Math.PI / 10, 0, 0]}
         fontSize={0.5}

@@ -2,17 +2,18 @@
 
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { ThreeEvent, useLoader } from "@react-three/fiber";
-import { useRef, useEffect } from "react";
+import { useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useRouter } from "next/navigation";
 
 const TrashBin = () => {
-  const chairglb = useLoader(GLTFLoader, "/models/trashBin.glb");
-  const meshRef = useRef<THREE.Mesh>(null);
   const router = useRouter();
+  /** 의자 glb 모델 */
+  const chairglb = useLoader(GLTFLoader, "/models/trashBin.glb");
 
+  /** 쓰레기통 클릭 함수 */
   const onClickTrashBin = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation(); // 이벤트 전파 방지
     if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
@@ -20,6 +21,7 @@ const TrashBin = () => {
     }
   };
 
+  /** 쓰레기통 style 변경 */
   useEffect(() => {
     chairglb.scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
@@ -35,7 +37,6 @@ const TrashBin = () => {
 
   return (
     <mesh
-      ref={meshRef}
       rotation-y={Math.PI / 2}
       scale={1}
       position={[2, -6.5, -1.3]}

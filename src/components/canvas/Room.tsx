@@ -14,7 +14,6 @@ import Lamp from "./models/Lamp";
 import Books from "./models/Books";
 import TrashBin from "./models/TrashBin";
 
-// 타입 지정
 interface WallProps {
   args:
     | [width: number, height: number]
@@ -31,6 +30,20 @@ interface WallProps {
   castShadow: boolean;
 }
 
+/**
+ * 벽 컴포넌트
+ * @param {[number, number, number]} args 벽의 크기와 분할 정보를 담는 배열
+ *    - [width, height] 또는 [width, height, widthSegments?, heightSegments?] 형식
+ *    - width: 벽의 너비
+ *    - height: 벽의 높이
+ *    - widthSegments?: (선택) 가로 방향 분할 수
+ *    - heightSegments?: (선택) 세로 방향 분할 수
+ * @property {[number, number, number]} rotation - 벽의 회전값 [x, y, z]
+ * @property {[number, number, number]} position - 벽의 위치 [x, y, z]
+ * @property {string} color - 벽의 색상 (hex 또는 색상명)
+ * @property {boolean} receiveShadow - 그림자를 받을지 여부
+ * @property {boolean} castShadow - 그림자를 생성할지 여부
+ */
 const WallComponent: React.FC<WallProps> = ({
   args,
   rotation,
@@ -53,11 +66,12 @@ const WallComponent: React.FC<WallProps> = ({
 const Room = () => {
   const { gl, scene } = useThree();
 
+  /** 그림자 관리 */
   gl.shadowMap.enabled = true;
   gl.shadowMap.type = THREE.PCFSoftShadowMap;
 
+  /** 조명 관리 */
   useEffect(() => {
-    // 조명 관리
     const pointLight1 = new THREE.PointLight(0xffffff, 100, 100);
     pointLight1.position.set(0, 4, 0);
     pointLight1.castShadow = true;

@@ -1,13 +1,21 @@
 "use client";
 
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { useLoader } from "@react-three/fiber";
+import { useLoader, useThree } from "@react-three/fiber";
 import { useRef, useEffect, useCallback } from "react";
 import * as THREE from "three";
 import { ThreeEvent } from "@react-three/fiber";
 import { useRouter } from "next/navigation";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
 
+/**
+ * 책의 설정값을 정의하는 인터페이스
+ * @interface BookSettings
+ * @property {string} color - 책의 색상 값
+ * @property {[number, number, number]} position - 3D 공간에서의 책 위치 (x, y, z)
+ * @property {[number, number, number]} rotation - 책의 회전 각도 (x, y, z)
+ * @property {[number, number, number]} [scale] - 책의 크기 배율 (선택적)
+ */
 interface BookSettings {
   color: string;
   position: [number, number, number];
@@ -15,6 +23,13 @@ interface BookSettings {
   scale?: [number, number, number];
 }
 
+/**
+ * 책 속지의 설정값을 정의하는 인터페이스
+ * @interface BookPage
+ * @property {number} position - 3D 공간에서의 책 위치 (x, y, z)
+ * @property {number} rotation - 책의 회전 각도 (x, y, z)
+ * @property {number} args - 책 속지의 크기 (선택적)
+ */
 interface BookPage {
   position: [number, number, number];
   rotation: [number, number, number];
@@ -22,23 +37,27 @@ interface BookPage {
 }
 
 const Books = () => {
-  // 모델 선언
+  const router = useRouter();
+  const { gl } = useThree();
+  /* 책 glb 모델 */
   const booksglb = useLoader(GLTFLoader, "/models/books.glb");
+  /* 책 ref */
   const booksRef = useRef<THREE.Mesh>(null);
-  const router = useRouter(); // 추가
 
-  const setReceiveLetterBoxModalClick = useCallback(
+  /** 책 클릭 시 편지함 모달로 이동 */
+  const onClickBooks = useCallback(
     (event: ThreeEvent<MouseEvent>) => {
       event.stopPropagation();
       if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
-        router.push("/letter/mailbox");
+        router.push("/letter/letterbox/receive");
       }
     },
     [router]
   );
 
+  /** 책 모델 style 조정 */
   useEffect(() => {
-    // 40의 책중 쓸 노드
+    /* 40개의 책중 쓸 노드 */
     const booksNode2 = [
       "Node2",
       "Node10",
@@ -49,8 +68,7 @@ const Books = () => {
       "Node35",
       "Node37",
     ];
-
-    // 서랍장 책들
+    /* 서랍장 책들 setting */
     const bookSettings: { [key: string]: BookSettings } = {
       Node20: {
         color: "#383959",
@@ -79,17 +97,17 @@ const Books = () => {
       },
     };
 
-    // 책 모델 조정
+    /* 책 모델 조정 */
     booksglb.scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const mesh = child as THREE.Mesh;
-        mesh.castShadow = true; // 그림자 생성
-        mesh.receiveShadow = true; // 그림자 수신
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
         if (!booksNode2.includes(mesh.name)) {
           mesh.position.set(9999, 9999, 9999);
           mesh.visible = true;
         } else {
-          // 서랍장 밑 책 5권
+          /* 서랍장 밑 책 5권 setting */
           const settings = bookSettings[mesh.name];
           if (settings) {
             mesh.material = new THREE.MeshStandardMaterial({
@@ -103,46 +121,43 @@ const Books = () => {
             }
           }
         }
-        // 책꽂이 책 3권
+        /* 책꽂이 책 3권 setting */
         if (mesh.name === "Node35") {
           mesh.material = new THREE.MeshStandardMaterial({
             color: "#4bafd4",
           });
-          mesh.position.set(8, 39, 22.3); // 책 위치 조정 (x,z,-반전y)
+          mesh.position.set(8, 39, 22.3);
           mesh.rotation.z = -Math.PI / 2;
           mesh.scale.x = 0.7;
           mesh.scale.z = 0.7;
-          // 클릭 이벤트 적용
-          mesh.userData = { onClick: setReceiveLetterBoxModalClick };
+          mesh.userData = { onClick: onClickBooks };
         }
         if (mesh.name === "Node2") {
           mesh.material = new THREE.MeshStandardMaterial({
             color: "#a25187",
           });
-          mesh.position.set(5, -99, -32.4); // 책 위치 조정 (x,z,-반전y)
+          mesh.position.set(5, -99, -32.4);
           mesh.rotation.y = Math.PI / 27.5;
           mesh.rotation.z = -Math.PI / 2;
           mesh.scale.x = 0.7;
           mesh.scale.z = 0.7;
-          // 클릭 이벤트 적용
-          mesh.userData = { onClick: setReceiveLetterBoxModalClick };
+          mesh.userData = { onClick: onClickBooks };
         }
         if (mesh.name === "Node11") {
           mesh.material = new THREE.MeshStandardMaterial({
             color: "#493c38",
           });
-          mesh.position.set(9.7, -5.9, -32.85); // 책 위치 조정 (x,z,-반전y)
+          mesh.position.set(9.7, -5.9, -32.85);
           mesh.rotation.z = -Math.PI / 2;
           mesh.scale.x = 0.7;
           mesh.scale.z = 0.7;
-          // 클릭 이벤트 적용
-          mesh.userData = { onClick: setReceiveLetterBoxModalClick };
+          mesh.userData = { onClick: onClickBooks };
         }
       }
     });
-  }, [booksglb, setReceiveLetterBoxModalClick]);
+  }, [booksglb, onClickBooks]);
 
-  // 책속지
+  /** 책속지 setting */
   const bookPages: BookPage[] = [
     { position: [0.44, -1.59, -2.665], rotation: [0, Math.PI / 2, 0] },
     { position: [0.525, -1.59, -2.665], rotation: [0, Math.PI / 2, 0] },
@@ -153,19 +168,37 @@ const Books = () => {
     },
   ];
 
+  /** 마우스 커서 포인터로 변경 */
+  const handlePointerOver = () => {
+    gl.domElement.style.cursor = "pointer";
+  };
+
+  /** 마우스 커서 기본으로 변경 */
+  const handlePointerOut = () => {
+    gl.domElement.style.cursor = "auto";
+  };
+
   return (
     <>
       {/* 책 */}
-      <mesh ref={booksRef} rotation-x={Math.PI / 2} scale={0.05}>
+      <mesh
+        ref={booksRef}
+        rotation-x={Math.PI / 2}
+        scale={0.05}
+        onPointerOver={handlePointerOver}
+        onPointerOut={handlePointerOut}
+      >
         <primitive object={booksglb.scene} />
       </mesh>
       {/* 책 속지 */}
       {bookPages.map((page, index) => (
         <mesh
           key={index}
-          onClick={setReceiveLetterBoxModalClick}
+          onClick={onClickBooks}
           position={page.position}
           rotation={page.rotation}
+          onPointerOver={handlePointerOver}
+          onPointerOut={handlePointerOut}
           castShadow
           receiveShadow
         >

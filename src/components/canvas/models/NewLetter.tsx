@@ -2,23 +2,26 @@
 
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useLoader } from "@react-three/fiber";
-import { useRef, useEffect } from "react";
+import { useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
 import { useSetRecoilState } from "recoil";
 import { newLetterPopupState } from "../../recoil/newLetterPopupState";
 
 const NewLetter = () => {
+  /** 새로운 편지 glb모델 */
   const LetterGlb = useLoader(GLTFLoader, "/models/letter.glb");
-  const meshRef = useRef<THREE.Mesh>(null);
+  /** 새로운 편지 모델 상태 recoil */
   const setNewLetterPopup = useSetRecoilState(newLetterPopupState);
 
+  /** 편지 모델 텍스처 */
   const letterTexture = useLoader(
     THREE.TextureLoader,
     "/images/letterDummyTexture.png"
   );
   letterTexture.flipY = false;
 
+  /** 새로운 편지 모델 style 변경 */
   useEffect(() => {
     LetterGlb.scene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
@@ -35,7 +38,6 @@ const NewLetter = () => {
 
   return (
     <mesh
-      ref={meshRef}
       rotation-y={Math.PI / 2}
       scale={1.2}
       position={[-0.5, -1.97, -2.5]}
