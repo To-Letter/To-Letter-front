@@ -171,7 +171,6 @@ const Mailbox: React.FC = () => {
   const handleMailItemClick = async (mail: Mail) => {
     setIndividualLetterInfo((prev) => ({
       ...prev,
-      isOpen: true,
       id: mail.id,
       toUserNickname: mail.sender,
       letterContent: mail.subject,

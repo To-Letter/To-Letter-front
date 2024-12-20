@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 
+/** 개별 편지 데이터 타입 */
 interface individualLetterType {
-  isOpen: boolean;
   id: number;
   toUserNickname: string;
   letterContent: string;
@@ -10,16 +10,16 @@ interface individualLetterType {
   tab: "received" | "send";
 }
 
+/** 받는 유저의 닉네임과 편지 내용을 관리하는 타입 */
 interface nicknameAndContentsType {
   nickname: string;
   contents: string;
 }
 
-// 개별 편지함 모달창
+/** 개별 편지 데이터 관리 recoil */
 export const individualLetterState = atom<individualLetterType>({
   key: "individualLetterState", // 고유 키
   default: {
-    isOpen: false,
     id: -9999,
     toUserNickname: "",
     letterContent: "",

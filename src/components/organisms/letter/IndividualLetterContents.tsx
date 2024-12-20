@@ -7,12 +7,15 @@ import { FaTrash } from "react-icons/fa";
 import useThrottle from "@/hooks/useThrottle";
 import { loadingState } from "@/store/recoil/loadingAtom";
 import DeleteConfirmContents from "@/components/organisms/letter/DeleteConfirmContents";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const IndividualLetterContents = () => {
   const router = useRouter();
-  /** 편지 삭제 확인 모달을 관리하는 query **/
-  const { confirm } = router.query;
+  /* 편지 삭제 확인 모달을 관리하는 query 관련 hooks */
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  /* 편지 삭제 확인 모달의 유무 */
+  const confirm = searchParams.get("confirm")?.toString();
   /** 모달창 외부 클릭시 반응을 위한 ref **/
   const modalRef = useRef<HTMLDivElement>(null);
   /** 편지 내용 스크롤을 위한 ref **/
@@ -34,17 +37,10 @@ const IndividualLetterContents = () => {
 
   /** 편지 삭제 버튼 클릭 시 실행 함수 */
   const openConfirmModal = () => {
-    router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          confirm: "true",
-        },
-      },
-      undefined,
-      { shallow: true }
-    );
+    const params = new URLSearchParams(searchParams);
+    params.set("confirm", "true");
+
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   /** 모달창 닫기 버튼 함수 */
@@ -55,7 +51,6 @@ const IndividualLetterContents = () => {
       setTab("received");
     }
     setIndividualLetterInfo({
-      isOpen: false,
       id: -9999,
       toUserNickname: "",
       letterContent: "",
@@ -174,13 +169,10 @@ const IndividualLetterContents = () => {
         <DeleteConfirmContents
           mailIds={[individualLetterInfo.id]}
           onClose={() => {
+            const params = new URLSearchParams(searchParams);
+            params.delete("confirm");
             router.push(
-              {
-                pathname: router.pathname,
-                query: { ...router.query, confirm: undefined },
-              },
-              undefined,
-              { shallow: true }
+              `${pathname}${params.toString() ? `?${params.toString()}` : ""}`
             );
           }}
           type={individualLetterInfo.tab}

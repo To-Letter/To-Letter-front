@@ -1,5 +1,6 @@
 import { atom } from "recoil";
 
+/** 유저 정보 타입 */
 interface myInfoType {
   isLogin: boolean;
   address: string;
@@ -8,6 +9,7 @@ interface myInfoType {
   userRole: "local" | "kakao";
 }
 
+/** 회원가입 정보 타입 */
 interface SignupType {
   nickname: string;
   email: string;
@@ -15,6 +17,7 @@ interface SignupType {
   mailboxAddress: string;
 }
 
+/** 회원가입 정보 관리 recoil */
 export const signupState = atom<SignupType>({
   key: "signupState",
   default: {
@@ -25,6 +28,7 @@ export const signupState = atom<SignupType>({
   },
 });
 
+/** 유저 정보 관리 recoil */
 export const myInfoState = atom<myInfoType>({
   key: "myInfoState",
   default: {

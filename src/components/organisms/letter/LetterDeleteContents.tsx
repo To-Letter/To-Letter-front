@@ -9,7 +9,7 @@ import DeleteConfirmContents from "./DeleteConfirmContents";
 import { CgPlayListCheck } from "react-icons/cg";
 import useThrottle from "@/hooks/useThrottle";
 import { formatDate } from "@/utils/formatDate";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface Mail {
   id: number;
@@ -20,8 +20,11 @@ interface Mail {
 
 const LetterDeleteContents: React.FC = () => {
   const router = useRouter();
-  /* 편지 삭제 확인 모달을 관리하는 query */
-  const { confirm } = router.query;
+  /* 편지 삭제 확인 모달을 관리하는 query 관련 hooks */
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  /* 편지 삭제 확인 모달의 유무 */
+  const confirm = searchParams.get("confirm")?.toString();
   /* 편지 리스트 관리 ref */
   const listRef = useRef<HTMLDivElement>(null);
   /* 편지 리스트 관리 state */
@@ -61,17 +64,10 @@ const LetterDeleteContents: React.FC = () => {
       alert("삭제할 편지를 선택해주세요.");
       return;
     }
-    router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          confirm: "true",
-        },
-      },
-      undefined,
-      { shallow: true }
-    );
+    const params = new URLSearchParams(searchParams);
+    params.set("confirm", "true");
+
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   /** 받은 편지함 데이터 로드 */
@@ -189,10 +185,9 @@ const LetterDeleteContents: React.FC = () => {
     [throttledScrollHandler]
   );
 
-  /** 메일 아이템 클릭 이벤트(개별 편지 팝업창) */
+  /** 메일 아이템 클릭 이벤트(개별 편지 모달창) */
   const handleMailItemClick = (mail: Mail) => {
     setIndividualLetterInfo({
-      isOpen: true,
       id: mail.id,
       toUserNickname: mail.sender,
       letterContent: mail.subject,
@@ -326,15 +321,12 @@ const LetterDeleteContents: React.FC = () => {
       </ModalContent>
       {confirm === "true" && (
         <DeleteConfirmContents
-          mailIds={deleteLetterIds} // state로 관리되는 ID들만 전달
+          mailIds={deleteLetterIds}
           onClose={() => {
+            const params = new URLSearchParams(searchParams);
+            params.delete("confirm");
             router.push(
-              {
-                pathname: router.pathname,
-                query: { ...router.query, confirm: undefined },
-              },
-              undefined,
-              { shallow: true }
+              `${pathname}${params.toString() ? `?${params.toString()}` : ""}`
             );
           }}
           type={tab}

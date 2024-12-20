@@ -28,7 +28,6 @@ export default function NewLetterContents() {
   /** 메일 아이템 클릭 이벤트(개별 편지 팝업창) */
   const handleMailItemClick = (mail: Mail) => {
     setIndividualLetterInfo({
-      isOpen: true,
       id: mail.id,
       toUserNickname: mail.sender,
       letterContent: mail.subject,

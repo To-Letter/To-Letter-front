@@ -12,11 +12,18 @@ interface MyInfoI {
   loginType: "localLogin" | "kakaoLogin";
 }
 
+/**
+ * @return 유저 정보 관리 recoil, 유저 정보 초기화, 유저 정보 업데이트, 에러 상태
+ */
 export const useUser = () => {
-  const [myInfo, setMyInfo] = useRecoilState(myInfoState);
-  const resetMyInfoState = useResetRecoilState(myInfoState);
-  const setIsLoading = useSetRecoilState(loadingState);
+  /** 에러 상태 관리 state */
   const [error, setError] = useState<string | null>(null);
+  /** 유저 정보 관리 recoil */
+  const [myInfo, setMyInfo] = useRecoilState(myInfoState);
+  /** 유저 정보 초기화 */
+  const resetMyInfoState = useResetRecoilState(myInfoState);
+  /** 로딩 상태 관리 recoil */
+  const setIsLoading = useSetRecoilState(loadingState);
 
   /**
    *
@@ -29,10 +36,12 @@ export const useUser = () => {
     }));
   };
 
+  /** 유저 정보 초기화 */
   const resetMyInfo = () => {
     resetMyInfoState();
   };
 
+  /** 유저 정보 api 호출 */
   useEffect(() => {
     setIsLoading(true);
     const fetchMyInfo = async () => {

@@ -66,7 +66,6 @@ const DeleteConfirmContents = ({
       alert("편지 삭제 중 오류가 발생했습니다.");
     } finally {
       setIndividualLetterInfo({
-        isOpen: false,
         id: -9999,
         toUserNickname: "",
         letterContent: "",

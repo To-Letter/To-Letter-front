@@ -55,7 +55,6 @@ export function SendLetters() {
   /** 개별 편지 클릭 핸들러 */
   const handleLetterClick = async (mail: Mail) => {
     setIndividualLetterInfo({
-      isOpen: true,
       id: mail.id,
       toUserNickname: mail.sender,
       letterContent: mail.subject,
