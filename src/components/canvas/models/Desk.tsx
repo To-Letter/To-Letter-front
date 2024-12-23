@@ -1,7 +1,7 @@
 "use client";
 
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { useLoader, useThree, ThreeEvent } from "@react-three/fiber";
+import { useLoader, ThreeEvent } from "@react-three/fiber";
 import { useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
@@ -10,6 +10,7 @@ import Bookshelf from "./Bookshelf";
 /* import NewLetter from "./NewLetter"; */
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useRouter } from "next/navigation";
+import usePointerCursor from "@/hooks/usePointerCursor";
 
 /**
  * 연필통 3D 모델의 메쉬별 색상 매핑 객체
@@ -45,7 +46,8 @@ const setMeshProperties = (mesh: THREE.Mesh, name: string) => {
 
 const Desk = () => {
   const router = useRouter();
-  const { gl } = useThree();
+  /** 커서 스타일 커스텀 훅 */
+  const { handlePointerOver, handlePointerOut } = usePointerCursor();
   /** 책상 glb모델 */
   const deskglb = useLoader(GLTFLoader, "/models/desk.glb");
   /** 연필통 glb모델 */
@@ -94,16 +96,6 @@ const Desk = () => {
     }
   }, [deskglb, pencilglb]);
 
-  /** 마우스 커서 포인터로 변경 */
-  const handlePointerOver = () => {
-    gl.domElement.style.cursor = "pointer";
-  };
-
-  /** 마우스 커서 기본으로 변경 */
-  const handlePointerOut = () => {
-    gl.domElement.style.cursor = "auto";
-  };
-
   /** 연필통 클릭 이벤트 */
   const onClickPencil = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation();
@@ -118,7 +110,11 @@ const Desk = () => {
       <Calender />
 
       {/* 책선반 */}
-      <Bookshelf position={[1.1, -1.68, -2.7]} />
+      <Bookshelf
+        position={[1.1, -1.68, -2.7]}
+        handlePointerOver={handlePointerOver}
+        handlePointerOut={handlePointerOut}
+      />
 
       {/**편지지 */}
       {/* {newLetterAlarm && <NewLetter />} */}

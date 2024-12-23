@@ -7,9 +7,12 @@ import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useRouter } from "next/navigation";
+import usePointerCursor from "@/hooks/usePointerCursor";
 
 const TrashBin = () => {
   const router = useRouter();
+  /** 커서 스타일 커스텀 훅 */
+  const { handlePointerOver, handlePointerOut } = usePointerCursor();
   /** 의자 glb 모델 */
   const chairglb = useLoader(GLTFLoader, "/models/trashBin.glb");
 
@@ -40,6 +43,8 @@ const TrashBin = () => {
       rotation-y={Math.PI / 2}
       scale={1}
       position={[2, -6.5, -1.3]}
+      onPointerOver={handlePointerOver}
+      onPointerOut={handlePointerOut}
       castShadow
       receiveShadow
       onClick={onClickTrashBin}

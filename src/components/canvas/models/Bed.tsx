@@ -1,15 +1,17 @@
 "use client";
 
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { ThreeEvent, useLoader, useThree } from "@react-three/fiber";
+import { ThreeEvent, useLoader } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { useRouter } from "next/navigation";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
+import usePointerCursor from "@/hooks/usePointerCursor";
 
 const Bed = () => {
   const router = useRouter();
-  const { gl } = useThree();
+  /** 커서 스타일 커스텀 훅 */
+  const { handlePointerOver, handlePointerOut } = usePointerCursor();
   /* 침대 glb 모델 */
   const bedglb = useLoader(GLTFLoader, "/models/bed.glb");
   /* 침대 ref */
@@ -40,16 +42,6 @@ const Bed = () => {
       }
     });
   }, [bedglb]);
-
-  /** 마우스 커서 포인터로 변경 */
-  const handlePointerOver = () => {
-    gl.domElement.style.cursor = "pointer";
-  };
-
-  /** 마우스 커서 기본으로 변경 */
-  const handlePointerOut = () => {
-    gl.domElement.style.cursor = "auto";
-  };
 
   return (
     <>
