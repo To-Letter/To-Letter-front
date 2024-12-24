@@ -1,8 +1,9 @@
 import useThrottle from "@/hooks/useThrottle";
 import { useEffect, useRef } from "react";
 import { styled } from "styled-components";
-import LetterItem from "./LetterItem";
+import LetterItem from "../../molecules/LetterItem";
 import { Mail } from "@/types/letterType";
+import { MainBox } from "@/components/atoms/Box";
 
 /**
  * @returns 편지 아이템 컴포넌트 UI
@@ -56,7 +57,7 @@ export function LetterList({
   }, [throttledScrollHandler]);
 
   return (
-    <>
+    <MainBox $direction="column" $height="95%" $width="100%">
       <SearchBar
         placeholder="메일 검색"
         value={searchTerm}
@@ -72,7 +73,7 @@ export function LetterList({
           />
         ))}
       </MailList>
-    </>
+    </MainBox>
   );
 }
 

@@ -5,6 +5,8 @@ import MenuTab from "@/components/molecules/MenuTab";
 import { IoIosMail } from "react-icons/io";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useRouter } from "next/navigation";
+import ModalBox from "@/components/atoms/ModalBox";
+import { HeaderBox } from "@/components/atoms/Box";
 
 export default function LetterBoxLayout({
   children,
@@ -22,83 +24,27 @@ export default function LetterBoxLayout({
     }
   };
 
-  const handleExit = () => {
-    router.push("/");
-  };
-
   return (
-    <ModalOverlay>
-      <ModalContent>
-        <MailboxWrap>
-          <Header>
-            <MenuTab />
-            <Exit onClick={handleExit}>X</Exit>
-          </Header>
-          {children}
-          <LetterWriteButton onClick={handleLetterWriteClick}>
-            <IoIosMail />
-          </LetterWriteButton>
-        </MailboxWrap>
-      </ModalContent>
-    </ModalOverlay>
+    <ModalBox
+      $width="430px"
+      $height="600px"
+      $padding="20px"
+      $direction="column"
+      $alignItems="flex-start"
+    >
+      <HeaderBox $width="100%" $padding="8px 0">
+        <MenuTab />
+      </HeaderBox>
+      {children}
+      <LetterWriteButton onClick={handleLetterWriteClick}>
+        <IoIosMail />
+      </LetterWriteButton>
+    </ModalBox>
   );
 }
-
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-`;
-
-const ModalContent = styled.div`
-  background: #000000a6;
-  border-radius: 2px;
-  width: 430px;
-  height: 600px;
-  max-width: 100%;
-  box-shadow: 1px 1px 1px #0000005c;
-  position: relative;
-  padding: 20px;
-`;
-
-const MailboxWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  position: relative;
-`;
-
-const Header = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 0 20px;
-`;
-
-const Exit = styled.div`
-  position: absolute;
-  right: -14px;
-  top: -14px;
-  padding: 4px 12px;
-  font-size: 20px;
-  font-weight: bold;
-  color: white;
-  cursor: pointer;
-`;
-
 const LetterWriteButton = styled.button`
   position: absolute;
-  bottom: -6px;
+  bottom: 16px;
   left: 386px;
   width: 50px;
   height: 50px;

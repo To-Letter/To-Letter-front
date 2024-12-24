@@ -26,16 +26,59 @@ export function ReceiveLetters() {
   /** 개별 편지 정보 관리 state **/
   const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
 
+  /**
+   * [삭제 필요]받은 편지 데이터 예시
+   */
+  const listLetter = [
+    {
+      id: 1,
+      fromUserNickname: "윤미1",
+      contents: "1번 편지입니다.",
+      arrivedAt: new Date().toISOString(),
+      viewCheck: false,
+    },
+    {
+      id: 2,
+      fromUserNickname: "윤미2",
+      contents:
+        "test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2",
+      arrivedAt: new Date().toISOString(),
+      viewCheck: true,
+    },
+    {
+      id: 3,
+      fromUserNickname: "투레터",
+      contents:
+        "test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3",
+      arrivedAt: new Date().toISOString(),
+      viewCheck: true,
+    },
+    {
+      id: 4,
+      fromUserNickname: "메리크리스마스",
+      contents: "수요일 빨간 날 최고",
+      arrivedAt: new Date().toISOString(),
+      viewCheck: true,
+    },
+  ];
+  /** [삭제 필요]페이지 데이터 예시 **/
+  const pageable = {
+    pageNumber: 1,
+    pageSize: 10,
+    totalElements: 4,
+    totalPages: 1,
+  };
+
   /** 받은 편지함 데이터 조회 함수 */
   const getAllReceiveLetters = useCallback(async (pageNumber = 0) => {
     try {
-      const res = await getReceiveLetter({
+      /* const res = await getReceiveLetter({
         page: pageNumber,
         size: 10,
         sort: "desc",
       });
       const listLetter = res.data.responseData.letterDTO;
-      const pageable = res.data.responseData.pageable;
+      const pageable = res.data.responseData.pageable; */
       const formattedMails = listLetter.map((letter: any) => ({
         id: letter.id,
         sender: letter.fromUserNickname,
@@ -67,7 +110,7 @@ export function ReceiveLetters() {
       onDelete: false,
       tab: "received",
     });
-    await getLetterReading(mail.id);
+    // await getLetterReading(mail.id);
     router.push("/letter/individualletter");
   };
 
@@ -88,11 +131,11 @@ export function ReceiveLetters() {
   /** 검색어 필터링 */
   const filteredLetters = useMemo(
     () =>
-      letters.filter(
+      /* letters.filter(
         (mail) =>
           mail.subject.includes(debouncedSearchTerm) ||
           mail.sender.includes(debouncedSearchTerm)
-      ),
+      ) */ letters,
     [letters, debouncedSearchTerm]
   );
 
