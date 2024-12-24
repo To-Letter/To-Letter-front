@@ -14,6 +14,7 @@ interface menuListI {
   auth: menuI;
   mypage: menuI;
   letterbox: menuI;
+  letterdelete: menuI;
 }
 
 /**
@@ -53,6 +54,14 @@ export const menuList: menuListI = {
     menuTabData: [
       { title: "받은 편지함", path: "/letter/letterbox/receive" },
       { title: "보낸 편지함", path: "/letter/letterbox/send" },
+    ],
+  },
+  letterdelete: {
+    category: "letterDeleteTab",
+    tabOption: "highlight",
+    menuTabData: [
+      { title: "받은 편지함", path: "/letter/letterdelete/receive" },
+      { title: "보낸 편지함", path: "/letter/letterdelete/send" },
     ],
   },
 };
