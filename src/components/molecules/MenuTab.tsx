@@ -20,15 +20,11 @@ export default function MenuTab() {
   const router = useRouter();
   const pathname = usePathname();
   const [firstPath, secondPath] = pathname.split("/").filter(Boolean);
+  console.log("pathname", pathname);
 
   const pathKey = (
     firstPath in menuList ? firstPath : secondPath
   ) as MenuListKeys;
-
-  // menuList에 해당 pathKey가 없는 경우 처리
-  if (!menuList[pathKey]) {
-    return null; // 또는 기본 메뉴나 에러 UI를 표시
-  }
 
   const { category, menuTabData, tabOption } = menuList[pathKey];
 
