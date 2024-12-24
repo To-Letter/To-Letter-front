@@ -9,6 +9,8 @@ interface props {
   $fontSize?: string;
   $padding?: string;
   $margin?: string;
+  $backgroundColor?: string;
+  $border?: string;
 }
 
 interface defaultStyleProps {
@@ -17,6 +19,8 @@ interface defaultStyleProps {
   $fontSize?: string;
   $padding?: string;
   $margin?: string;
+  $backgroundColor?: string;
+  $border?: string;
 }
 
 /**
@@ -27,6 +31,8 @@ interface defaultStyleProps {
  * @param $fontSize? fontSize Style(String), 기본 값 "16px"
  * @param $margin? margin Style(String), 기본 값 "0"
  * @param $padding? padding Style(String), 기본 값 "0"
+ * @param $backgroundColor? backgroundColor Style(String), 기본 값 "#262523"
+ * @param $border? border Style(String), 기본 값 "1px solid #e9e9e9"
  * @returns 기본 버튼 디자인 UI
  */
 export default function Button({
@@ -37,6 +43,8 @@ export default function Button({
   $fontSize = "16px",
   $margin = "0",
   $padding = "0",
+  $backgroundColor,
+  $border,
 }: props) {
   return (
     <ButtonWrap
@@ -47,6 +55,8 @@ export default function Button({
       $fontSize={$fontSize}
       $margin={$margin}
       $padding={$padding}
+      $backgroundColor={$backgroundColor}
+      $border={$border}
     >
       {title}
     </ButtonWrap>
@@ -55,7 +65,7 @@ export default function Button({
 
 const ButtonWrap = styled.button<defaultStyleProps>`
   width: ${({ $width }) => $width};
-  border: 1px solid #e9e9e9;
+  border: ${({ $border }) => $border || "1px solid #e9e9e9"};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -63,7 +73,7 @@ const ButtonWrap = styled.button<defaultStyleProps>`
   padding: ${({ $padding }) => $padding};
   margin: ${({ $margin }) => $margin};
   color: #e9e9e9;
-  background-color: #262523;
+  background-color: ${({ $backgroundColor }) => $backgroundColor || "#262523"};
   border-radius: 1px;
   cursor: pointer;
   ${({ $disable }) => $disable && `color: #818181; border: 1px solid #818181;`};

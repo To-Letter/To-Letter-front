@@ -3,6 +3,9 @@ import styled from "styled-components";
 import { useUser } from "@/hooks/useUser";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useRouter } from "next/navigation";
+import { ElementBox } from "../atoms/Box";
+import { Text } from "../atoms/Text";
+import Button from "../atoms/Button";
 
 /** 편지 공유 컴포넌트 */
 const LetterShareContents: React.FC = () => {
@@ -101,124 +104,112 @@ const LetterShareContents: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <ModalOverlay>
-        <ModalContent onClick={(e) => e.stopPropagation()}>
-          <ShareModalWrap>
-            <Exit onClick={() => router.back()}>X</Exit>
-            <SnsButtonsWrap>
-              <SnsButtons>
-                <ShareButton onClick={shareToKakao}>
-                  <KakaoIconImg src="/images/kakao_icon.png" alt="카카오톡" />
-                  <KakaoTextDiv>카카오톡</KakaoTextDiv>
-                </ShareButton>
-                <ShareButton onClick={twitterShare}>
-                  <KakaoIconImg src="/images/x_icon.jpg" alt="X" />
-                  <KakaoTextDiv>X</KakaoTextDiv>
-                </ShareButton>
-                <ShareButton onClick={shareFacebook}>
-                  <KakaoIconImg
-                    src="/images/facebook_icon.png"
-                    alt="페이스북"
-                  />
-                  <KakaoTextDiv>페이스북</KakaoTextDiv>
-                </ShareButton>
-              </SnsButtons>
-            </SnsButtonsWrap>
-            <UrlSection>
-              <UrlInput value={window.location.href} readOnly />
-              <CopyButton onClick={copyUrlToClipboard}>URL 복사</CopyButton>
-            </UrlSection>
-          </ShareModalWrap>
-        </ModalContent>
-      </ModalOverlay>
-    </div>
+    <ElementBox
+      $width="100%"
+      $height="100%"
+      $justifyContent="center"
+      $alignItems="center"
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        background: "rgba(0, 0, 0, 0.5)",
+      }}
+    >
+      <ElementBox
+        $width="400px"
+        $direction="column"
+        $alignItems="flex-start"
+        style={{
+          position: "relative",
+          background: "#000000a6",
+          borderRadius: "2px",
+          boxShadow: "1px 1px 1px #0000005c",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Text
+          $fontSize="20px"
+          $fontWeight="bold"
+          $color="white"
+          $isClickAble={true}
+          style={{
+            position: "absolute",
+            top: "3px",
+            right: "3px",
+            padding: "4px 12px",
+          }}
+          onClick={() => router.back()}
+        >
+          X
+        </Text>
+
+        <ElementBox
+          $width="calc(100% - 80px)"
+          $margin="25px 40px"
+          $direction="column"
+          $alignItems="center"
+          $justifyContent="center"
+        >
+          <ElementBox
+            $width="100%"
+            $justifyContent="flex-start"
+            $alignItems="start"
+          >
+            <ElementBox $direction="row" $alignItems="center">
+              <ShareButtonWrap onClick={shareToKakao}>
+                <ShareImg src="/images/kakao_icon.png" alt="카카오톡" />
+                <Text $color="white" $margin="5px 0 0 0">
+                  카카오톡
+                </Text>
+              </ShareButtonWrap>
+              <ShareButtonWrap onClick={twitterShare}>
+                <ShareImg src="/images/x_icon.jpg" alt="X" />
+                <Text $color="white" $margin="5px 0 0 0">
+                  X
+                </Text>
+              </ShareButtonWrap>
+              <ShareButtonWrap onClick={shareFacebook}>
+                <ShareImg src="/images/facebook_icon.png" alt="페이스북" />
+                <Text $color="white" $margin="5px 0 0 0">
+                  페이스북
+                </Text>
+              </ShareButtonWrap>
+            </ElementBox>
+          </ElementBox>
+
+          <ElementBox $width="100%" $alignItems="center" $margin="10px 0 0 0">
+            <UrlInput value={window.location.href} readOnly />
+            <Button
+              title="URL 복사"
+              onClick={copyUrlToClipboard}
+              $width="auto"
+              $padding="3.5px 8px"
+              $fontSize="13.5px"
+              $border="none"
+              $backgroundColor="#646262"
+            />
+          </ElementBox>
+        </ElementBox>
+      </ElementBox>
+    </ElementBox>
   );
 };
 
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ModalContent = styled.div`
-  position: relative;
-  background: #000000a6;
-  border-radius: 2px;
-  width: 400px;
-  max-width: 100%;
-  box-shadow: 1px 1px 1px #0000005c;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-`;
-
-const Exit = styled.div`
-  position: absolute;
-  top: 3px;
-  right: 3px;
-  padding: 4px 12px;
-  font-size: 20px;
-  font-weight: bold;
-  color: white;
-  cursor: pointer;
-`;
-
-const ShareModalWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: calc(100% - 80px);
-  margin: 25px 40px;
-`;
-
-const SnsButtons = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const SnsButtonsWrap = styled.div`
-  display: flex;
-  align-items: start;
-  width: 100%;
-  justify-content: space-around;
-`;
-
-const ShareButton = styled.button`
+const ShareButtonWrap = styled.button`
   display: flex;
   align-items: center;
   flex-direction: column;
   border: none;
   background-color: transparent;
   padding: 0;
-  margin: 0px 20px;
+  margin: 0px 20px 0px 0px;
   cursor: pointer;
 `;
 
-const KakaoIconImg = styled.img`
+const ShareImg = styled.img`
   width: 50px;
   height: 50px;
-`;
-
-const KakaoTextDiv = styled.div`
-  color: white;
-  margin-top: 5px;
-`;
-
-const UrlSection = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
-  width: 100%;
 `;
 
 const UrlInput = styled.input`
@@ -231,14 +222,6 @@ const UrlInput = styled.input`
     outline: none;
     border: none;
   }
-`;
-
-const CopyButton = styled.button`
-  padding: 3.5px 8px;
-  background-color: #646262;
-  color: white;
-  border: none;
-  cursor: pointer;
 `;
 
 export default LetterShareContents;

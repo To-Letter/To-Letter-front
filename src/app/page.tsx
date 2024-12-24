@@ -5,8 +5,18 @@ import { OrbitControls } from "@react-three/drei";
 import Scene from "../components/canvas/Scene"; // 경로 수정
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import "@/style/globals.css";
+/* import { useEffect } from "react";
+import { useRouter } from "next/navigation"; */
 
 export default function Home() {
+  /*   const router = useRouter();
+  useEffect(() => {
+    // 자주 사용되는 모달 경로들을 미리 프리페치
+    router.prefetch("/login");
+    router.prefetch("/signup");
+    // ... 다른 모달 경로들
+  }, [router]); */
+
   return (
     <main>
       <Canvas shadows>

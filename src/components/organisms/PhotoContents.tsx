@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Html } from "@react-three/drei";
-import styled from "styled-components";
+import { ElementBox } from "../atoms/Box";
+import { Text } from "../atoms/Text";
 import { useRouter, useSearchParams } from "next/navigation";
 
 /**
@@ -16,11 +16,6 @@ const PhotoContents = () => {
   /** 사진 모달 참조 */
   const popupRef = useRef<HTMLDivElement>(null);
 
-  /** 사진 모달 닫기 함수 */
-  const handleClose = () => {
-    router.back();
-  };
-
   /** 사진 모달 외부 클릭 감지 이벤트 */
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -28,7 +23,7 @@ const PhotoContents = () => {
         popupRef.current &&
         !popupRef.current.contains(event.target as Node)
       ) {
-        router.back();
+        router.push("/");
       }
     };
 
@@ -39,22 +34,69 @@ const PhotoContents = () => {
   }, [router]);
 
   return (
-    <Html center>
-      <PopupContainer ref={popupRef}>
-        <PopupHeader>
-          <CloseButton onClick={handleClose}>X</CloseButton>
-        </PopupHeader>
-        <PopupContent>
-          <p>{text}</p>
-        </PopupContent>
-      </PopupContainer>
-    </Html>
+    <ElementBox
+      $width="100%"
+      $height="100%"
+      $justifyContent="center"
+      $alignItems="center"
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        background: "rgba(0, 0, 0, 0.5)",
+      }}
+    >
+      <ElementBox
+        ref={popupRef}
+        $width="300px"
+        $height="200px"
+        $direction="column"
+        style={{
+          position: "relative",
+          borderRadius: "20px",
+          backgroundColor: "white",
+          boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
+          zIndex: 1000,
+        }}
+      >
+        <ElementBox
+          $width="100%"
+          $height="40px"
+          $justifyContent="flex-end"
+          $alignItems="center"
+          $padding="0 0px"
+          style={{
+            backgroundColor: "black",
+            borderTopLeftRadius: "20px",
+            borderTopRightRadius: "20px",
+          }}
+        >
+          <Text
+            $fontSize="16px"
+            $color="white"
+            $margin="0 10px 0 0"
+            $isClickAble={true}
+            onClick={() => router.push("/")}
+          >
+            X
+          </Text>
+        </ElementBox>
+        <ElementBox
+          $width="100%"
+          $height="calc(100% - 40px)"
+          $justifyContent="center"
+          $alignItems="center"
+        >
+          <Text $color="black">{text}</Text>
+        </ElementBox>
+      </ElementBox>
+    </ElementBox>
   );
 };
 
 export default PhotoContents;
 
-const PopupContainer = styled.div`
+/* const PopupContainer = styled.div`
   position: relative;
   width: 300px;
   height: 200px;
@@ -89,3 +131,4 @@ const CloseButton = styled.button`
   font-size: 16px;
   cursor: pointer;
 `;
+ */
