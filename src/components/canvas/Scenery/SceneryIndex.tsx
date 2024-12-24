@@ -1,4 +1,4 @@
-/* "use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import TimeBackground from "./TimeBackground";
@@ -19,7 +19,7 @@ const SceneryIndex = () => {
     const data = await getCurrentWeather({
       lat: lat,
       lng: lng,
-      key: process.env.REACT_APP_OPENWEATHERMAP_API_KEY,
+      key: process.env.NEXT_PUBLIC_OPENWEATHERMAP_API_KEY,
     });
     setWeatherInfo(data.weather[0].main);
   };
@@ -34,24 +34,24 @@ const SceneryIndex = () => {
         () => {
           /**
            * 위치 정보 제공 여부가 크게 중요하지 않다고 판단, 기본 값 설정
-           
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              alert('사용자가 위치 정보 제공을 거부했습니다.');
-              break;
-            case error.POSITION_UNAVAILABLE:
-              alert('위치 정보를 사용할 수 없습니다.');
-              break;
-            case error.TIMEOUT:
-              alert('위치 정보 요청이 시간 초과되었습니다.');
-              break;
-            default:
-              alert('알 수 없는 오류가 발생했습니다.');
-              break;
-          }
+           */
+          // switch (error.code) {
+          //   case error.PERMISSION_DENIED:
+          //     alert('사용자가 위치 정보 제공을 거부했습니다.');
+          //     break;
+          //   case error.POSITION_UNAVAILABLE:
+          //     alert('위치 정보를 사용할 수 없습니다.');
+          //     break;
+          //   case error.TIMEOUT:
+          //     alert('위치 정보 요청이 시간 초과되었습니다.');
+          //     break;
+          //   default:
+          //     alert('알 수 없는 오류가 발생했습니다.');
+          //     break;
+          // }
           /**
            * 기본 값, 서울 시청 좌표
-          
+           */
           getWeather({ lat: 37.5665851, lng: 126.9782038 });
         }
       );
@@ -77,4 +77,3 @@ const SceneryIndex = () => {
 };
 
 export default SceneryIndex;
- */
