@@ -1,27 +1,33 @@
 "use client";
 
-import React, { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Html } from "@react-three/drei";
 import styled from "styled-components";
-import { useRouter } from "next/navigation";
-
-interface PopupProps {
-  text: string;
-  onClose: () => void;
-}
+import { useRouter, useSearchParams } from "next/navigation";
 
 /**
- * 팝업 컴포넌트
- * @param {string} text 팝업 텍스트
- * @param {function} onClose 팝업 닫기 함수
+ * 사진 모달 컴포넌트
  *  */
-const Popup: React.FC<PopupProps> = ({ text, onClose }) => {
+const PhotoContents = () => {
   const router = useRouter();
+  /** 사진 모달 텍스트 query */
+  const searchParams = useSearchParams();
+  const text = searchParams.get("text");
+  /** 사진 모달 참조 */
+  const popupRef = useRef<HTMLDivElement>(null);
 
-  /** 팝업 외부 클릭 감지 이벤트 */
+  /** 사진 모달 닫기 함수 */
+  const handleClose = () => {
+    router.back();
+  };
+
+  /** 사진 모달 외부 클릭 감지 이벤트 */
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if ((event.target as HTMLElement).closest(".popup") === null) {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
         router.back();
       }
     };
@@ -34,13 +40,11 @@ const Popup: React.FC<PopupProps> = ({ text, onClose }) => {
 
   return (
     <Html center>
-      <PopupContainer className="popup">
-        <PopupHeader className="popup-header">
-          <CloseButton className="close-button" onClick={onClose}>
-            X
-          </CloseButton>
+      <PopupContainer ref={popupRef}>
+        <PopupHeader>
+          <CloseButton onClick={handleClose}>X</CloseButton>
         </PopupHeader>
-        <PopupContent className="popup-content">
+        <PopupContent>
           <p>{text}</p>
         </PopupContent>
       </PopupContainer>
@@ -48,9 +52,8 @@ const Popup: React.FC<PopupProps> = ({ text, onClose }) => {
   );
 };
 
-export default Popup;
+export default PhotoContents;
 
-// Styled-components
 const PopupContainer = styled.div`
   position: relative;
   width: 300px;

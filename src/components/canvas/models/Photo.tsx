@@ -2,10 +2,8 @@
 
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
-import Popup from "./Popup";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import usePointerCursor from "@/hooks/usePointerCursor";
 
 /** 사진
@@ -30,8 +28,6 @@ const Photo = ({
   const { handlePointerOver, handlePointerOut } = usePointerCursor();
   /** 사진 텍스처 */
   const texture = useLoader(TextureLoader, imageUrl);
-  /** 팝업 상태 */
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   /** 사진 클릭 함수 */
   const onClickphoto = () => {
@@ -41,15 +37,8 @@ const Photo = ({
     if (popupId === "photo1" && isLoggedIn) {
       router.push("/share");
     } else {
-      setIsPopupVisible(true);
-      router.push("/photo");
+      router.push(`/photo?text=${encodeURIComponent(popupText)}`);
     }
-  };
-
-  /** 팝업 닫기 함수 */
-  const handleClose = () => {
-    setIsPopupVisible(false);
-    router.back();
   };
 
   return (
@@ -71,7 +60,6 @@ const Photo = ({
           <meshStandardMaterial color="white" />
         </mesh>
       </group>
-      {isPopupVisible && <Popup text={popupText} onClose={handleClose} />}
     </>
   );
 };

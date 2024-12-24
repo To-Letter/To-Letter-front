@@ -1,4 +1,4 @@
-import { sendApi } from "@/lib/api/sendApi";
+import sendApi from "@/lib/api/sendApi";
 
 /**
  * 마이페이지 정보 불러오기
