@@ -88,7 +88,7 @@ export const getNicknameConfirm = async (nickname: { nickname: string }) => {
  * @param email 이메일
  * @returns response
  */
-export const getEmialConfirm = async (email: { email: string }) => {
+export const getEmailConfirm = async (email: { email: string }) => {
   const queryString = `?userEmail=${encodeURIComponent(email.email)}`;
   const response: any = await sendApi.get(
     `/users/su/confirmEmail${queryString}`

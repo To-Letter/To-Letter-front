@@ -9,11 +9,11 @@ import { useRecoilState } from "recoil";
 import { signupState } from "@/store/recoil/accountAtom";
 import styled from "styled-components";
 import ToastMessage from "@/components/atoms/ToastMessage";
-import {
+/* import {
   getEmialConfirm,
   getNicknameConfirm,
   postLocalSignup,
-} from "@/lib/api/controller/account";
+} from "@/lib/api/controller/account"; */
 
 export default function SignupContents() {
   const router = useRouter();
@@ -61,7 +61,7 @@ export default function SignupContents() {
   }, [router, setSignupForm, signupForm.mailboxAddress]);
 
   /** 회원가입 api 통신 및 응답 처리 함수 */
-  const onClickSignup = async () => {
+  /*   const onClickSignup = async () => {
     const conditions = [
       {
         check: signupForm.nickname !== "",
@@ -115,10 +115,10 @@ export default function SignupContents() {
     } catch (err: any) {
       setToast({ message: "입력란을 다시 확인해주세요.", visible: true });
     }
-  };
+  }; */
 
   /** 닉네임 중복확인 api 통신 및 응답 처리 함수 */
-  const onClickConfirmNickname = async () => {
+  /*   const onClickConfirmNickname = async () => {
     if (signupForm.nickname === "") {
       setToast({ message: "닉네임을 입력해주세요.", visible: true });
     } else {
@@ -137,10 +137,10 @@ export default function SignupContents() {
         console.log("nickNameError : ", err);
       }
     }
-  };
+  }; */
 
   /** 이메일 중복확인 api 통신 및 응답 처리 함수 */
-  const onClickConfirmEmail = async () => {
+  /*   const onClickConfirmEmail = async () => {
     if (signupForm.email === "") {
       setToast({ message: "이메일을 입력해주세요.", visible: true });
     } else {
@@ -159,7 +159,7 @@ export default function SignupContents() {
         console.log("emailError : ", err);
       }
     }
-  };
+  }; */
 
   useEffect(() => {
     console.log("확인", signupForm);
@@ -185,7 +185,8 @@ export default function SignupContents() {
           value={signupForm.nickname}
           isExistButton={true}
           buttonTitle="중복 체크"
-          onClick={onClickConfirmNickname}
+          /* onClick={onClickConfirmNickname} */
+          onClick={() => {}}
           $disable={isNicknameChecked}
         />
         <InputForm
@@ -197,7 +198,8 @@ export default function SignupContents() {
           value={signupForm.email}
           isExistButton={true}
           buttonTitle="중복 체크"
-          onClick={onClickConfirmEmail}
+          /* onClick={onClickConfirmEmail} */
+          onClick={() => {}}
           $disable={isEmailChecked}
         />
         <InputForm
@@ -241,7 +243,8 @@ export default function SignupContents() {
       <SectionBox $direction="column" $width="100%">
         <Button
           title="Signup"
-          onClick={onClickSignup}
+          /* onClick={onClickSignup} */
+          onClick={() => {}}
           $padding="8px 0"
           $margin="0 0 16px 0"
         />

@@ -1,5 +1,5 @@
 import { useThree } from "@react-three/fiber";
-import axiosInterceptor from "@/lib/api/axiosInterceptor";
+/* import axiosInterceptor from "@/lib/api/axiosInterceptor"; */
 
 /**
  * 마우스 커서 스타일을 제어하는 커스텀 훅
@@ -8,10 +8,11 @@ import axiosInterceptor from "@/lib/api/axiosInterceptor";
 const usePointerCursor = () => {
   const { gl } = useThree();
   const handlePointerOver = () => {
-    gl.domElement.style.cursor =
+    /* gl.domElement.style.cursor =
       axiosInterceptor.defaults.headers.common["Authorization"] !== null
         ? "pointer"
-        : "auto";
+        : "auto"; */
+    gl.domElement.style.cursor = "auto";
   };
   const handlePointerOut = () => {
     gl.domElement.style.cursor = "auto";

@@ -9,10 +9,10 @@ import Button from "../../atoms/Button";
 import { useRecoilState } from "recoil";
 import { signupState } from "@/store/recoil/accountAtom";
 import styled from "styled-components";
-import {
+/* import {
   getNicknameConfirm,
   postKakaoSignup,
-} from "@/lib/api/controller/account";
+} from "@/lib/api/controller/account"; */
 import ToastMessage from "@/components/atoms/ToastMessage";
 
 export default function KakaoSignupContents() {
@@ -54,7 +54,7 @@ export default function KakaoSignupContents() {
   };
 
   /** 카카오 회원가입 api 통신 및 응답 처리 함수 */
-  const onClickKakaoSignup = async () => {
+  /*   const onClickKakaoSignup = async () => {
     const conditions = [
       {
         check: signupForm.nickname !== "",
@@ -99,10 +99,10 @@ export default function KakaoSignupContents() {
       console.log("kakao error: " + err);
       setToast({ message: "입력란을 다시 확인해주세요.", visible: true });
     }
-  };
+  }; */
 
   /** 닉네임 중복확인 함수 */
-  const onClickConfirmNickname = async () => {
+  /*   const onClickConfirmNickname = async () => {
     if (signupForm.nickname === "") {
       setToast({ message: "닉네임을 입력해주세요.", visible: true });
     } else {
@@ -121,7 +121,7 @@ export default function KakaoSignupContents() {
         console.log("ninameerror : ", err);
       }
     }
-  };
+  }; */
 
   /** 주소값을 가져오는 로직 */
   useEffect(() => {
@@ -154,7 +154,8 @@ export default function KakaoSignupContents() {
           value={signupForm.nickname}
           isExistButton={true}
           buttonTitle="중복 체크"
-          onClick={onClickConfirmNickname}
+          /* onClick={onClickConfirmNickname} */
+          onClick={() => {}}
           $disable={isNicknameChecked}
         />
         <InputForm
@@ -199,7 +200,8 @@ export default function KakaoSignupContents() {
       <SectionBox $direction="column" $width="100%">
         <Button
           title="Signup"
-          onClick={onClickKakaoSignup}
+          /* onClick={onClickKakaoSignup} */
+          onClick={() => {}}
           $padding="8px 0"
           $margin="0 0 16px 0"
         />

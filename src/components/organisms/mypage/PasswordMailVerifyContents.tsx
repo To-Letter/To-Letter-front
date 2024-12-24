@@ -1,33 +1,34 @@
 "use client";
 import React, { ChangeEvent, useState } from "react";
-import Timer from "../../account/Timer";
+import Timer from "@/components/molecules/Timer";
 import ToastMessage from "@/components/atoms/ToastMessage";
-import { loadingState } from "@/store/recoil/loadingAtom";
+/* import { loadingState } from "@/store/recoil/loadingAtom";
 import { useSetRecoilState } from "recoil";
 import { getFindMailAuth, postEmailVerify } from "@/lib/api/controller/account";
 import { useUser } from "@/hooks/useUser";
 import { emailVerifyAuthType } from "@/constants/emailVerify";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; */
 import Verify from "@/components/molecules/Verify";
 import Button from "@/components/atoms/Button";
 import { Text } from "@/components/atoms/Text";
 import { MainBox, SectionBox } from "@/components/atoms/Box";
 
 export default function PasswordMailVerifyContents() {
-  const router = useRouter();
+  /*   const router = useRouter(); */
   /** 토스트 메시지를 관리하는 state */
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: "",
     visible: false,
   });
   /** 인증 번호 관리 state */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [mailKey, setMailKey] = useState<string>("");
   /** 이메일 인증 여부 */
   const [verifyMe, setVerifyMe] = useState<boolean>(false);
   /** 유저 정보 관리 */
-  const { myInfo } = useUser();
+  /*   const { myInfo } = useUser(); */
   /** 로딩 상태를 관리하는 recoil */
-  const setLoding = useSetRecoilState(loadingState);
+  /*   const setLoding = useSetRecoilState(loadingState); */
 
   /** 인증 번호 입력 업데이트 함수 */
   const onChangeMailKey = (e: ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +36,7 @@ export default function PasswordMailVerifyContents() {
   };
 
   /** 인증 코드 확인 함수 */
-  const onClickMailVerify = async () => {
+  /*   const onClickMailVerify = async () => {
     if (!verifyMe) {
       setToast({ message: "인증 요청 버튼을 먼저 눌러주세요.", visible: true });
     } else if (mailKey === "" || mailKey.length !== 6) {
@@ -77,10 +78,10 @@ export default function PasswordMailVerifyContents() {
         console.error(err);
       }
     }
-  };
+  }; */
 
   /** 이메일 인증코드 발송 함수 */
-  const authRequest = async () => {
+  /*   const authRequest = async () => {
     setLoding(true);
     try {
       const res: any = await getFindMailAuth(myInfo.email);
@@ -112,7 +113,7 @@ export default function PasswordMailVerifyContents() {
     } catch (err) {
       console.error(err);
     }
-  };
+  }; */
 
   return (
     <MainBox
@@ -133,7 +134,8 @@ export default function PasswordMailVerifyContents() {
               title="인증 요청"
               $width="80px"
               $padding="2px 0"
-              onClick={authRequest}
+              /* onClick={authRequest} */
+              onClick={() => {}}
             />
           )}
         </Verify>
@@ -141,7 +143,8 @@ export default function PasswordMailVerifyContents() {
       <Button
         title="인증 코드 확인"
         $padding="8px"
-        onClick={onClickMailVerify}
+        /* onClick={onClickMailVerify} */
+        onClick={() => {}}
       />
       {toast.visible && (
         <ToastMessage

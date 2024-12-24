@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { deleteKakaoUser } from "@/lib/api/controller/account";
+/* import { deleteKakaoUser } from "@/lib/api/controller/account"; */
 import ProgressBar from "@/components/atoms/ProgressBar";
 import { useSetRecoilState } from "recoil";
 import { loadingState } from "@/store/recoil/loadingAtom";
@@ -17,7 +17,7 @@ const KakaoUserWithdrawContents = () => {
 
   /** 서버와 카카오 회원 탈퇴 통신 및 응답 처리 함수 */
   useEffect(() => {
-    const OnClickKakaoToken = async () => {
+    /*     const OnClickKakaoToken = async () => {
       if (code) {
         try {
           const res: any = await deleteKakaoUser({ code: code });
@@ -38,11 +38,11 @@ const KakaoUserWithdrawContents = () => {
       } else {
         alert("코드가 유효하지 않습니다.");
       }
-    };
+    }; */
 
     if (!hasFetched.current) {
       hasFetched.current = true;
-      OnClickKakaoToken();
+      /* OnClickKakaoToken(); */
     }
   }, [code, router, setLoding]);
 

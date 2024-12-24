@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Button from "../atoms/Button";
-import { ChangeEvent, useEffect } from "react";
+import { ChangeEvent } from "react";
 import { ElementBox } from "../atoms/Box";
 
 interface props {

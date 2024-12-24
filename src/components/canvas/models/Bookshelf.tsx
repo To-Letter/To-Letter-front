@@ -2,7 +2,7 @@
 
 import { ThreeEvent } from "@react-three/fiber";
 import { useRouter } from "next/navigation";
-import axiosInterceptor from "@/lib/api/axiosInterceptor";
+/* import axiosInterceptor from "@/lib/api/axiosInterceptor"; */
 
 /**
  * 3D 책장 컴포넌트
@@ -30,9 +30,10 @@ const Bookshelf = ({
   /** 책 선반 클릭 시 편지함 모달로 이동 */
   const onClickBookshelf = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation();
-    if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
+    /* if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
       router.push("/letter/letterbox/receive");
-    }
+    } */
+    router.push("/letter/letterbox/receive");
   };
 
   return (

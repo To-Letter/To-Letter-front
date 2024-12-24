@@ -1,8 +1,10 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useState, useEffect } from "react";
 import { myInfoState } from "@/store/recoil/accountAtom";
-import { loadingState } from "@/store/recoil/loadingAtom";
-import { getMypage } from "@/lib/api/controller/user";
+/* import { loadingState } from "@/store/recoil/loadingAtom";
+import { getMypage } from "@/lib/api/controller/user"; */
 
 interface MyInfoI {
   isLogin: boolean;
@@ -17,13 +19,14 @@ interface MyInfoI {
  */
 export const useUser = () => {
   /** 에러 상태 관리 state */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
   /** 유저 정보 관리 recoil */
   const [myInfo, setMyInfo] = useRecoilState(myInfoState);
   /** 유저 정보 초기화 */
   const resetMyInfoState = useResetRecoilState(myInfoState);
   /** 로딩 상태 관리 recoil */
-  const setIsLoading = useSetRecoilState(loadingState);
+  /*   const setIsLoading = useSetRecoilState(loadingState); */
 
   /**
    *
@@ -42,7 +45,7 @@ export const useUser = () => {
   };
 
   /** 유저 정보 api 호출 */
-  useEffect(() => {
+  /*   useEffect(() => {
     setIsLoading(true);
     const fetchMyInfo = async () => {
       if (!myInfo.isLogin) {
@@ -75,7 +78,7 @@ export const useUser = () => {
     myInfo.address,
     myInfo.nickname,
     setIsLoading,
-  ]);
+  ]); */
 
   return {
     myInfo,

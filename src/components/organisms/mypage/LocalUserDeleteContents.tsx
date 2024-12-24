@@ -1,22 +1,23 @@
 "use client";
 import React, { ChangeEvent, useState } from "react";
 import styled from "styled-components";
-import { useUser } from "@/hooks/useUser";
-import { deleteLocalUser } from "@/lib/api/controller/account";
-import { useSetRecoilState } from "recoil";
-import { loadingState } from "@/store/recoil/loadingAtom";
+/* import { useUser } from "@/hooks/useUser"; */
+/* import { deleteLocalUser } from "@/lib/api/controller/account"; */
+/* import { useSetRecoilState } from "recoil"; */
+/* import { loadingState } from "@/store/recoil/loadingAtom"; */
 import ToastMessage from "@/components/atoms/ToastMessage";
-import { useRouter } from "next/navigation";
+/* import { useRouter } from "next/navigation"; */
 import InputForm from "@/components/molecules/InputForm";
 import { MainBox, SectionBox } from "@/components/atoms/Box";
 import { Text } from "@/components/atoms/Text";
 import Button from "@/components/atoms/Button";
 
 export default function LocalUserDeleteContents() {
-  const router = useRouter();
+  /*   const router = useRouter(); */
   /** 유저 정보 관리 */
-  const { myInfo } = useUser();
+  /*   const { myInfo } = useUser(); */
   /** 유저 삭제에 필요한 인증 과정 비밀번호 관리 */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [password, setPassword] = useState<string>("");
   /** 토스트 메시지를 관리하는 state */
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
@@ -24,7 +25,7 @@ export default function LocalUserDeleteContents() {
     visible: false,
   });
   /** 로딩 상태를 관리하는 recoil */
-  const setLoding = useSetRecoilState(loadingState);
+  /*   const setLoding = useSetRecoilState(loadingState); */
 
   /** 비밀번호 입력 업데이트 함수 */
   const onChangeFistPass = (e: ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +33,7 @@ export default function LocalUserDeleteContents() {
   };
 
   /** 계정 삭제 버튼 클릭 함수 */
-  const onClickLocalDelete = async () => {
+  /*   const onClickLocalDelete = async () => {
     setLoding(true);
     const res: any = await deleteLocalUser({
       email: myInfo.email,
@@ -50,7 +51,7 @@ export default function LocalUserDeleteContents() {
         visible: true,
       });
     }
-  };
+  }; */
 
   return (
     <MainBox $width="100%" $height="380px">
@@ -74,7 +75,8 @@ export default function LocalUserDeleteContents() {
           title="계정 삭제"
           $padding="8px 0"
           $margin="16px 0 0 0"
-          onClick={onClickLocalDelete}
+          /* onClick={onClickLocalDelete} */
+          onClick={() => {}}
         />
         {toast.visible && (
           <ToastMessage

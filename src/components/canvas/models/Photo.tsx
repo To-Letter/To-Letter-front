@@ -2,7 +2,7 @@
 
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
-import axiosInterceptor from "@/lib/api/axiosInterceptor";
+/* import axiosInterceptor from "@/lib/api/axiosInterceptor"; */
 import { useRouter } from "next/navigation";
 import usePointerCursor from "@/hooks/usePointerCursor";
 
@@ -31,10 +31,15 @@ const Photo = ({
 
   /** 사진 클릭 함수 */
   const onClickphoto = () => {
-    const isLoggedIn =
-      axiosInterceptor.defaults.headers.common["Authorization"] !== null;
+    /*     const isLoggedIn =
+      axiosInterceptor.defaults.headers.common["Authorization"] !== null; */
 
-    if (popupId === "photo1" && isLoggedIn) {
+    /* if (popupId === "photo1" && isLoggedIn) {
+      router.push("/share");
+    } else {
+      router.push(`/photo?text=${encodeURIComponent(popupText)}`);
+    } */
+    if (popupId === "photo1") {
       router.push("/share");
     } else {
       router.push(`/photo?text=${encodeURIComponent(popupText)}`);
