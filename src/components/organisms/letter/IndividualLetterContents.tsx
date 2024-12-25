@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { IoMdClose } from "react-icons/io";
+import { IoMdArrowBack } from "react-icons/io";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { individualLetterState, tabState } from "@/store/recoil/letterAtom";
 import { FaTrash } from "react-icons/fa";
@@ -8,6 +9,7 @@ import useThrottle from "@/hooks/useThrottle";
 import { loadingState } from "@/store/recoil/loadingAtom";
 import DeleteConfirmContents from "@/components/organisms/letter/DeleteConfirmContents";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { MainBox } from "@/components/atoms/Box";
 
 const IndividualLetterContents = () => {
   const router = useRouter();
@@ -45,11 +47,6 @@ const IndividualLetterContents = () => {
 
   /** 모달창 닫기 버튼 함수 */
   const closeModal = useCallback(() => {
-    if (individualLetterInfo.tab === "send") {
-      setTab("send");
-    } else {
-      setTab("received");
-    }
     setIndividualLetterInfo({
       id: -9999,
       toUserNickname: "",
@@ -58,7 +55,8 @@ const IndividualLetterContents = () => {
       onDelete: false,
       tab: "received",
     });
-  }, [individualLetterInfo.tab, setIndividualLetterInfo, setTab]);
+    router.back();
+  }, []);
 
   /** 모달창 외부 클릭시 반응을 위한 함수 */
   const handleClickOutside = useCallback(
@@ -138,11 +136,11 @@ const IndividualLetterContents = () => {
   }, [setLoadingState]);
 
   return isImageLoaded ? (
-    <Popup ref={modalRef}>
-      <BackButtonWrapper onClick={closeModal}>
-        <BackIcon src="images/back_arrow_icon.png" alt="Back" />
+    <LetterWrap ref={modalRef} $padding="10px" $width="700px">
+      <BackButtonWrapper onClick={() => router.back()}>
+        <IoMdArrowBack />
       </BackButtonWrapper>
-      <CloseButton onClick={closeModal}>
+      <CloseButton onClick={() => router.push("/")}>
         <IoMdClose />
       </CloseButton>
       <PopupInner>
@@ -178,20 +176,14 @@ const IndividualLetterContents = () => {
           type={individualLetterInfo.tab}
         />
       )}
-    </Popup>
+    </LetterWrap>
   ) : null;
 };
 
-const Popup = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+const LetterWrap = styled(MainBox)`
   background: url("/images/letter_background.jpg") no-repeat center center;
   background-size: contain;
-  padding: 10px;
   z-index: 1000;
-  width: 700px;
   max-height: 700px;
   display: block;
   background-size: cover;
@@ -336,8 +328,8 @@ const BackButtonWrapper = styled.button`
   margin: 3px 3px;
 `;
 const BackIcon = styled.img`
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
 `;
 
 export default IndividualLetterContents;

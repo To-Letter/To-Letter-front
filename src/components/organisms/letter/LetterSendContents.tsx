@@ -6,12 +6,9 @@ import { loadingState } from "@/store/recoil/loadingAtom";
 import { sendLetter } from "@/lib/api/controller/letter";
 import { nicknameAndContentsState } from "@/store/recoil/letterAtom";
 import { useRouter } from "next/navigation";
-
-interface defaultStyleProps {
-  $direction?: "row" | "column";
-  $justifyContent?: string;
-  $alignItems?: string;
-}
+import { ElementBox, MainBox, SectionBox } from "@/components/atoms/Box";
+import Button from "@/components/atoms/Button";
+import SummaryTip from "@/components/molecules/SummaryTip";
 
 const LetterSendContents: React.FC = () => {
   const router = useRouter();
@@ -65,86 +62,68 @@ const LetterSendContents: React.FC = () => {
   };
 
   return (
-    <ModalOverlay>
-      <ModalContent>
-        <SendLetterModalWrap>
-          <SendLetterModalContent>
-            <ContentLabel>
-              <ColumnBoxWrap>
-                <Box $alignItems="center" $justifyContent="center">
-                  편지를 이대로 보내시겠습니까
-                  <SendLetterSummry>
-                    ?
-                    <TipBox>
-                      ※ To. Letter의 편지는 유저들의 주소 거리에 기반하여 실제
-                      우편 도착시간과 비슷합니다.
-                    </TipBox>
-                  </SendLetterSummry>
-                </Box>
-                <CheckboxLabel>
-                  보낸 편지함에 저장
-                  <SendLetterCheckbox
-                    type="checkbox"
-                    checked={checked}
-                    onChange={handleCheckboxChange}
-                  />
-                </CheckboxLabel>
-              </ColumnBoxWrap>
-            </ContentLabel>
-          </SendLetterModalContent>
-          <BtnWrap>
-            <SendBtn onClick={letterSend}>예</SendBtn>
-            <SendBtn onClick={() => router.push("/")}>아니요</SendBtn>
-          </BtnWrap>
-          {toast.visible && (
-            <ToastMessage
-              message={toast.message}
-              onClose={() => setToast({ ...toast, visible: false })}
-            />
-          )}
-        </SendLetterModalWrap>
-      </ModalContent>
-    </ModalOverlay>
+    <MainBox
+      $width="calc(100% - 80px)"
+      $direction="column"
+      $alignItems="flex-start"
+      $justifyContent="center"
+      $margin="12px 40px 12px 40px"
+    >
+      <SectionBox
+        $width="100%"
+        $direction="column"
+        $alignItems="flex-start"
+        $justifyContent="center"
+        $margin="16px 0"
+      >
+        <ContentLabel>
+          <ElementBox
+            $direction="column"
+            $justifyContent="center"
+            $alignItems="center"
+          >
+            <ElementBox $alignItems="center" $justifyContent="center">
+              편지를 이대로 보내시겠습니까
+              <SummaryTip
+                $margin="0 0 0 4px"
+                tipText="※ To. Letter의 편지는 유저들이 등록한 주소 거리에 기반하여 우편 도착시간이 결정됩니다."
+              />
+            </ElementBox>
+            <CheckboxLabel>
+              보낸 편지함에 저장
+              <SendLetterCheckbox
+                type="checkbox"
+                checked={checked}
+                onChange={handleCheckboxChange}
+              />
+            </CheckboxLabel>
+          </ElementBox>
+        </ContentLabel>
+      </SectionBox>
+      <SectionBox
+        $width="calc(100% - 80px)"
+        $direction="row"
+        $alignItems="space-between"
+        $justifyContent="space-between"
+        $margin="0 40px 16px 40px"
+      >
+        <Button title="예" onClick={letterSend} $width="30%" $padding="8px 0" />
+        <Button
+          title="아니요"
+          onClick={() => router.push("/")}
+          $width="30%"
+          $padding="8px 0"
+        />
+      </SectionBox>
+      {toast.visible && (
+        <ToastMessage
+          message={toast.message}
+          onClose={() => setToast({ ...toast, visible: false })}
+        />
+      )}
+    </MainBox>
   );
 };
-
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ModalContent = styled.div`
-  background: #000000a6;
-  border-radius: 2px;
-  width: 400px;
-  max-width: 100%;
-  box-shadow: 1px 1px 1px #0000005c;
-`;
-
-const SendLetterModalWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  width: calc(100% - 80px);
-  margin: 12px 40px 12px 40px;
-`;
-
-const SendLetterModalContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  margin: 16px 0;
-  width: 100%;
-`;
 
 const ContentLabel = styled.label`
   display: flex;
@@ -152,57 +131,6 @@ const ContentLabel = styled.label`
   margin: 8px 0;
   width: 100%;
   color: #cecece;
-`;
-
-const ColumnBoxWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const Box = styled.div<defaultStyleProps>`
-  display: flex;
-  flex-direction: ${({ $direction }) => $direction};
-  justify-content: ${({ $justifyContent }) => $justifyContent};
-  align-items: ${({ $alignItems }) => $alignItems};
-  position: relative;
-`;
-
-export const SendLetterSummry = styled.div`
-  margin-left: 2px;
-  border-radius: 50%;
-  border: 1px solid white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 18px;
-  height: 18px;
-  font-size: 14px;
-  font-weight: bold;
-  position: relative;
-  color: #e9e9e9;
-
-  &:hover > div {
-    display: block;
-  }
-`;
-
-export const TipBox = styled.div`
-  display: none;
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: #fff;
-  padding: 5px;
-  border-radius: 3px;
-  white-space: break-spaces;
-  z-index: 10;
-  width: 200px;
-  text-align: center;
-  word-break: keep-all;
 `;
 
 const CheckboxLabel = styled.label`
@@ -215,29 +143,6 @@ const SendLetterCheckbox = styled.input`
   margin-right: 8px;
   width: 16px;
   height: 16px;
-`;
-
-const BtnWrap = styled.div`
-  display: flex;
-  text-align: center;
-  flex-direction: row;
-  align-items: space-between;
-  justify-content: space-between;
-  width: calc(100% - 80px);
-  margin: 0px 40px 16px 40px;
-`;
-
-const SendBtn = styled.div`
-  width: 30%;
-  border: 1px solid #e9e9e9;
-  display: inline-block;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 0;
-  margin-bottom: 16px;
-  color: #e9e9e9;
-  background-color: #262523;
-  cursor: pointer;
 `;
 
 export default LetterSendContents;

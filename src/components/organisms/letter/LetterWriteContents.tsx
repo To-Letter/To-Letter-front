@@ -7,6 +7,8 @@ import { useUser } from "@/hooks/useUser";
 import { useRecoilState } from "recoil";
 import { nicknameAndContentsState } from "@/store/recoil/letterAtom";
 import { useRouter } from "next/navigation";
+import { ElementBox, MainBox } from "@/components/atoms/Box";
+import { Text } from "@/components/atoms/Text";
 
 const LetterWriteContents: React.FC = () => {
   const router = useRouter();
@@ -80,16 +82,17 @@ const LetterWriteContents: React.FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [handleClickOutside]);
-
   return (
-    <Popup ref={modalRef}>
+    <LetterWrap ref={modalRef} $padding="10px" $width="700px">
       <CloseButton onClick={() => router.push("/")}>
         <IoMdClose />
       </CloseButton>
-      <PopupInner>
-        <ToInputWrapper>
-          <ToInput>{`To. ${nicknameAndContents.nickname}`}</ToInput>
-        </ToInputWrapper>
+      <LetterInner $direction="column" $height="800px" $margin="auto">
+        <ElementBox $alignItems="center">
+          <ToInput $fontSize="16px">
+            {`To. ${nicknameAndContents.nickname}`}
+          </ToInput>
+        </ElementBox>
         <StyledTextarea
           value={nicknameAndContents.contents}
           ref={textareaRef}
@@ -97,7 +100,7 @@ const LetterWriteContents: React.FC = () => {
           placeholder="Write your letter here..."
           spellCheck={false}
         />
-      </PopupInner>
+      </LetterInner>
       <FromText>From. {myInfo.nickname}</FromText>
       <SendButton onClick={moveSendLetterModal}>
         <IoIosMail />
@@ -108,20 +111,14 @@ const LetterWriteContents: React.FC = () => {
           onClose={() => setToast({ ...toast, visible: false })}
         />
       )}
-    </Popup>
+    </LetterWrap>
   );
 };
 
-const Popup = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+const LetterWrap = styled(MainBox)`
   background: url("/images/letter_background.jpg") no-repeat center center;
   background-size: contain;
-  padding: 10px;
   z-index: 1000;
-  width: 700px;
   max-height: 700px;
   display: block;
   background-size: cover;
@@ -138,15 +135,10 @@ const Popup = styled.div`
   }
 `;
 
-const PopupInner = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 800px;
-  /* width: 87%; */
+const LetterInner = styled(ElementBox)`
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  margin: auto;
   box-sizing: border-box;
 
   // height @mediaquery
@@ -198,15 +190,8 @@ const StyledTextarea = styled.textarea`
   }
 `;
 
-const ToInputWrapper = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const ToInput = styled.div`
+const ToInput = styled(Text)`
   font-family: "Handwriting", sans-serif;
-  font-size: 16px;
-
   // height @mediaquery
   @media (min-height: 501px) and (max-height: 800px) {
     font-size: 16px;

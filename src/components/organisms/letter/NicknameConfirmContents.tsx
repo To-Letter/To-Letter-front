@@ -6,12 +6,10 @@ import { nicknameAndContentsState } from "@/store/recoil/letterAtom";
 import { loadingState } from "@/store/recoil/loadingAtom";
 import { getNicknameConfirm } from "@/lib/api/controller/account";
 import { useRouter } from "next/navigation";
-
-interface defaultStyleProps {
-  $direction?: "row" | "column";
-  $justifyContent?: string;
-  $alignItems?: string;
-}
+import { ElementBox, MainBox, SectionBox } from "@/components/atoms/Box";
+import SummaryTip from "@/components/molecules/SummaryTip";
+import Button from "@/components/atoms/Button";
+import { Text } from "@/components/atoms/Text";
 
 const NicknameConfirmContents: React.FC = () => {
   const router = useRouter();
@@ -72,126 +70,57 @@ const NicknameConfirmContents: React.FC = () => {
   };
 
   return (
-    <ModalOverlay>
-      <ModalContent>
-        <NicknameAuthWrap>
-          <NicknameAuthContent>
-            <FormLabel>
-              <Box $alignItems="center" $justifyContent="space-between">
-                <Box $alignItems="center" $justifyContent="center">
-                  받는 사람 닉네임
-                  <NicknameSummry>
-                    ?
-                    <TipBox>
-                      편지를 보내는 사람의 닉네임이 존재하는지 확인해주세요.
-                    </TipBox>
-                  </NicknameSummry>
-                </Box>
-                <Button onClick={authToUseNickname}>확인 요청</Button>
-                <Exit onClick={() => router.back()}>X</Exit>
-              </Box>
-              <FormInput type="text" onChange={onChangeToUserNicknameHdr} />
-              <InstructionText>
-                {isNicknameChecked
-                  ? "존재하는 유저입니다."
-                  : "존재하지 않는 유저입니다."}
-              </InstructionText>
-            </FormLabel>
-          </NicknameAuthContent>
-          <LetterBtn onClick={moveLetter}>편지 쓰기</LetterBtn>
-          {toast.visible && (
-            <ToastMessage
-              message={toast.message}
-              onClose={() => setToast({ ...toast, visible: false })}
+    <MainBox
+      $direction="column"
+      $justifyContent="center"
+      $alignItems="flex-start"
+      $width="calc(100% - 80px)"
+      $margin="12px 40px 20px 40px"
+    >
+      <SectionBox
+        $width="100%"
+        $direction="column"
+        $alignItems="flex-start"
+        $justifyContent="center"
+        $margin="16px 0"
+      >
+        <FormLabel>
+          <ElementBox $alignItems="center" $justifyContent="space-between">
+            <ElementBox $alignItems="center" $justifyContent="center">
+              받는 사람 닉네임
+              <SummaryTip
+                $margin="0 8px"
+                $bottom="24px"
+                tipText="편지를 보내는 사람의 닉네임이 존재하는지 확인해주세요."
+              />
+            </ElementBox>
+            <Button
+              title="확인 요청"
+              $width="80px"
+              $padding="2px 0"
+              onClick={authToUseNickname}
             />
-          )}
-        </NicknameAuthWrap>
-      </ModalContent>
-    </ModalOverlay>
+          </ElementBox>
+          <FormInput type="text" onChange={onChangeToUserNicknameHdr} />
+          <Text $fontSize="10px" $margin="10px 0 0 0">
+            {isNicknameChecked
+              ? "존재하는 유저입니다."
+              : "존재하지 않는 유저입니다."}
+          </Text>
+        </FormLabel>
+      </SectionBox>
+      <SectionBox $width="100%">
+        <Button title="편지 쓰기" $padding="6px 0" onClick={moveLetter} />
+        {toast.visible && (
+          <ToastMessage
+            message={toast.message}
+            onClose={() => setToast({ ...toast, visible: false })}
+          />
+        )}
+      </SectionBox>
+    </MainBox>
   );
 };
-
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ModalContent = styled.div`
-  background: #000000a6;
-  border-radius: 2px;
-  width: 400px;
-  max-width: 100%;
-  box-shadow: 1px 1px 1px #0000005c;
-`;
-
-export const NicknameSummry = styled.div`
-  margin-left: 8px;
-  border-radius: 50%;
-  border: 1px solid white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 18px;
-  height: 18px;
-  font-size: 14px;
-  font-weight: bold;
-  position: relative;
-  color: #e9e9e9;
-
-  &:hover > div {
-    display: block;
-  }
-`;
-
-export const TipBox = styled.div`
-  display: none;
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: #fff;
-  padding: 5px;
-  border-radius: 3px;
-  white-space: break-spaces;
-  z-index: 10;
-  width: 200px;
-  text-align: center;
-  word-break: keep-all;
-`;
-
-export const Box = styled.div<defaultStyleProps>`
-  display: flex;
-  flex-direction: ${({ $direction }) => $direction};
-  justify-content: ${({ $justifyContent }) => $justifyContent};
-  align-items: ${({ $alignItems }) => $alignItems};
-  position: relative;
-`;
-
-const NicknameAuthWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  width: calc(100% - 80px);
-  margin: 12px 40px 20px 40px;
-`;
-
-const NicknameAuthContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  margin: 16px 0;
-  width: 100%;
-`;
 
 const FormLabel = styled.label`
   display: flex;
@@ -199,17 +128,6 @@ const FormLabel = styled.label`
   margin: 8px 0;
   width: 100%;
   color: #cecece;
-`;
-
-const Exit = styled.div`
-  position: absolute;
-  right: -39px;
-  top: -35px;
-  padding: 4px 12px;
-  font-size: 20px;
-  font-weight: bold;
-  color: white;
-  cursor: pointer;
 `;
 
 const FormInput = styled.input`
@@ -245,37 +163,6 @@ const FormInput = styled.input`
     transition: background-color 5000s ease-in-out 0s;
     border-bottom: 1px solid white;
   }
-`;
-
-const Button = styled.div`
-  width: 80px;
-  border-radius: 1px;
-  border: 1px solid #e9e9e9;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2px 0;
-  color: #e9e9e9;
-  background-color: #262523;
-  cursor: pointer;
-`;
-
-const LetterBtn = styled.div`
-  width: 100%;
-  border: 1px solid #e9e9e9;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 0;
-  margin-bottom: 16px;
-  color: #e9e9e9;
-  background-color: #262523;
-  cursor: pointer;
-`;
-
-const InstructionText = styled.div`
-  margin-top: 10px;
-  font-size: 10px;
 `;
 
 export default NicknameConfirmContents;

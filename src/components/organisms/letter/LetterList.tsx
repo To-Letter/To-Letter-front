@@ -11,8 +11,9 @@ import { MainBox } from "@/components/atoms/Box";
  * @param onLetterClick 편지 클릭 이벤트 핸들러
  * @param fetchMore 무한 스크롤 페이지 관리 함수
  * @param hasMore 무한 스크롤 페이지 마지막 여부 관리 state
- * @param searchTerm 검색어 관리 state
- * @param onSearchChange 검색어 변경 이벤트 핸들러
+ * @param isSearchAble? 서치 기능 포함 여부 관리 state(기본 false)
+ * @param searchTerm? 검색어 관리 state
+ * @param onSearchChange? 검색어 변경 이벤트 핸들러
  * @param type 편지 리스트 타입(받은 편지, 보낸 편지)
  */
 interface LetterListProps {
@@ -20,8 +21,9 @@ interface LetterListProps {
   onLetterClick: (mail: Mail) => void;
   fetchMore: () => void;
   hasMore: boolean;
-  searchTerm: string;
-  onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isSearchAble?: boolean;
+  searchTerm?: string;
+  onSearchChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type: "receive" | "send";
 }
 
@@ -30,8 +32,9 @@ export function LetterList({
   onLetterClick,
   fetchMore,
   hasMore,
-  searchTerm,
-  onSearchChange,
+  isSearchAble = true,
+  searchTerm = "",
+  onSearchChange = () => {},
   type,
 }: LetterListProps) {
   const listRef = useRef<HTMLDivElement>(null);
@@ -58,11 +61,13 @@ export function LetterList({
 
   return (
     <MainBox $direction="column" $height="95%" $width="100%">
-      <SearchBar
-        placeholder="메일 검색"
-        value={searchTerm}
-        onChange={onSearchChange}
-      />
+      {isSearchAble && (
+        <SearchBar
+          placeholder="메일 검색"
+          value={searchTerm}
+          onChange={onSearchChange}
+        />
+      )}
       <MailList ref={listRef}>
         {letters.map((mail) => (
           <LetterItem
