@@ -13,7 +13,7 @@ interface LetterItemProps {
   };
   onClick: (letterId: number) => void;
   type: "receive" | "send"; // 받은/보낸 편지함 구분
-  children?: React.ReactNode | null;
+  children?: React.ReactNode;
 }
 
 /**
@@ -27,21 +27,22 @@ export const LetterItem = ({
   letter,
   onClick,
   type,
-  children = null,
+  children,
 }: LetterItemProps) => {
   return (
     <MailItem
-      onClick={() => onClick(letter.id)}
+      onClick={children ? undefined : () => onClick(letter.id)}
       $width="396px"
       $alignItems="center"
       $justifyContent="space-between"
       $padding="10px"
     >
-      {children !== null && children}
+      {children}
 
       <ElementBox
+        onClick={children ? () => onClick(letter.id) : undefined}
         $direction="column"
-        $width={children !== null ? "calc(100% - 32px)" : "100%"}
+        $width={children ? "calc(100% - 32px)" : "100%"}
         $height="100%"
         $alignItems="start"
       >

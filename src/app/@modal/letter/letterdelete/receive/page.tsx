@@ -1,11 +1,6 @@
 "use client";
-import LetterDeleteContents from "@/components/organisms/letter/LetterDeleteContents";
-import { ReceiveLetters } from "@/components/organisms/letter/ReceiveLetters";
+import ReceiveLettersDeleteContents from "@/components/organisms/letter/ReceiveLettersDeleteContents";
 
 export default function ReceivePage() {
-  return (
-    <LetterDeleteContents>
-      <ReceiveLetters />
-    </LetterDeleteContents>
-  );
+  return <ReceiveLettersDeleteContents />;
 }

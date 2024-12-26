@@ -17,7 +17,7 @@ export default function LetterBoxLayout({
       $direction="column"
       $alignItems="flex-start"
     >
-      <HeaderBox $width="100%" $padding="8px 0">
+      <HeaderBox $width="100%" $height="60px" $padding="8px 0">
         <MenuTab />
       </HeaderBox>
       {children}

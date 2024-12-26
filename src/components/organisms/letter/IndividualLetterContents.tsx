@@ -1,15 +1,16 @@
+"use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { IoMdClose } from "react-icons/io";
-import { IoMdArrowBack } from "react-icons/io";
+import { IoArrowBack } from "react-icons/io5";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { individualLetterState, tabState } from "@/store/recoil/letterAtom";
+import { individualLetterState } from "@/store/recoil/letterAtom";
 import { FaTrash } from "react-icons/fa";
 import useThrottle from "@/hooks/useThrottle";
 import { loadingState } from "@/store/recoil/loadingAtom";
 import DeleteConfirmContents from "@/components/organisms/letter/DeleteConfirmContents";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { MainBox } from "@/components/atoms/Box";
+import { ElementBox, MainBox } from "@/components/atoms/Box";
 
 const IndividualLetterContents = () => {
   const router = useRouter();
@@ -32,13 +33,12 @@ const IndividualLetterContents = () => {
   const [individualLetterInfo, setIndividualLetterInfo] = useRecoilState(
     individualLetterState
   );
-  /** 편지 탭 관리 recoil **/
-  const [, setTab] = useRecoilState(tabState);
+
   /** 로딩 상태 관리 recoil **/
   const setLoadingState = useSetRecoilState(loadingState);
 
   /** 편지 삭제 버튼 클릭 시 실행 함수 */
-  const openConfirmModal = () => {
+  const handelDeleteConfirm = () => {
     const params = new URLSearchParams(searchParams);
     params.set("confirm", "true");
 
@@ -47,6 +47,8 @@ const IndividualLetterContents = () => {
 
   /** 모달창 닫기 버튼 함수 */
   const closeModal = useCallback(() => {
+    const letterInfo = individualLetterInfo;
+
     setIndividualLetterInfo({
       id: -9999,
       toUserNickname: "",
@@ -55,8 +57,14 @@ const IndividualLetterContents = () => {
       onDelete: false,
       tab: "received",
     });
-    router.back();
-  }, []);
+    if (letterInfo.onDelete) {
+      router.push(
+        `/letter/letterdelete/${letterInfo.tab === "send" ? "send" : "receive"}`
+      );
+    } else {
+      router.back();
+    }
+  }, [router, setIndividualLetterInfo, individualLetterInfo]);
 
   /** 모달창 외부 클릭시 반응을 위한 함수 */
   const handleClickOutside = useCallback(
@@ -133,20 +141,20 @@ const IndividualLetterContents = () => {
       setIsImageLoaded(true);
       setLoadingState(false);
     };
-  }, [setLoadingState]);
+  }, [setLoadingState, searchParams]);
 
   return isImageLoaded ? (
     <LetterWrap ref={modalRef} $padding="10px" $width="700px">
-      <BackButtonWrapper onClick={() => router.back()}>
-        <IoMdArrowBack />
+      <BackButtonWrapper onClick={closeModal}>
+        <IoArrowBack width="24px" height="24px" />
       </BackButtonWrapper>
       <CloseButton onClick={() => router.push("/")}>
         <IoMdClose />
       </CloseButton>
       <PopupInner>
-        <ToInputWrapper>
+        <ElementBox $alignItems="center">
           <ToInput>{`To. ${individualLetterInfo.toUserNickname}`}</ToInput>
-        </ToInputWrapper>
+        </ElementBox>
         <StyledTextarea
           value={content}
           ref={textareaRef}
@@ -159,7 +167,7 @@ const IndividualLetterContents = () => {
       </PopupInner>
       <FromText>From. {individualLetterInfo.fromUserNickname}</FromText>
       {individualLetterInfo.onDelete && (
-        <DeleteButton onClick={() => openConfirmModal}>
+        <DeleteButton onClick={handelDeleteConfirm}>
           <FaTrash />
         </DeleteButton>
       )}
@@ -183,7 +191,7 @@ const IndividualLetterContents = () => {
 const LetterWrap = styled(MainBox)`
   background: url("/images/letter_background.jpg") no-repeat center center;
   background-size: contain;
-  z-index: 1000;
+  z-index: 10;
   max-height: 700px;
   display: block;
   background-size: cover;
@@ -260,11 +268,6 @@ const StyledTextarea = styled.textarea`
   }
 `;
 
-const ToInputWrapper = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
 const ToInput = styled.div`
   font-family: "Handwriting", sans-serif;
   font-size: 16px;
@@ -321,15 +324,17 @@ const BackButtonWrapper = styled.button`
   position: absolute;
   top: 10px;
   left: 10px;
+  width: 24px;
+  height: 24px;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
   margin: 3px 3px;
+  // SVG 스타일링
+  svg {
+    width: 24px;
+    height: 24px;
+  }
 `;
-const BackIcon = styled.img`
-  width: 24px;
-  height: 24px;
-`;
-
 export default IndividualLetterContents;

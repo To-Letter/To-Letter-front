@@ -1,11 +1,6 @@
 "use client";
-import LetterDeleteContents from "@/components/organisms/letter/LetterDeleteContents";
-import { SendLetters } from "@/components/organisms/letter/SendLetters";
+import SendLettersDeleteContents from "@/components/organisms/letter/SendLettersDeleteContents";
 
 export default function SendPage() {
-  return (
-    <LetterDeleteContents>
-      <SendLetters />
-    </LetterDeleteContents>
-  );
+  return <SendLettersDeleteContents />;
 }
