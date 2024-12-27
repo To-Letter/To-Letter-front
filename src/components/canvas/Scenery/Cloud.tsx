@@ -27,7 +27,7 @@ const Cloud = ({ nowHoursValue }: { nowHoursValue: number }) => {
         console.error("An error occurred while loading the texture.", error);
       }
     );
-  }, []);
+  }, [timeZone]);
 
   return (
     <>

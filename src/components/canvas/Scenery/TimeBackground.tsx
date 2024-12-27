@@ -62,7 +62,7 @@ const TimeBackground = ({ nowHoursValue }: BackgroundProps) => {
         intensity: 3,
       };
     }
-  }, []);
+  }, [nowHoursValue]);
   const [bgTexture, setBgTexture] = useState<THREE.Texture | null>(null);
 
   useEffect(() => {

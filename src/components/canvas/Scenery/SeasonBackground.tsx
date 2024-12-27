@@ -100,7 +100,13 @@ const SeasonBackground = ({
         return clone;
       })
     );
-  }, []);
+  }, [
+    grassGlb.scene,
+    groundGlb.scene,
+    groundTexture,
+    seasonIndex,
+    weatherInfo,
+  ]);
 
   return (
     <>

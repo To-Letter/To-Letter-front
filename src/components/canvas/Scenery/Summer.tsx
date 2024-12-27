@@ -57,7 +57,7 @@ const Summer = () => {
         return clone;
       })
     );
-  }, [treeglb]);
+  }, [treeglb, woodTexture]);
   // }, [treeglb, woodTexture]);
 
   return (
