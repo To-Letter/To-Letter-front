@@ -72,6 +72,7 @@ export default function NewLettersubject() {
     setPage((prevPage) => {
       const nextPage = prevPage + 1;
       /* getAllReceiveLetters(nextPage); */
+      setHasMore(true); // [삭제 필요] build error 임시 처리
       return nextPage;
     });
   };
