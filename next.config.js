@@ -1,7 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["three"],
-  // 필요한 경우 추가 설정
+  reactStrictMode: true,
+  compiler: {
+    styledComponents: true,
+  },
+  experimental: {
+    optimizeCss: true, // CSS 최적화
+    optimizePackageImports: ["@components"], // 패키지 임포트 최적화
+  },
 };
 
 module.exports = nextConfig;
