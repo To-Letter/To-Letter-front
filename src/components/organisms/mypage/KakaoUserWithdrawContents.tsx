@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useRef } from "react";
 /* import { deleteKakaoUser } from "@/lib/api/controller/account"; */
 import ProgressBar from "@/components/atoms/ProgressBar";
@@ -13,7 +14,7 @@ const KakaoUserWithdrawContents = () => {
   /** 로딩 상태를 관리하는 recoil */
   const setLoding = useSetRecoilState(loadingState);
   /** 카카오 인증코드 추출 */
-  const code = new URL(window.location.href).searchParams.get("code");
+  // const code = new URL(window.location.href).searchParams.get("code"); //[useState로 정의하여 useEffect 내부 이동 필요] next build error fix
 
   /** 서버와 카카오 회원 탈퇴 통신 및 응답 처리 함수 */
   useEffect(() => {
@@ -44,7 +45,8 @@ const KakaoUserWithdrawContents = () => {
       hasFetched.current = true;
       /* OnClickKakaoToken(); */
     }
-  }, [code, router, setLoding]);
+  }, [router, setLoding]);
+  // }, [code, router, setLoding]);
 
   return (
     <MainBox $width="100vw" $height="100vh">

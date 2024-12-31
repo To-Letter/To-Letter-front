@@ -1,6 +1,6 @@
 "use client";
 
-import ErrorPage from "@/components/commonui/errorpage";
+import ErrorPage from "@/components/template/errorpage";
 
 export default function Error({
   error,
