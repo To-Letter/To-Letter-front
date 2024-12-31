@@ -1,17 +1,23 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import LoadingSpinner from "../atoms/LoadingSpinner";
-
-// Scene 컴포넌트를 동적으로 불러오기
-const DynamicScene = dynamic(() => import("./SceneComponent"), {
-  ssr: false, // 서버 사이드 렌더링 비활성화import { LoadingSpinner } from '@/components/atoms/LoadingSpinner';
-
-  loading: () => <LoadingSpinner />, // 로딩 중 표시할 컴포넌트
-});
+import Chair from "./models/Chair";
+import Desk from "./models/Desk";
+import Room from "./Room";
+import SceneryIndex from "./Scenery/SceneryIndex";
+/* import axiosInterceptor from "@/lib/api/axiosInterceptor"; */
 
 const Scene = () => {
-  return <DynamicScene />;
+  return (
+    <>
+      <SceneryIndex />
+      <Room />
+      {/* {axiosInterceptor.defaults.headers.common["Authorization"] !== null && (
+        <Chair />
+      )} */}
+      <Chair />
+      <Desk />
+    </>
+  );
 };
 
 export default Scene;
