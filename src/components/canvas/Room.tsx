@@ -113,19 +113,19 @@ const Room = () => {
       {/* 게시물 */}
       <Photo
         position={[-1, 0.3, -3.95]}
-        imageUrl="/images/Photo1.jpg"
+        imageUrl="/images/photo1.jpg"
         popupText="업데이트를 기대해주세요!"
         popupId="photo1"
       />
       <Photo
         position={[1, 0.6, -3.95]}
-        imageUrl="/images/Photo2.jpg"
+        imageUrl="/images/photo2.jpg"
         popupText="업데이트를 기대해주세요!"
         popupId="photo2"
       />
       <Photo
         position={[0.5, -0.8, -3.95]}
-        imageUrl="/images/Photo3.jpg"
+        imageUrl="/images/photo3.jpg"
         popupText="업데이트를 기대해주세요!"
         popupId="photo3"
       />
