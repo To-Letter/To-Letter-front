@@ -1,3 +1,4 @@
+"use client";
 import axios from "axios";
 import { AUTH_KEY } from "@/constants/authkey";
 import sendApi from "@/lib/api/sendApi";
