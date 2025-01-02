@@ -1,3 +1,5 @@
+"use client";
+
 // KakaoUserDelete.tsx
 import KakaoUserDeleteContents from "@/components/organisms/mypage/KakaoUserDeleteContents";
 

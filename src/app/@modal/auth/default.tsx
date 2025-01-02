@@ -1,3 +1,5 @@
+"use client";
+
 // auth/default.tsx
 import { redirect } from "next/navigation";
 

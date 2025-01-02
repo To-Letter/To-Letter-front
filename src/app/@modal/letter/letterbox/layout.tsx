@@ -1,5 +1,5 @@
-// src/app/@modal/letter/letterbox/layout.tsx
 "use client";
+
 import { styled } from "styled-components";
 import MenuTab from "@/components/molecules/MenuTab";
 import { IoIosMail } from "react-icons/io";

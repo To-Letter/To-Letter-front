@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { ElementBox } from "../atoms/Box";
 import styled from "styled-components";

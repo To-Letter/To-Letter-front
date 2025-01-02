@@ -1,3 +1,5 @@
+"use client";
+
 // LocalUserDelete.tsx
 import LocalUserDeleteContents from "@/components/organisms/mypage/LocalUserDeleteContents";
 

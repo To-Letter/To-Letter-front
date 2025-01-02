@@ -1,3 +1,5 @@
+"use client";
+
 import React, { ChangeEvent, useState } from "react";
 import styled from "styled-components";
 import ToastMessage from "@/components/atoms/ToastMessage";

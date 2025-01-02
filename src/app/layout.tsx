@@ -1,4 +1,5 @@
 "use client";
+
 import StyledComponentsRegistry from "@/lib/api/reistry";
 import { RecoilRoot } from "recoil";
 import LoadingSpinner from "@/components/atoms/LoadingSpinner";
