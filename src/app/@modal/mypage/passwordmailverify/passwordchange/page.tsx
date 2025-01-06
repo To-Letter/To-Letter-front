@@ -1,3 +1,5 @@
+"use client";
+
 // ChangePassword.tsx
 import PasswordChangeContents from "@/components/organisms/mypage/PasswordChangeContents";
 

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { ElementBox } from "../atoms/Box";
 import { Text } from "../atoms/Text";

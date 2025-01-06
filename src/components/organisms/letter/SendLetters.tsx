@@ -1,3 +1,5 @@
+"use client";
+
 // components/organisms/letter/SendLetters.tsx
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useSetRecoilState } from "recoil";

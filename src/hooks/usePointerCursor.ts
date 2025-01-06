@@ -1,3 +1,5 @@
+"use client";
+
 import { useThree } from "@react-three/fiber";
 /* import axiosInterceptor from "@/lib/api/axiosInterceptor"; */
 

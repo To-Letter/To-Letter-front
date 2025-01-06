@@ -1,3 +1,5 @@
+"use client";
+
 import React, { ChangeEvent, useState } from "react";
 import InputForm from "../../molecules/InputForm";
 import Button from "../../atoms/Button";

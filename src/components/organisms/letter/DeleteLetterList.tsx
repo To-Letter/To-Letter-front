@@ -1,3 +1,5 @@
+"use client";
+
 import useThrottle from "@/hooks/useThrottle";
 import { useEffect, useRef } from "react";
 import { styled } from "styled-components";

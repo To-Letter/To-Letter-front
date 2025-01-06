@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { individualLetterState } from "@/store/recoil/letterAtom";

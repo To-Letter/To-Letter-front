@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { IoIosMail } from "react-icons/io"; // 메일 버튼

@@ -1,3 +1,5 @@
+"use client";
+
 // EndLetter.tsx
 import LetterEndContents from "@/components/organisms/mypage/LetterEndContents";
 
