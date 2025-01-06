@@ -14,7 +14,6 @@ const RootLayout = memo(
     children: React.ReactNode;
     modal: React.ReactNode;
   }) => {
-    console.log("root layout");
     const pathname = usePathname();
 
     return (
@@ -31,8 +30,10 @@ const RootLayout = memo(
       </html>
     );
   },
+  /**
+   * modal 및 children에 뱐경사항이 있을 경우 리랜더링
+   */
   (prevProps, nextProps) => {
-    // 이전과 새로운 props 비교 로직
     return (
       prevProps.modal === nextProps.modal &&
       prevProps.children === nextProps.children
