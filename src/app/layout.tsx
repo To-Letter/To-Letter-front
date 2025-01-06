@@ -14,6 +14,7 @@ const RootLayout = memo(
     children: React.ReactNode;
     modal: React.ReactNode;
   }) => {
+    console.log("root layout");
     const pathname = usePathname();
 
     return (
@@ -29,9 +30,15 @@ const RootLayout = memo(
         </body>
       </html>
     );
+  },
+  (prevProps, nextProps) => {
+    // 이전과 새로운 props 비교 로직
+    return (
+      prevProps.modal === nextProps.modal &&
+      prevProps.children === nextProps.children
+    );
   }
 );
-
 RootLayout.displayName = "RootLayout";
 
 export default RootLayout;

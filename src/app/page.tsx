@@ -17,6 +17,8 @@ export default function Home() {
     // ... 다른 모달 경로들
   }, [router]); */
 
+  console.log("root");
+
   return (
     <main>
       <Canvas shadows>
