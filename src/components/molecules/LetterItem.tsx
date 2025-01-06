@@ -1,4 +1,5 @@
-// src/components/organisms/letter/LetterItem.tsx
+"use client";
+
 import { ElementBox } from "@/components/atoms/Box";
 import { formatDate } from "@/utils/formatDate";
 import styled from "styled-components";

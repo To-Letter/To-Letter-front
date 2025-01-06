@@ -1,3 +1,5 @@
+"use client";
+
 import { useRouter } from "next/navigation";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { ElementBox, MainBox, SectionBox } from "../../atoms/Box";

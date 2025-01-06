@@ -1,5 +1,5 @@
-// src/app/@modal/letter/letterbox/layout.tsx
 "use client";
+
 import MenuTab from "@/components/molecules/MenuTab";
 import ModalBox from "@/components/atoms/ModalBox";
 import { HeaderBox } from "@/components/atoms/Box";

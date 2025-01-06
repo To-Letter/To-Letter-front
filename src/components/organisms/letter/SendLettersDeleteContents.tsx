@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 // import useDebounce from "@/hooks/useDebounce"; //[주석 해제 필요] build error fix

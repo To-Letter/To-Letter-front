@@ -1,3 +1,5 @@
+"use client";
+
 // DeleteRedirection.tsx
 import KakaoUserWithdrawContents from "@/components/organisms/mypage/KakaoUserWithdrawContents";
 

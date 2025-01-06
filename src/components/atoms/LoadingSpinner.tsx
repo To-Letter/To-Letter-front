@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useRecoilValue } from "recoil";
 import { loadingState } from "@/store/recoil/loadingAtom";

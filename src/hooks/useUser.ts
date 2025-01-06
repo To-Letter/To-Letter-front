@@ -1,3 +1,4 @@
+"use client";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

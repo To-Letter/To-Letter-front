@@ -1,3 +1,5 @@
+"use client";
+
 import styled from "styled-components";
 import Button from "../atoms/Button";
 import { ChangeEvent } from "react";

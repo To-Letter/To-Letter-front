@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useRef } from "react";
 /* import { deleteKakaoUser } from "@/lib/api/controller/account"; */
 import ProgressBar from "@/components/atoms/ProgressBar";
