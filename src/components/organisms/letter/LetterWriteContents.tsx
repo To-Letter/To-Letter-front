@@ -46,11 +46,12 @@ const LetterWriteContents: React.FC = () => {
 
   /** 편지 내용이 있는 경우 편지 보내기 모달로 이동하는 함수 */
   const moveSendLetterModal = () => {
-    if (nicknameAndContents.contents !== "") {
+    /* if (nicknameAndContents.contents !== "") {
       router.push("/letter/lettersend");
     } else {
       setToast({ message: "편지에 내용을 써주세요.", visible: true });
-    }
+    } */
+    router.push("/letter/lettersend");
   };
 
   /** 편지 내용 스크롤 이벤트 관리 */
@@ -85,7 +86,7 @@ const LetterWriteContents: React.FC = () => {
     };
   }, [handleClickOutside]);
   return (
-    <LetterWrap ref={modalRef} $padding="10px" $width="700px">
+    <LetterWrap ref={modalRef} $padding="10px" $width="700px" $color="black">
       <CloseButton onClick={() => router.push("/")}>
         <IoMdClose />
       </CloseButton>
