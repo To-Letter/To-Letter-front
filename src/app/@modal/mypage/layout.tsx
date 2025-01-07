@@ -4,8 +4,18 @@ import React from "react";
 import ModalBox from "@/components/atoms/ModalBox";
 import { HeaderBox } from "@/components/atoms/Box";
 import MenuTab from "@/components/molecules/MenuTab";
+import { usePathname } from "next/navigation";
 
-export default function layout({ children }: { children: React.ReactNode }) {
+export default function MyPageLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const pathname = usePathname();
+  if (pathname === "/") {
+    return;
+  }
+
   return (
     <ModalBox
       $width="320px"

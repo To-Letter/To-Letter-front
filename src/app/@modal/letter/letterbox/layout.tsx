@@ -7,6 +7,7 @@ import { IoIosMail } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import ModalBox from "@/components/atoms/ModalBox";
 import { HeaderBox } from "@/components/atoms/Box";
+import { usePathname } from "next/navigation";
 
 export default function LetterBoxLayout({
   children,
@@ -14,6 +15,10 @@ export default function LetterBoxLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
+  if (pathname === "/") {
+    return;
+  }
 
   const handleLetterWriteClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>

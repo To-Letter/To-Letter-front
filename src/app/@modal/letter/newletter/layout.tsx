@@ -4,12 +4,18 @@ import MenuTab from "@/components/molecules/MenuTab";
 import ModalBox from "@/components/atoms/ModalBox";
 import { HeaderBox } from "@/components/atoms/Box";
 import { styled } from "styled-components";
+import { usePathname } from "next/navigation";
 
 export default function NewLetterLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  if (pathname === "/") {
+    return;
+  }
+
   return (
     <ModalBox
       $width="430px"
