@@ -102,7 +102,7 @@ const Desk = () => {
     /*     if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
       router.push("/letter/userconfirm");
     } */
-    router.push("/letter/letterbox/receive");
+    router.push("/letter/userconfirm");
   };
 
   return (

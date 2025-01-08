@@ -22,10 +22,7 @@ const RootLayout = memo(
       <html lang="ko">
         <body>
           <StyledComponentsRegistry>
-            <ClientProviders>
-              {children}
-              {modal}
-            </ClientProviders>
+            <ClientProviders modal={modal}>{children}</ClientProviders>
           </StyledComponentsRegistry>
         </body>
       </html>
