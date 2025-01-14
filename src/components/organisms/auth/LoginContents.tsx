@@ -5,38 +5,38 @@ import InputForm from "../../molecules/InputForm";
 import Button from "../../atoms/Button";
 import { Text } from "../../atoms/Text";
 import { MainBox, SectionBox } from "../../atoms/Box";
-/* import { useRouter } from "next/navigation"; */
-/* import { myInfoState, signupState } from "@/store/recoil/accountAtom"; */
+import { useRouter } from "next/navigation";
+import { myInfoState, signupState } from "@/store/recoil/accountAtom";
 /* import { loadingState } from "@/store/recoil/loadingAtom"; */
-/* import { useResetRecoilState, useSetRecoilState } from "recoil"; */
+import { useResetRecoilState, useSetRecoilState } from "recoil";
 /* import { getKakaoURL, postLocalLogin } from "@/lib/api/controller/account"; */
+import { postLocalLogin } from "@/lib/api/controller/account";
 
 interface loginFormI {
   email: string;
   password: string;
 }
 
-/* interface LoginResponse {
+interface LoginResponse {
   data: {
     responseCode: number;
     responseData?: string;
   };
-} */
+}
 
 export default function LoginContents() {
-  /*   const router = useRouter(); */
+  const router = useRouter();
   /** 로그인 정보 관리 state */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loginForm, setLoginForm] = useState<loginFormI>({
     email: "",
     password: "",
   });
   /** 유저 정보 reocil reset */
-  /*   const resetMyInfo = useResetRecoilState(myInfoState);
+  const resetMyInfo = useResetRecoilState(myInfoState);
   /** 회원가입 정보 관리 recoil */
-  /*   const setSignupForm = useSetRecoilState(signupState);
+  const setSignupForm = useSetRecoilState(signupState);
   /** 로딩 상태 관리 recoil */
-  /*   const setLoadingState = useSetRecoilState(loadingState);
+  /*   const setLoadingState = useSetRecoilState(loadingState); */
 
   /** 로그인 정보 입력 업데이트 함수 */
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +47,7 @@ export default function LoginContents() {
   };
 
   /** 로그인 api 통신 및 응답 처리 함수 */
-  /*   const onClickLogin = async () => {
+  const onClickLogin = async () => {
     if (loginForm.email === "") {
       alert("이메일을 정확히 입력해주세요.");
     } else if (loginForm.password === "") {
@@ -83,7 +83,7 @@ export default function LoginContents() {
     } catch (_error) {
       alert("이메일 혹은 비밀번호를 잘못입력하셨습니다.");
     }
-  }; */
+  };
 
   /** 카카오 로그인 api 통신 및 응답 처리 함수 */
   /*   const onClickKakaoLogin = async () => {
@@ -125,8 +125,7 @@ export default function LoginContents() {
       <SectionBox $direction="column" $width="100%">
         <Button
           title="Login"
-          /* onClick={onClickLogin} */
-          onClick={() => {}}
+          onClick={onClickLogin}
           $padding="8px 0"
           $margin="0 0 16px 0"
         />

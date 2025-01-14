@@ -1,18 +1,17 @@
 "use client";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useState, useEffect } from "react";
 import { myInfoState } from "@/store/recoil/accountAtom";
-/* import { loadingState } from "@/store/recoil/loadingAtom";
-import { getMypage } from "@/lib/api/controller/user"; */
+import { loadingState } from "@/store/recoil/loadingAtom";
+import { getMypage } from "@/lib/api/controller/user";
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 
 interface MyInfoI {
   isLogin: boolean;
   address: string;
   email: string;
   nickname: string;
-  loginType: "localLogin" | "kakaoLogin";
+  userRole: "local" | "kakao";
 }
 
 /**
@@ -20,14 +19,13 @@ interface MyInfoI {
  */
 export const useUser = () => {
   /** 에러 상태 관리 state */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
   /** 유저 정보 관리 recoil */
   const [myInfo, setMyInfo] = useRecoilState(myInfoState);
   /** 유저 정보 초기화 */
   const resetMyInfoState = useResetRecoilState(myInfoState);
   /** 로딩 상태 관리 recoil */
-  /*   const setIsLoading = useSetRecoilState(loadingState); */
+  const setIsLoading = useSetRecoilState(loadingState);
 
   /**
    *
@@ -46,40 +44,44 @@ export const useUser = () => {
   };
 
   /** 유저 정보 api 호출 */
-  /*   useEffect(() => {
-    setIsLoading(true);
+  useEffect(() => {
     const fetchMyInfo = async () => {
-      if (!myInfo.isLogin) {
-        try {
-          const result = await getMypage(); // 백엔드에서 유저 정보를 가져옴
-          if (result.data.responseCode === 200) {
-            setMyInfo({
-              isLogin: true, // 로그인 상태로 업데이트
-              address: result.data.responseData.address,
-              email: result.data.responseData.email,
-              nickname: result.data.responseData.nickname,
-              userRole: result.data.responseData.loginType,
-            });
-          } else {
-            alert("오류가 발생했습니다!");
-            window.location.href = "/";
-          }
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (_error) {
-          setError("Failed to fetch user info.");
+      setIsLoading(true);
+      try {
+        const result = await getMypage();
+        if (result.data.responseCode === 200) {
+          console.log("useUser result", result.data.responseData);
+          setMyInfo({
+            isLogin: true,
+            address: result.data.responseData.address,
+            email: result.data.responseData.email,
+            nickname: result.data.responseData.nickname,
+            userRole: result.data.responseData.loginType,
+          });
         }
+      } catch (error: any) {
+        // 401 등 인증 에러가 아닌 경우에만 에러 처리
+        if (!error.response) {
+          setError("Failed to fetch user info.");
+          console.error("마이페이지 조회 에러:", error);
+        }
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
-    fetchMyInfo();
+    // 토큰이 있는 경우에만 마이페이지 정보 요청
+    const token = axiosInterceptor.defaults.headers.common["Authorization"];
+    if (token) {
+      fetchMyInfo();
+    }
   }, [
     myInfo.isLogin,
     setMyInfo,
     myInfo.address,
     myInfo.nickname,
     setIsLoading,
-  ]); */
+  ]);
 
   return {
     myInfo,

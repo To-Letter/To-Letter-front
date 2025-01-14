@@ -7,6 +7,7 @@ import axiosInterceptor from "@/lib/api/axiosInterceptor";
 const clearTokens = () => {
   // Authorization 헤더 삭제
   delete axiosInterceptor.defaults.headers.common["Authorization"];
+  delete axiosInterceptor.defaults.headers.common["refreshToken"];
 
   // refreshToken 쿠키 삭제
   document.cookie =
@@ -30,6 +31,7 @@ export const postLocalLogin = async (loginData: {
 
   // 각각의 토큰 저장
   const accessToken = response.headers.get("authorization");
+  const refreshToken = response.headers.get("refreshToken");
 
   console.log("Access token: " + accessToken);
 
@@ -37,6 +39,9 @@ export const postLocalLogin = async (loginData: {
     axiosInterceptor.defaults.headers.common[
       "Authorization"
     ] = `${accessToken}`;
+  }
+  if (refreshToken) {
+    axiosInterceptor.defaults.headers.common["refreshToken"] = refreshToken;
   }
 
   return response;
@@ -213,11 +218,18 @@ export const postKakaoSignup = async (kakaoSignupData: {
  * @returns response
  */
 export const getLogout = async () => {
-  const response: any = await sendApi.get(`/users/logout`);
+  try {
+    const response = await sendApi.get(`/users/logout`);
 
-  clearTokens();
+    if (response.data.responseCode === 200) {
+      clearTokens();
+    }
 
-  return response;
+    return response;
+  } catch (error) {
+    clearTokens();
+    throw error;
+  }
 };
 
 /**

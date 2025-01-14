@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { styled } from "styled-components";
 import { useRouter } from "next/navigation";
 import { ElementBox, MainBox, SectionBox } from "@/components/atoms/Box";
@@ -9,13 +9,25 @@ import InputForm from "@/components/molecules/InputForm";
 import SummaryTip from "@/components/molecules/SummaryTip";
 import { Text } from "@/components/atoms/Text";
 import { useUser } from "@/hooks/useUser";
+import {
+  getLogout,
+  getNicknameConfirm,
+  patchUserInfoUpdate,
+} from "@/lib/api/controller/account";
+import ToastMessage from "@/components/atoms/ToastMessage";
+
+interface myInfoI {
+  email: string;
+  address: string;
+  nickname: string;
+}
 
 export default function MyInfoContents() {
   const router = useRouter();
   /** 닉네임 중복 체크 */
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
   /** 유저 정보 관리 */
-  const { myInfo, updateMyInfo } = useUser();
+  const { myInfo, updateMyInfo, resetMyInfo } = useUser();
   /** 주소 팁 텍스트 */
   const tipText = useRef<string>(
     `
@@ -23,10 +35,21 @@ export default function MyInfoContents() {
     값으로, 실제 자신의 주소를 입력하지 않아도 괜찮아요!
     `
   );
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [myInfoForm, setMyInfoForm] = useState<myInfoI>({
+    email: myInfo.email,
+    address: myInfo.address,
+    nickname: myInfo.nickname,
+  });
+  const [toast, setToast] = useState<{ message: string; visible: boolean }>({
+    message: "",
+    visible: false,
+  });
 
   /** 유저 정보 업데이트 함수 */
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
     updateMyInfo({
+      ...myInfoForm,
       [e.target.name]: e.target.value,
     });
     if (e.target.name === "nickname") setIsNicknameChecked(false);
@@ -36,6 +59,82 @@ export default function MyInfoContents() {
   const onClickOpenModal = () => {
     router.push("/auth/address");
   };
+
+  const onClickUpdata = async () => {
+    if (myInfo.nickname !== myInfoForm.nickname) {
+      if (isNicknameChecked) {
+        const res = await patchUserInfoUpdate({
+          address: myInfoForm.address,
+          nickname: myInfoForm.nickname,
+        });
+        if (res.data.responseCode === 200) {
+          updateMyInfo({
+            address: myInfoForm.address,
+            nickname: myInfoForm.nickname,
+          });
+          setToast({ message: "정상적으로 변경되었습니다.", visible: true });
+        }
+      } else {
+        setToast({
+          message: "닉네임 중복 체크를 진행해주세요.",
+          visible: true,
+        });
+      }
+    } else {
+      const res = await patchUserInfoUpdate({
+        address: myInfoForm.address,
+        nickname: myInfoForm.nickname,
+      });
+      if (res.data.responseCode === 200) {
+        updateMyInfo({
+          address: myInfoForm.address,
+          nickname: myInfoForm.nickname,
+        });
+        setToast({ message: "정상적으로 변경되었습니다.", visible: true });
+      }
+    }
+  };
+
+  const onClickLogout = async () => {
+    try {
+      const res = await getLogout();
+      if (res.data.responseCode === 200) {
+        resetMyInfo();
+        router.push("/");
+      }
+    } catch (error) {
+      console.log("로그아웃 에러:", error);
+    }
+  };
+
+  // 닉네임 중복확인
+  const onClickConfirmNickname = async () => {
+    if (myInfo.nickname !== myInfoForm.nickname) {
+      try {
+        const res: any = await getNicknameConfirm({
+          nickname: myInfoForm.nickname,
+        });
+        if (res.data.responseCode === 200) {
+          setToast({ message: "사용 가능한 닉네임입니다.", visible: true });
+          setIsNicknameChecked(true);
+        } else if (res.data.responseCode === 401) {
+          setToast({ message: "중복된 닉네임입니다.", visible: true });
+          setIsNicknameChecked(false);
+        }
+      } catch (err: any) {
+        console.log("nickNameError : ", err);
+      }
+    }
+  };
+
+  // useEffect를 추가하여 myInfo가 업데이트될 때마다 myInfoForm도 업데이트
+  useEffect(() => {
+    setMyInfoForm({
+      email: myInfo.email,
+      address: myInfo.address,
+      nickname: myInfo.nickname,
+    });
+  }, [myInfo]);
 
   return (
     <MainBox
@@ -64,9 +163,7 @@ export default function MyInfoContents() {
           isExistButton={true}
           buttonTitle="중복 체크"
           value={myInfo.nickname}
-          onClick={() => {
-            setIsNicknameChecked(true);
-          }}
+          onClick={onClickConfirmNickname}
           $disable={isNicknameChecked}
         />
         <ElementBox $justifyContent="space-between" $margin="16px 0 0">
@@ -102,12 +199,18 @@ export default function MyInfoContents() {
       <SectionBox $direction="column" $width="100%">
         <Button
           title="내 정보 수정하기"
-          onClick={() => {}}
+          onClick={onClickUpdata}
           $padding="8px 0"
           $margin="0 0 16px 0"
         />
-        <Button title="Logout" onClick={() => {}} $padding="8px 0" />
+        <Button title="Logout" onClick={onClickLogout} $padding="8px 0" />
       </SectionBox>
+      {toast.visible && (
+        <ToastMessage
+          message={toast.message}
+          onClose={() => setToast({ ...toast, visible: false })}
+        />
+      )}
     </MainBox>
   );
 }
