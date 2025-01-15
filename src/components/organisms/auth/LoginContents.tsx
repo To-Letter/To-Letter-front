@@ -54,7 +54,7 @@ export default function LoginContents() {
       alert("비밀번호를 입력해주세요.");
     }
     try {
-      //기존에 저장되어있는 유저 정보 삭제
+      /** 기존에 저장되어있는 유저 정보 삭제 */
       resetMyInfo();
       const res: LoginResponse = await postLocalLogin({
         email: loginForm.email,
@@ -62,10 +62,10 @@ export default function LoginContents() {
       });
 
       if (res.data.responseCode === 200) {
-        // 로그인 성공
+        /** 로그인 성공 */
         router.push("/");
       } else if (res.data.responseCode === 403) {
-        // 이메일 인증 미완료 계정
+        /** 이메일 인증 미완료 계정 */
         setSignupForm((prev) => ({
           ...prev,
           email: loginForm.email,
@@ -76,7 +76,6 @@ export default function LoginContents() {
         res.data.responseCode === 401 ||
         res.data.responseCode === 400
       ) {
-        // 걍 틀림
         alert("이메일 혹은 비밀번호를 잘못입력하셨습니다.");
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

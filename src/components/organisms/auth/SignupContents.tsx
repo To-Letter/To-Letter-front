@@ -163,18 +163,6 @@ export default function SignupContents() {
     }
   };
 
-  useEffect(() => {
-    console.log("확인", signupForm);
-  }, [
-    signupForm.nickname,
-    signupForm.email,
-    signupForm.password,
-    signupForm.mailboxAddress,
-    isNicknameChecked,
-    isEmailChecked,
-    signupForm,
-  ]);
-
   return (
     <MainBox $direction="column" $alignItems="flex-start" $width="100%">
       <SectionBox $direction="column" $width="100%" $margin="24px 0">

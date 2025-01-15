@@ -27,15 +27,58 @@ export const useUser = () => {
   /** 로딩 상태 관리 recoil */
   const setIsLoading = useSetRecoilState(loadingState);
 
+  /** 초기 데이터 로드는 한 번만 실행되도록 수정 */
+  useEffect(() => {
+    const token = axiosInterceptor.defaults.headers.common["Authorization"];
+    // myInfo가 비어있을 때만 fetchMyInfo 실행
+    if (token && !myInfo.email) {
+      fetchMyInfo();
+    }
+  }, []);
+
+  /** 유저 정보 api 호출 */
+  const fetchMyInfo = async () => {
+    setIsLoading(true);
+    try {
+      const result = await getMypage();
+      if (result.data.responseCode === 200) {
+        setMyInfo({
+          isLogin: true,
+          address: result.data.responseData.address,
+          email: result.data.responseData.email,
+          nickname: result.data.responseData.nickname,
+          userRole: result.data.responseData.loginType,
+        });
+      }
+    } catch (error: any) {
+      if (!error.response || error.response.status !== 401) {
+        setError("Failed to fetch user info.");
+        console.error("마이페이지 조회 에러:", error);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   /**
    *
    * @param updatedInfo MyInfoI의 isLogin, address, email, nickname 중 모든 속성이 필수가 아님
    */
   const updateMyInfo = (updatedInfo: Partial<MyInfoI>) => {
-    setMyInfo((prevState: any) => ({
-      ...prevState,
-      ...updatedInfo,
-    }));
+    console.log("Updating myInfo with:", updatedInfo); // 디버깅용
+    setMyInfo((prevState: any) => {
+      const newState = {
+        ...prevState,
+        ...updatedInfo,
+      };
+      console.log("New myInfo state:", newState); // 디버깅용
+      return newState;
+    });
+  };
+
+  /** 서버 유저 정보 업데이트 후 로컬 유저 정보 새로고침 */
+  const refreshMyInfo = async () => {
+    await fetchMyInfo();
   };
 
   /** 유저 정보 초기화 */
@@ -43,50 +86,11 @@ export const useUser = () => {
     resetMyInfoState();
   };
 
-  /** 유저 정보 api 호출 */
-  useEffect(() => {
-    const fetchMyInfo = async () => {
-      setIsLoading(true);
-      try {
-        const result = await getMypage();
-        if (result.data.responseCode === 200) {
-          console.log("useUser result", result.data.responseData);
-          setMyInfo({
-            isLogin: true,
-            address: result.data.responseData.address,
-            email: result.data.responseData.email,
-            nickname: result.data.responseData.nickname,
-            userRole: result.data.responseData.loginType,
-          });
-        }
-      } catch (error: any) {
-        // 401 등 인증 에러가 아닌 경우에만 에러 처리
-        if (!error.response) {
-          setError("Failed to fetch user info.");
-          console.error("마이페이지 조회 에러:", error);
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    // 토큰이 있는 경우에만 마이페이지 정보 요청
-    const token = axiosInterceptor.defaults.headers.common["Authorization"];
-    if (token) {
-      fetchMyInfo();
-    }
-  }, [
-    myInfo.isLogin,
-    setMyInfo,
-    myInfo.address,
-    myInfo.nickname,
-    setIsLoading,
-  ]);
-
   return {
     myInfo,
-    resetMyInfo,
     updateMyInfo,
+    refreshMyInfo,
+    resetMyInfo,
     error,
   };
 };
