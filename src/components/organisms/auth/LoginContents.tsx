@@ -7,10 +7,9 @@ import { Text } from "../../atoms/Text";
 import { MainBox, SectionBox } from "../../atoms/Box";
 import { useRouter } from "next/navigation";
 import { myInfoState, signupState } from "@/store/recoil/accountAtom";
-/* import { loadingState } from "@/store/recoil/loadingAtom"; */
+import { loadingState } from "@/store/recoil/loadingAtom";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
-/* import { getKakaoURL, postLocalLogin } from "@/lib/api/controller/account"; */
-import { postLocalLogin } from "@/lib/api/controller/account";
+import { getKakaoURL, postLocalLogin } from "@/lib/api/controller/account";
 
 interface loginFormI {
   email: string;
@@ -36,7 +35,7 @@ export default function LoginContents() {
   /** 회원가입 정보 관리 recoil */
   const setSignupForm = useSetRecoilState(signupState);
   /** 로딩 상태 관리 recoil */
-  /*   const setLoadingState = useSetRecoilState(loadingState); */
+  const setLoadingState = useSetRecoilState(loadingState);
 
   /** 로그인 정보 입력 업데이트 함수 */
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
@@ -85,7 +84,7 @@ export default function LoginContents() {
   };
 
   /** 카카오 로그인 api 통신 및 응답 처리 함수 */
-  /*   const onClickKakaoLogin = async () => {
+  const onClickKakaoLogin = async () => {
     //기존에 저장되어있는 유저 정보 삭제
     resetMyInfo();
     setLoadingState(true);
@@ -98,7 +97,7 @@ export default function LoginContents() {
       console.error("kakao Login Error:", err);
       alert("kakao Login code Error");
     }
-  }; */
+  };
 
   return (
     <MainBox $direction="column" $alignItems="flex-start" $width="100%">
@@ -130,8 +129,7 @@ export default function LoginContents() {
         />
         <Button
           title="카카오톡 로그인"
-          /* onClick={onClickKakaoLogin} */
-          onClick={() => {}}
+          onClick={onClickKakaoLogin}
           $padding="8px 0"
         />
       </SectionBox>
