@@ -19,26 +19,22 @@ export const useModelLoadingStore = create<ModalLoadingState>((set) => ({
   setTotalModels: (callback) =>
     set((state) => {
       const newTotal = callback(state.totalModels);
-      const progress = (state.loadedCount / newTotal) * 100;
-      const isComplete = state.loadedCount > newTotal;
+      const progress =
+        (newTotal / state.totalModels) * 100 > 100
+          ? 100
+          : (newTotal / state.totalModels) * 100;
+      const isComplete = state.loadedCount >= newTotal;
       return { totalModels: newTotal, progress, isComplete };
     }),
 
   incrementLoadedCount: () =>
     set((state) => {
       const newLoadedCount = state.loadedCount + 1;
-      const progress = (newLoadedCount / state.totalModels) * 100;
-      const isComplete = newLoadedCount === state.totalModels;
-      console.log(
-        "isComplete",
-        isComplete,
-        " /newLoadedCount",
-        newLoadedCount,
-        " /state.totalModels",
-        state.totalModels,
-        " / isComplete",
-        isComplete
-      );
+      const progress =
+        (newLoadedCount / state.totalModels) * 100 > 100
+          ? 100
+          : (newLoadedCount / state.totalModels) * 100;
+      const isComplete = newLoadedCount >= state.totalModels;
       return { loadedCount: newLoadedCount, progress, isComplete };
     }),
 
