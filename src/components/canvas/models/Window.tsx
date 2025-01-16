@@ -1,15 +1,14 @@
 "use client";
 
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { useLoader } from "@react-three/fiber";
 import { useEffect } from "react";
 import * as THREE from "three";
+import { useGLTFLoader } from "@/hooks/useGLTFLoader";
 
 const Window = () => {
   /** 창문 glb 모델 */
-  const windowglb = useLoader(GLTFLoader, "/models/window.glb");
+  const windowglb = useGLTFLoader("/models/window.glb");
   /** 커튼 glb 모델 */
-  const curtainglb = useLoader(GLTFLoader, "/models/curtain.glb");
+  const curtainglb = useGLTFLoader("/models/curtain.glb");
 
   /** 창문 style 변경 */
   useEffect(() => {

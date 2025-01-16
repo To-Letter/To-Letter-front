@@ -1,16 +1,16 @@
 "use client";
 
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useLoader } from "@react-three/fiber";
 import { useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
+import { useGLTFLoader } from "@/hooks/useGLTFLoader";
 /* import { useSetRecoilState } from "recoil"; */
 /* import { newLetterPopupState } from "../../recoil/newLetterPopupState"; */
 
 const NewLetter = () => {
   /** 새로운 편지 glb모델 */
-  const LetterGlb = useLoader(GLTFLoader, "/models/letter.glb");
+  const LetterGlb = useGLTFLoader("/models/letter.glb");
   /** 새로운 편지 모델 상태 recoil */
   /*   const setNewLetterPopup = useSetRecoilState(newLetterPopupState); */
 
