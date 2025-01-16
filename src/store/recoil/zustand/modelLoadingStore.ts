@@ -11,7 +11,7 @@ interface ModalLoadingState {
 }
 
 export const useModelLoadingStore = create<ModalLoadingState>((set) => ({
-  totalModels: 14, // 로그인시 의자제외 11, 비로그인시 12 TimeBackground 제외
+  totalModels: 13, // 로그인시 의자제외 12, 비로그인시 13
   loadedCount: 0,
   progress: 0,
   isComplete: false,
@@ -44,7 +44,7 @@ export const useModelLoadingStore = create<ModalLoadingState>((set) => ({
 
   resetLoading: () =>
     set({
-      totalModels: 14,
+      totalModels: 13,
       loadedCount: 0,
       progress: 0,
       isComplete: false,

@@ -10,6 +10,7 @@ import Bookshelf from "./Bookshelf";
 import { useRouter } from "next/navigation";
 import usePointerCursor from "@/hooks/usePointerCursor";
 import { useGLTFLoader } from "@/hooks/useGLTFLoader";
+import { ThreeEvent } from "@react-three/fiber";
 
 /**
  * 연필통 3D 모델의 메쉬별 색상 매핑 객체
