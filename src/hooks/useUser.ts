@@ -65,13 +65,11 @@ export const useUser = () => {
    * @param updatedInfo MyInfoI의 isLogin, address, email, nickname 중 모든 속성이 필수가 아님
    */
   const updateMyInfo = (updatedInfo: Partial<MyInfoI>) => {
-    console.log("Updating myInfo with:", updatedInfo); // 디버깅용
     setMyInfo((prevState: any) => {
       const newState = {
         ...prevState,
         ...updatedInfo,
       };
-      console.log("New myInfo state:", newState); // 디버깅용
       return newState;
     });
   };

@@ -10,7 +10,6 @@ export const sendApi = {
     const accessToken =
       axiosInterceptor.defaults.headers.common["Authorization"];
 
-    console.log("url check : ", AUTH_KEY.apiUrl + url);
     if (accessToken !== null) {
       return axiosInterceptor.get(AUTH_KEY.apiUrl + url);
     } else {

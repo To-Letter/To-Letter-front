@@ -2,13 +2,14 @@
 
 import React, { useState } from "react";
 import styled from "styled-components";
-/* import { getKakaoDeleteURL } from "@/lib/api/controller/account"; */
-/* import { useSetRecoilState } from "recoil"; */
-/* import { loadingState } from "@/store/recoil/loadingAtom"; */
+import { getKakaoDeleteURL } from "@/lib/api/controller/account";
+import { useSetRecoilState } from "recoil";
+import { loadingState } from "@/store/recoil/loadingAtom";
 import ToastMessage from "@/components/atoms/ToastMessage";
 import { MainBox, SectionBox } from "@/components/atoms/Box";
 import { Text } from "@/components/atoms/Text";
 import Button from "@/components/atoms/Button";
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 
 export default function KakaoUserDeleteContents() {
   /** 토스트 메시지를 관리하는 state */
@@ -17,13 +18,27 @@ export default function KakaoUserDeleteContents() {
     visible: false,
   });
   /** 로딩 상태를 관리하는 recoil */
-  /*   const setLoding = useSetRecoilState(loadingState); */
+  const setLoding = useSetRecoilState(loadingState);
 
   /** 카카오 회원 탈퇴 버튼 클릭 시 Redirection 이동 함수 */
-  /*   const onClickKakaoDelete = async () => {
+  const onClickKakaoDelete = async () => {
     try {
       setLoding(true);
+
+      /* 현재 로그인된 상태의 토큰을 세션스토리지에 저장 */
+      const currentAccessToken =
+        axiosInterceptor.defaults.headers.common["Authorization"];
+      const currentRefreshToken =
+        axiosInterceptor.defaults.headers.common["refreshToken"];
+
+      if (currentAccessToken && currentRefreshToken) {
+        /* 세션스토리지에 현재 토큰 저장 */
+        sessionStorage.setItem("accessToken", currentAccessToken.toString());
+        sessionStorage.setItem("refreshToken", currentRefreshToken.toString());
+      }
+
       const res: any = await getKakaoDeleteURL();
+
       if (res.data.responseCode === 200) {
         window.location.href = res.data.responseData;
       }
@@ -36,7 +51,7 @@ export default function KakaoUserDeleteContents() {
         visible: true,
       });
     }
-  }; */
+  };
 
   return (
     <MainBox $width="100%" $height="380px">
@@ -56,8 +71,7 @@ export default function KakaoUserDeleteContents() {
         <Button
           title="계정 삭제"
           $padding="8px 0"
-          /* onClick={onClickKakaoDelete} */
-          onClick={() => {}}
+          onClick={onClickKakaoDelete}
         />
         {toast.visible && (
           <ToastMessage
