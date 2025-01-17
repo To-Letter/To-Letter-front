@@ -11,7 +11,9 @@ export const sendApi = {
       axiosInterceptor.defaults.headers.common["Authorization"];
 
     if (accessToken !== null) {
-      return axiosInterceptor.get(AUTH_KEY.apiUrl + url);
+      return axiosInterceptor.get(AUTH_KEY.apiUrl + url, {
+        withCredentials: true, // 쿠키 포함
+      });
     } else {
       return axios.get(AUTH_KEY.apiUrl + url, { withCredentials: true });
     }

@@ -28,13 +28,10 @@ export default function KakaoUserDeleteContents() {
       /* 현재 로그인된 상태의 토큰을 세션스토리지에 저장 */
       const currentAccessToken =
         axiosInterceptor.defaults.headers.common["Authorization"];
-      const currentRefreshToken =
-        axiosInterceptor.defaults.headers.common["refreshToken"];
 
-      if (currentAccessToken && currentRefreshToken) {
+      if (currentAccessToken) {
         /* 세션스토리지에 현재 토큰 저장 */
         sessionStorage.setItem("accessToken", currentAccessToken.toString());
-        sessionStorage.setItem("refreshToken", currentRefreshToken.toString());
       }
 
       const res: any = await getKakaoDeleteURL();

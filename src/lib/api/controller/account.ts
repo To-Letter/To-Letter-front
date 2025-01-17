@@ -19,10 +19,13 @@ import axiosInterceptor from "@/lib/api/axiosInterceptor";
  */
 const clearTokens = () => {
   delete axiosInterceptor.defaults.headers.common["Authorization"];
-  delete axiosInterceptor.defaults.headers.common["refreshToken"];
 
   sessionStorage.removeItem("accessToken");
   sessionStorage.removeItem("refreshToken");
+
+  // refreshToken 쿠키 삭제
+  document.cookie =
+    "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 };
 
 /**
@@ -39,17 +42,14 @@ export const postLocalLogin = async (loginData: {
     email: loginData.email,
     password: loginData.password,
   });
+  console.log("login response", response);
 
   const accessToken = response.headers.get("authorization");
-  const refreshToken = response.headers.get("refreshToken");
 
   if (accessToken) {
     axiosInterceptor.defaults.headers.common[
       "Authorization"
     ] = `${accessToken}`;
-  }
-  if (refreshToken) {
-    axiosInterceptor.defaults.headers.common["refreshToken"] = refreshToken;
   }
 
   return response;
