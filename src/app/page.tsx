@@ -4,7 +4,6 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import Scene from "../components/canvas/Scene"; // 경로 수정
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
-import "@/style/globals.css";
 import { useRouter } from "next/navigation";
 import { useModelLoadingStore } from "@/store/recoil/zustand/modelLoadingStore";
 import { useEffect } from "react";
