@@ -5,7 +5,7 @@ import { ThreeEvent, useLoader } from "@react-three/fiber";
 import { useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
-/* import axiosInterceptor from "@/lib/api/axiosInterceptor"; */
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useRouter } from "next/navigation";
 import usePointerCursor from "@/hooks/usePointerCursor";
 
@@ -19,9 +19,9 @@ const TrashBin = () => {
   /** 쓰레기통 클릭 함수 */
   const onClickTrashBin = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation(); // 이벤트 전파 방지
-    /*     if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
+    if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
       router.push("/letter/letterdelete");
-    } */
+    }
     router.push("/letter/letterdelete");
   };
 

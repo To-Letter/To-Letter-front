@@ -8,7 +8,7 @@ import * as THREE from "three";
 import Calender from "./Calender";
 import Bookshelf from "./Bookshelf";
 /* import NewLetter from "./NewLetter"; */
-/* import axiosInterceptor from "@/lib/api/axiosInterceptor"; */
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useRouter } from "next/navigation";
 import usePointerCursor from "@/hooks/usePointerCursor";
 
@@ -99,10 +99,9 @@ const Desk = () => {
   /** 연필통 클릭 이벤트 */
   const onClickPencil = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation();
-    /*     if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
+    if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
       router.push("/letter/userconfirm");
-    } */
-    router.push("/letter/userconfirm");
+    }
   };
 
   return (

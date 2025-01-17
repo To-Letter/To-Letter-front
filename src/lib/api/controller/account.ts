@@ -2,11 +2,26 @@ import sendApi from "@/lib/api/sendApi";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
 
 /**
- * 토큰 삭제 함수
+ * 토큰 삭제 함수(헤더 + 쿠키용)
  * */
-const clearTokens = () => {
+/* const clearTokens = () => {
   // Authorization 헤더 삭제
   delete axiosInterceptor.defaults.headers.common["Authorization"];
+  delete axiosInterceptor.defaults.headers.common["refreshToken"];
+
+  // refreshToken 쿠키 삭제
+  document.cookie =
+    "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+}; */
+
+/**
+ * 토큰 삭제 함수(기본 헤더용)
+ */
+const clearTokens = () => {
+  delete axiosInterceptor.defaults.headers.common["Authorization"];
+
+  sessionStorage.removeItem("accessToken");
+  sessionStorage.removeItem("refreshToken");
 
   // refreshToken 쿠키 삭제
   document.cookie =
@@ -27,11 +42,9 @@ export const postLocalLogin = async (loginData: {
     email: loginData.email,
     password: loginData.password,
   });
+  console.log("login response", response);
 
-  // 각각의 토큰 저장
   const accessToken = response.headers.get("authorization");
-
-  console.log("Access token: " + accessToken);
 
   if (accessToken) {
     axiosInterceptor.defaults.headers.common[
@@ -165,13 +178,18 @@ export const postKakaoToken = async (code: { code: string }) => {
     const response: any = await sendApi.post(`/kakao/su/token${queryString}`);
 
     if (response.data.responseCode === 201) {
-      // 이미 회원가입이 되있는 유저에 대한 토큰 저장 -> 로그인
+      /* 이미 회원가입이 되있는 유저에 대한 토큰 저장 -> 로그인 */
       const accessToken = response.headers.get("authorization");
+      const refreshToken = response.headers.get("refreshToken");
 
       if (accessToken) {
         axiosInterceptor.defaults.headers.common[
           "Authorization"
         ] = `${accessToken}`;
+      }
+
+      if (refreshToken) {
+        axiosInterceptor.defaults.headers.common["refreshToken"] = refreshToken;
       }
     }
 
@@ -213,11 +231,18 @@ export const postKakaoSignup = async (kakaoSignupData: {
  * @returns response
  */
 export const getLogout = async () => {
-  const response: any = await sendApi.get(`/users/logout`);
+  try {
+    const response = await sendApi.get(`/users/logout`);
 
-  clearTokens();
+    if (response.data.responseCode === 200) {
+      clearTokens();
+    }
 
-  return response;
+    return response;
+  } catch (error) {
+    clearTokens();
+    throw error;
+  }
 };
 
 /**
@@ -301,8 +326,19 @@ export const getKakaoDeleteURL = async () => {
  * @returns response
  */
 export const deleteKakaoUser = async ({ code }: { code: string }) => {
+  const accessToken = sessionStorage.getItem("accessToken");
+  const refreshToken = sessionStorage.getItem("refreshToken");
+
+  if (accessToken) {
+    axiosInterceptor.defaults.headers.common["Authorization"] = accessToken;
+  }
+  if (refreshToken) {
+    axiosInterceptor.defaults.headers.common["refreshToken"] = refreshToken;
+  }
+
   const queryString = `?code=${encodeURIComponent(code)}`;
   const response: any = await sendApi.delete(`/kakao/delete${queryString}`);
+
   if (response.data.responseCode === 200) {
     clearTokens();
   }

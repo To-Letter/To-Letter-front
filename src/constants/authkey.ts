@@ -3,5 +3,5 @@
  * @params apiUrl: 서버 api 통신 url
  * */
 export const AUTH_KEY = {
-  apiUrl: process.env.REACT_APP_API_URL,
+  apiUrl: process.env.NEXT_PUBLIC_API_URL,
 };

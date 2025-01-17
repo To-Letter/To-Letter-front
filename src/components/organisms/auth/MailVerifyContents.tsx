@@ -6,16 +6,16 @@ import { Text } from "@/components/atoms/Text";
 import ToastMessage from "@/components/atoms/ToastMessage";
 import Timer from "@/components/molecules/Timer";
 import Verify from "@/components/molecules/Verify";
-/* import { emailVerifyAuthType } from "@/constants/emailVerify"; */
-/* import { getEmialAuth, postEmailVerify } from "@/lib/api/controller/account"; */
-/* import { signupState } from "@/store/recoil/accountAtom"; */
-/* import { loadingState } from "@/store/recoil/loadingAtom"; */
-/* import { useRouter } from "next/navigation"; */
+import { emailVerifyAuthType } from "@/constants/emailVerify";
+import { getEmialAuth, postEmailVerify } from "@/lib/api/controller/account";
+import { signupState } from "@/store/recoil/accountAtom";
+import { loadingState } from "@/store/recoil/loadingAtom";
+import { useRouter } from "next/navigation";
 import React, { ChangeEvent, useState } from "react";
-/* import { useRecoilValue, useSetRecoilState } from "recoil"; */
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 export default function MailVerifyContents() {
-  /* const router = useRouter(); */
+  const router = useRouter();
   /** 인증요청 버튼 클릭 여부 관리 state */
   const [verifyMe, setVerifyMe] = useState<boolean>(false);
   /** 사용자가 메일로 받은 인증키 입력 관리 state */
@@ -30,9 +30,9 @@ export default function MailVerifyContents() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [authReqMessage, setAuthReqMessage] = useState<boolean>(false);
   /** 회원가입 정보 관리 recoil */
-  /*   const signupForm = useRecoilValue(signupState);
+  const signupForm = useRecoilValue(signupState);
   /** 로딩 상태 관리 recoil */
-  /*   const setLoding = useSetRecoilState(loadingState); */
+  const setLoding = useSetRecoilState(loadingState);
 
   /** 인증키 입력 업데이트 함수 */
   const onChangeMailKey = (e: ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +40,7 @@ export default function MailVerifyContents() {
   };
 
   /** 이메일 인증코드 발송 api 통신 및 응답 처리 함수 */
-  /*   const authRequest = async () => {
+  const authRequest = async () => {
     setLoding(true);
     try {
       const res: any = await getEmialAuth({ email: signupForm.email });
@@ -70,10 +70,10 @@ export default function MailVerifyContents() {
     } catch (err) {
       console.error(err);
     }
-  }; */
+  };
 
   /** 이메일 인증 요청 api 통신 및 응답 처리 함수 */
-  /*   const submitSignup = async () => {
+  const submitSignup = async () => {
     if (!verifyMe) {
       setToast({ message: "인증 요청 버튼을 먼저 눌러주세요.", visible: true });
     } else if (mailKey === "" || mailKey.length !== 6) {
@@ -114,7 +114,7 @@ export default function MailVerifyContents() {
         console.error(err);
       }
     }
-  }; */
+  };
 
   return (
     <MainBox
@@ -138,8 +138,7 @@ export default function MailVerifyContents() {
               title="인증 요청"
               $width="80px"
               $padding="2px 0"
-              /* onClick={authRequest} */
-              onClick={() => {}}
+              onClick={authRequest}
             />
           )}
         </Verify>
@@ -149,8 +148,7 @@ export default function MailVerifyContents() {
           title="Signup"
           $padding="8px 0"
           $margin="0 0 16px 0"
-          /* onClick={submitSignup} */
-          onClick={() => {}}
+          onClick={submitSignup}
         />
       </SectionBox>
       <Text $color="#e9e9e9" $fontSize="10px" $margin="0 0 24px 0">

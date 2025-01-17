@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-/* import { deleteKakaoUser } from "@/lib/api/controller/account"; */
+import { useEffect, useRef, useState } from "react";
+import { deleteKakaoUser } from "@/lib/api/controller/account";
 import ProgressBar from "@/components/atoms/ProgressBar";
 import { useSetRecoilState } from "recoil";
 import { loadingState } from "@/store/recoil/loadingAtom";
@@ -12,14 +12,20 @@ const KakaoUserWithdrawContents = () => {
   const router = useRouter();
   /** api 중복 호출 방지 ref */
   const hasFetched = useRef(false);
+  /** 카카오 인증코드 추출 */
+  const [code, setCode] = useState<string | null>(null);
   /** 로딩 상태를 관리하는 recoil */
   const setLoding = useSetRecoilState(loadingState);
-  /** 카카오 인증코드 추출 */
-  // const code = new URL(window.location.href).searchParams.get("code"); //[useState로 정의하여 useEffect 내부 이동 필요] next build error fix
+
+  /** 카카오 탈퇴를 위한 인가코드 관리 */
+  useEffect(() => {
+    const code = new URL(window.location.href).searchParams.get("code");
+    setCode(code);
+  }, []);
 
   /** 서버와 카카오 회원 탈퇴 통신 및 응답 처리 함수 */
   useEffect(() => {
-    /*     const OnClickKakaoToken = async () => {
+    const OnClickKakaoToken = async () => {
       if (code) {
         try {
           const res: any = await deleteKakaoUser({ code: code });
@@ -40,14 +46,13 @@ const KakaoUserWithdrawContents = () => {
       } else {
         alert("코드가 유효하지 않습니다.");
       }
-    }; */
+    };
 
     if (!hasFetched.current) {
       hasFetched.current = true;
-      /* OnClickKakaoToken(); */
+      OnClickKakaoToken();
     }
-  }, [router, setLoding]);
-  // }, [code, router, setLoding]);
+  }, [code, router, setLoding]);
 
   return (
     <MainBox $width="100vw" $height="100vh">
