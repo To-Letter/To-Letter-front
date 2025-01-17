@@ -13,20 +13,27 @@ export default function GuideLoading() {
 
   return (
     <Overlay
-      $width="200px"
+      $width="180px"
       $height="100px"
-      $justifyContent="flex-end"
+      $justifyContent="space-around"
       $alignItems="center"
       $margin="8px"
+      $padding="16px"
       $borderRadius="8px"
       $backgroundColor="rgba(0, 0, 0, 0.5)"
     >
-      <Spinner>
-        <Text $color="white" $fontWeight="bold">
+      <ElementBox
+        $direction="column"
+        $justifyContent="center"
+        $alignItems="center"
+        $margin="20px 0 0 16px"
+      >
+        <Spinner />
+        <Text $color="white" $fontWeight="bold" $margin="0 px 0 0">
           {Math.round(progress)}%
         </Text>
-      </Spinner>
-      <ElementBox $margin="0 16px 0 0">
+      </ElementBox>
+      <ElementBox $margin="0 0 0 16px">
         {progress >= 100 && (
           <MoveRootPage onClick={() => router.push("/")}>
             <Image
@@ -59,8 +66,8 @@ const spin = keyframes`
 // 스피너가 표시될 때 화면을 어둡게 덮는 오버레이
 const Overlay = styled(SectionBox)`
   position: fixed;
-  top: 0;
-  left: 0;
+  bottom: 0;
+  right: 0;
   z-index: 9999;
 `;
 
@@ -89,25 +96,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 const Spinner = styled.div`
-  position: fixed;
   width: 34px;
   height: 34px;
-  top: 64px;
-  left: 56px;
-  margin-left: -17px;
-  margin-top: -17px;
 
+  &:after,
   &:before {
     content: "";
     position: fixed;
-    border: 4px solid white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 48px;
-    height: 48px;
-    margin-left: -8px;
-    margin-top: -18px;
+    border: 3px solid white;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:after {
+    animation: ${spin} 2.5s linear infinite;
+  }
+
+  &:before {
+    width: 32px;
+    height: 32px;
+    margin-left: -7px;
+    margin-top: -7px;
     animation: ${spin} 2.5s linear infinite;
     animation-direction: reverse;
   }

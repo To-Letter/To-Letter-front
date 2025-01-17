@@ -15,14 +15,13 @@ const GuideLoading = dynamic(() => import("@/components/atoms/GuideLoading"), {
 const CSRGuidePage = () => {
   return (
     <>
+      <GuideLoading />
       {/* 숨겨진 캔버스에서 모델 프리로딩 */}
       <HideBox>
         <Canvas>
           <PreloadScene />
         </Canvas>
       </HideBox>
-
-      <GuideLoading />
     </>
   );
 };
@@ -30,5 +29,5 @@ const CSRGuidePage = () => {
 export default CSRGuidePage;
 
 const HideBox = styled.div`
-  /* visibility: hidden; */
+  visibility: hidden;
 `;
