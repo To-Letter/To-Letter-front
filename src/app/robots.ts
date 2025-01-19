@@ -1,6 +1,8 @@
 import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://to-letter-front.vercel.app";
   return {
     rules: {
       userAgent: "*",
@@ -10,6 +12,6 @@ export default function robots(): MetadataRoute.Robots {
         "/static/*", // 정적 파일 경로 제외
       ],
     },
-    sitemap: "https://to-letter-front.vercel.app/sitemap.xml", // 실제 배포 URL로 변경 필요
+    sitemap: `${siteUrl}/sitemap.xml`, // 실제 배포 URL로 변경 필요
   };
 }
