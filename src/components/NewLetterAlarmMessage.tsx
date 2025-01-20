@@ -27,6 +27,9 @@ export const NewLetterAlarmMessage = () => {
       {
         headers: {
           Authorization: token,
+          refreshToken: axiosInterceptor.defaults.headers.common[
+            "refreshToken"
+          ] as string,
         },
       }
     );
