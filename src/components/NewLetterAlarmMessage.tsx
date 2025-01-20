@@ -29,44 +29,31 @@ export const NewLetterAlarmMessage = () => {
           Authorization: token,
         },
         heartbeatTimeout: 600000,
-        withCredentials: true, // CORS 관련 설정 추가
+        withCredentials: true,
       }
     );
 
-    // 연결 성공 시 로그
-    eventSource.current.onopen = () => {
-      console.log("SSE 연결 성공", eventSource.current);
-    };
-
-    // 메시지 수신 이벤트 처리
-    eventSource.current.addEventListener("message", (event) => {
-      try {
-        console.log("수신된 데이터message:", event);
-        console.log("수신된 데이터message:", event.data);
-        setNewLetterAlarm(true);
-        setToast({ message: "새로운 편지가 도착했습니다!", visible: true });
-        eventSource.current?.close();
-      } catch (error) {
-        console.error("메시지 처리 중 오류 발생:", error);
-      }
+    // connect 이벤트용 리스너
+    eventSource.current.addEventListener("connect", (event) => {
+      console.log("연결됨:", event);
     });
 
-    // 메시지 수신 이벤트 처리
-    eventSource.current.onmessage = (event) => {
+    // 명시적으로 message 이벤트 리스너 추가
+    eventSource.current.addEventListener("message", function (event) {
+      console.log("메시지 이벤트 발생:", event);
+      console.log("메시지 데이터:", event.data);
+
       try {
-        console.log("수신된 데이터onmessage:", event);
+        const parsedData = JSON.parse(event.data);
+        console.log("parsedData", parsedData);
         setNewLetterAlarm(true);
         setToast({ message: "새로운 편지가 도착했습니다!", visible: true });
-        eventSource.current?.close();
-      } catch (error) {
-        console.error("메시지 처리 중 오류 발생:", error);
+      } catch (e) {
+        console.log("데이터 파싱 실패:", e);
       }
-    };
 
-    setTimeout(() => {
-      console.log("SSE 연결 상태:", eventSource.current?.readyState);
-    }, 60000);
-
+      eventSource.current?.close();
+    });
     // 에러 처리
     eventSource.current.onerror = (error) => {
       console.error("SSE 에러 발생:", error);
@@ -80,17 +67,6 @@ export const NewLetterAlarmMessage = () => {
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
-
-    eventSource.current.onerror = async (el: any) => {
-      console.log("SSE 통신 닫힘 ", eventSource.current, el);
-      eventSource.current?.close();
-      eventSource.current = null;
-      /*       if (
-        axiosInterceptor.defaults.headers.common["Authorization"] !== undefined
-      ) {
-        sseEventSourceFetch();
-      } */
-    };
 
     // Cleanup: 컴포넌트 언마운트 및 이벤트 리스너 제거
     return () => {
