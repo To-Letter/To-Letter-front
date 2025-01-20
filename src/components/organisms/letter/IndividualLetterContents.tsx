@@ -162,8 +162,8 @@ const IndividualLetterContents = () => {
           placeholder="Write your letter here..."
           spellCheck={false}
           readOnly
-          onFocus={(e) => e.target.blur()} // 클릭해도 커서 깜빡거리지 않도록
-          style={{ cursor: "default" }} // 마우스 커서를 기본 모양으로
+          onFocus={(e) => e.target.blur()}
+          style={{ cursor: "default" }}
         />
       </PopupInner>
       <FromText>From. {individualLetterInfo.fromUserNickname}</FromText>
@@ -272,6 +272,7 @@ const StyledTextarea = styled.textarea`
 const ToInput = styled.div`
   font-family: "Handwriting", sans-serif;
   font-size: 16px;
+  color: #000000;
 
   // height @mediaquery
   @media (min-height: 501px) and (max-height: 800px) {
@@ -319,6 +320,7 @@ const FromText = styled.div`
   right: 67px;
   font-family: "Handwriting", sans-serif;
   font-size: 18px;
+  color: #000000;
 `;
 
 const BackButtonWrapper = styled.button`
