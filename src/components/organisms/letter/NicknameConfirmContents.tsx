@@ -64,12 +64,11 @@ const NicknameConfirmContents: React.FC = () => {
    * 편지 쓰기 모달로 이동 함수
    */
   const moveLetter = () => {
-    router.push("/letter/letterwrite");
-    /* if (isNicknameChecked) {
+    if (isNicknameChecked) {
       router.push("/letter/letterwrite");
     } else {
       setToast({ message: "닉네임 확인을 완료해주세요.", visible: true });
-    } */
+    }
   };
 
   return (
