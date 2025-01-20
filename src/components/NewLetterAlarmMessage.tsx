@@ -28,16 +28,24 @@ export const NewLetterAlarmMessage = () => {
         headers: {
           Authorization: token,
         },
+        heartbeatTimeout: 600000,
       }
     );
     console.log("SSE 통신 연결: ", eventSource.current);
-    // 새로운 알림 이벤트 처리
+    /*  // 새로운 알림 이벤트 처리
     eventSource.current.addEventListener("new_thread", () => {
       setNewLetterAlarm(true);
       console.log("새로운 알림!");
       setToast({ message: "새로운 편지가 도착했습니다!", visible: true });
       eventSource.current?.close(); // 알림 수신 후 연결 닫기
     });
+ */
+    eventSource.current.onmessage = async (event: any) => {
+      setNewLetterAlarm(true);
+      console.log("새로운 알림!", event);
+      setToast({ message: "새로운 편지가 도착했습니다!", visible: true });
+      eventSource.current?.close(); // 알림 수신 후 연결 닫기
+    };
 
     // 브라우저가 닫히거나 새로고침될 때 SSE 해제
     const handleBeforeUnload = () => {
@@ -47,15 +55,14 @@ export const NewLetterAlarmMessage = () => {
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     eventSource.current.onerror = async (el: any) => {
-      console.log("SSE 통신 닫힘 ", eventSource.current);
-      console.log("SSE 통신 닫힘 ", el);
+      console.log("SSE 통신 닫힘 ", eventSource.current, el);
       eventSource.current?.close();
       eventSource.current = null;
-      if (
+      /*       if (
         axiosInterceptor.defaults.headers.common["Authorization"] !== undefined
       ) {
         sseEventSourceFetch();
-      }
+      } */
     };
 
     // Cleanup: 컴포넌트 언마운트 및 이벤트 리스너 제거
