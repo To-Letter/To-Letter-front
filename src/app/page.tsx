@@ -11,6 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { progress } = useModelLoadingStore();
 
   /** kakao 리다이렉션 페이지에서 모달 전환을 위한 파라미터 처리 */
   useEffect(() => {
@@ -20,9 +21,6 @@ export default function Home() {
       router.push("/auth/login");
     }
   }, [searchParams, router]);
-
-  const router = useRouter();
-  const { progress } = useModelLoadingStore();
 
   useEffect(() => {
     // 모델이 로드되지 않은 상태라면 가이드 페이지로 리다이렉트
