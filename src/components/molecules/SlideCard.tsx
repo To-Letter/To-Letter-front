@@ -15,19 +15,21 @@ export default function SlideCard({
   guideContents,
 }: SlideCardProps) {
   return (
-    <main className="w-full h-full flex rounded-sm border border-solid border-zinc-700">
+    <main className="tw-w-full tw-h-full tw-flex tw-rounded-sm tw-border tw-border-solid tw-border-zinc-700">
       <Image
         width={540}
         height={600}
         src={imgSrc}
         alt={imgAlt}
-        className="object-cover"
+        className="tw-object-cover"
       />
-      <section className="w-[540px] h-[600px] bg-[#eedbcf] border-l-2 border-solid border-zinc-400 p-[24px]">
-        <div className="w-full h-[60px] border-b-2 border-solid border-zinc-700 flex items-center">
-          <h1 className="text-2xl text-black font-bold">{guideHeader}</h1>
+      <section className="tw-w-[540px] tw-h-[600px] tw-bg-[#eedbcf] tw-border-l-2 tw-border-solid tw-border-zinc-400 tw-p-[24px]">
+        <div className="tw-w-full tw-h-[60px] tw-border-b-2 tw-border-solid tw-border-zinc-700 tw-flex tw-items-center">
+          <h1 className="tw-text-2xl tw-text-black tw-font-bold">
+            {guideHeader}
+          </h1>
         </div>
-        <div className="w-full h-full pt-[24px] text-black whitespace-pre-line">
+        <div className="tw-w-full tw-h-full tw-pt-[24px] tw-text-black tw-whitespace-pre-line">
           {guideContents}
         </div>
       </section>

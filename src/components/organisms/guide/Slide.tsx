@@ -46,14 +46,14 @@ export default function Slide() {
   }, []);
 
   return (
-    <div className="w-screen h-screen bg-[#7b5d54] flex justify-center items-center">
-      <div className="relative w-[1080px] h-[600px] shadow-lg overflow-hidden">
+    <div className="tw-w-screen tw-h-screen tw-bg-[#7b5d54] tw-flex tw-justify-center tw-items-center">
+      <div className="tw-relative tw-w-[1080px] tw-h-[600px] tw-shadow-lg tw-overflow-hidden">
         <div
           ref={sliderRef}
-          className="flex w-full h-full overflow-x-scroll scroll-smooth no-scrollbar"
+          className="tw-flex tw-w-full tw-h-full tw-overflow-x-scroll tw-scroll-smooth tw-no-scrollbar"
         >
           {guideValue.map((item, index) => (
-            <div key={index} className="flex-shrink-0 w-full h-full">
+            <div key={index} className="tw-flex-shrink-0 tw-w-full tw-h-full">
               <SlideCard
                 imgSrc={item.imgSrc}
                 imgAlt={item.imgAlt}
@@ -68,7 +68,7 @@ export default function Slide() {
       {currentIndex > 0 && (
         <button
           onClick={handlePrev}
-          className="absolute left-[12px] top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white w-12 h-12 flex justify-center items-center rounded-full hover:bg-opacity-75"
+          className="tw-absolute tw-left-[12px] tw-top-1/2 tw-transform tw-translate-y-1/2 tw-bg-black tw-bg-opacity-50 tw-text-white tw-w-12 tw-h-12 tw-flex tw-justify-center tw-items-center tw-rounded-full tw-hover:tw-bg-opacity-75"
         >
           <FaArrowLeft />
         </button>
@@ -77,7 +77,7 @@ export default function Slide() {
       {currentIndex < totalSlides - 1 && (
         <button
           onClick={handleNext}
-          className="absolute right-[12px] top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white w-12 h-12 flex justify-center items-center rounded-full hover:bg-opacity-75"
+          className="tw-absolute tw-right-[12px] tw-top-1/2 tw-transform tw-translate-y-1/2 tw-bg-black tw-bg-opacity-50 tw-text-white tw-w-12 tw-h-12 tw-flex tw-justify-center tw-items-center tw-rounded-full tw-hover:tw-bg-opacity-75"
         >
           <FaArrowRight />
         </button>
