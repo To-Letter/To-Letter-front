@@ -52,7 +52,7 @@ export const getSendLetter = async (pageData: {
   sort: string;
 }) => {
   const queryString = `?page=${pageData.page}&size=${pageData.size}&sort=${pageData.sort}`;
-  const response: any = await sendApi.get(`/letter/sent${queryString}`);
+  const response: any = await sendApi.get(`/letter/send${queryString}`);
 
   return response;
 };
