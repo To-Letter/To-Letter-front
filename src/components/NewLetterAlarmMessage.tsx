@@ -29,20 +29,45 @@ export const NewLetterAlarmMessage = () => {
           Authorization: token,
         },
         heartbeatTimeout: 600000,
+        withCredentials: true, // CORS 관련 설정 추가
       }
     );
-    console.log("SSE 통신 연결: ", eventSource.current);
-    /*  // 새로운 알림 이벤트 처리
-    eventSource.current.addEventListener("new_thread", () => {
+
+    // 연결 성공 시 로그
+    eventSource.current.onopen = () => {
+      console.log("SSE 연결 성공", eventSource.current);
+    };
+
+    // 새로운 알림 이벤트 처리
+    eventSource.current.addEventListener("message", () => {
       setNewLetterAlarm(true);
-      console.log("새로운 알림!");
+      console.log("새로운 알림! new_thread");
       setToast({ message: "새로운 편지가 도착했습니다!", visible: true });
       eventSource.current?.close(); // 알림 수신 후 연결 닫기
     });
- */
+
+    // 메시지 수신 이벤트 처리
+    eventSource.current.onmessage = (event) => {
+      try {
+        console.log("수신된 데이터:", event);
+        setNewLetterAlarm(true);
+        setToast({ message: "새로운 편지가 도착했습니다!", visible: true });
+        eventSource.current?.close();
+      } catch (error) {
+        console.error("메시지 처리 중 오류 발생:", error);
+      }
+    };
+
+    // 에러 처리
+    eventSource.current.onerror = (error) => {
+      console.error("SSE 에러 발생:", error);
+      eventSource.current?.close();
+      eventSource.current = null;
+    };
+
     eventSource.current.onmessage = async (event: any) => {
       setNewLetterAlarm(true);
-      console.log("새로운 알림!", event);
+      console.log("새로운 알림! onmessage", event);
       setToast({ message: "새로운 편지가 도착했습니다!", visible: true });
       eventSource.current?.close(); // 알림 수신 후 연결 닫기
     };
