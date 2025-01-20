@@ -1,7 +1,5 @@
 "use client";
 
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { useLoader, ThreeEvent } from "@react-three/fiber";
 import { useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
@@ -11,6 +9,8 @@ import Bookshelf from "./Bookshelf";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useRouter } from "next/navigation";
 import usePointerCursor from "@/hooks/usePointerCursor";
+import { useGLTFLoader } from "@/hooks/useGLTFLoader";
+import { ThreeEvent } from "@react-three/fiber";
 
 /**
  * 연필통 3D 모델의 메쉬별 색상 매핑 객체
@@ -49,9 +49,9 @@ const Desk = () => {
   /** 커서 스타일 커스텀 훅 */
   const { handlePointerOver, handlePointerOut } = usePointerCursor();
   /** 책상 glb모델 */
-  const deskglb = useLoader(GLTFLoader, "/models/desk.glb");
+  const deskglb = useGLTFLoader("/models/desk.glb");
   /** 연필통 glb모델 */
-  const pencilglb = useLoader(GLTFLoader, "/models/pencil_case.glb");
+  const pencilglb = useGLTFLoader("/models/pencil_case.glb");
 
   /*   const newLetterAlarm = useRecoilValue(newLetterAlarmState); */
 

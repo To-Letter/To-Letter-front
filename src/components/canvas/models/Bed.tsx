@@ -1,19 +1,19 @@
 "use client";
 
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { ThreeEvent, useLoader } from "@react-three/fiber";
+import { ThreeEvent } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { useRouter } from "next/navigation";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import usePointerCursor from "@/hooks/usePointerCursor";
+import { useGLTFLoader } from "@/hooks/useGLTFLoader";
 
 const Bed = () => {
   const router = useRouter();
   /** 커서 스타일 커스텀 훅 */
   const { handlePointerOver, handlePointerOut } = usePointerCursor();
   /* 침대 glb 모델 */
-  const bedglb = useLoader(GLTFLoader, "/models/bed.glb");
+  const bedglb = useGLTFLoader("/models/bed.glb");
   /* 침대 ref */
   const bedRef = useRef<THREE.Mesh>(null);
 

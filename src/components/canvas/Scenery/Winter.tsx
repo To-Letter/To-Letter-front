@@ -3,15 +3,15 @@
 import React, { useEffect, useState } from "react";
 import { useLoader } from "@react-three/fiber";
 import { Group, Object3DEventMap } from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
 import { treePosition } from "@/constants/seasonTree";
 import { seasonFile } from "@/constants/seasonTree";
+import { useGLTFLoader } from "@/hooks/useGLTFLoader";
 
 const Winter = () => {
   const [treeClones, setTreeClones] = useState<Group<Object3DEventMap>[]>([]);
 
-  const treeglb = useLoader(GLTFLoader, seasonFile.winter.modelPath);
+  const treeglb = useGLTFLoader(seasonFile.winter.modelPath);
 
   const woodTexture = useLoader(
     THREE.TextureLoader,

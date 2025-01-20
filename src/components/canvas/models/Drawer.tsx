@@ -1,13 +1,12 @@
 "use client";
 
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { useLoader } from "@react-three/fiber";
 import { useEffect } from "react";
 import * as THREE from "three";
+import { useGLTFLoader } from "@/hooks/useGLTFLoader";
 
 const Drawer = () => {
   /** 서랍 glb모델 */
-  const drawerglb = useLoader(GLTFLoader, "/models/drawer.glb");
+  const drawerglb = useGLTFLoader("/models/drawer.glb");
 
   /** 서랍 모델 style 변경 */
   useEffect(() => {

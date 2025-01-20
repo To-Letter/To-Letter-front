@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import StyledComponentsRegistry from "@/lib/api/reistry";
 import { memo } from "react";
 import ClientProviders from "@/components/ClientProviders";
+import "@/style/globals.css";
 
 export const metadata: Metadata = {
   title: "TO. Letter",

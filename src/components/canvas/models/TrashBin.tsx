@@ -1,20 +1,20 @@
 "use client";
 
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { ThreeEvent, useLoader } from "@react-three/fiber";
+import { ThreeEvent } from "@react-three/fiber";
 import { useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useRouter } from "next/navigation";
 import usePointerCursor from "@/hooks/usePointerCursor";
+import { useGLTFLoader } from "@/hooks/useGLTFLoader";
 
 const TrashBin = () => {
   const router = useRouter();
   /** 커서 스타일 커스텀 훅 */
   const { handlePointerOver, handlePointerOut } = usePointerCursor();
   /** 의자 glb 모델 */
-  const chairglb = useLoader(GLTFLoader, "/models/trashBin.glb");
+  const chairglb = useGLTFLoader("/models/trashBin.glb");
 
   /** 쓰레기통 클릭 함수 */
   const onClickTrashBin = (event: ThreeEvent<MouseEvent>) => {
