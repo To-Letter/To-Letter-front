@@ -1,22 +1,31 @@
 "use client";
 
-import React, { useEffect } from "react";
-/* import styled from "styled-components";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import { useUser } from "@/hooks/useUser";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
-import { useRouter } from "next/navigation"; */
+import { useRouter } from "next/navigation";
 import { ElementBox } from "../atoms/Box";
-/* import { Text } from "../atoms/Text";
+import { Text } from "../atoms/Text";
 import Button from "../atoms/Button";
- */
+
 /** 편지 공유 컴포넌트 */
 const LetterShareContents: React.FC = () => {
-  // const router = useRouter();
+  const router = useRouter();
   /** 유저 정보 커스텀 훅 */
-  // const { myInfo } = useUser();
+  const { myInfo } = useUser();
+  /** 현재 URL */
+  const [currentUrl, setCurrentUrl] = useState<string>("");
+  /** CSR 확인을 위한 상태 */
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    setCurrentUrl(window.location.href);
+  }, []);
 
   /** 카카오 서버에 이미지 업로드 */
-  /* const kakaoImageUploading = (): Promise<string> => {
+  const kakaoImageUploading = (): Promise<string> => {
     return new Promise((resolve, reject) => {
       const imagePath = "/images/kakao_share_image.png";
       fetch(imagePath)
@@ -39,30 +48,33 @@ const LetterShareContents: React.FC = () => {
           reject(error);
         });
     });
-  }; */
+  };
 
   /** 카카오 공유 함수 */
-  /* const shareToKakao = async () => {
+  const shareToKakao = async () => {
+    if (!mounted) return;
     try {
-      if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
+      if (
+        axiosInterceptor.defaults.headers.common["Authorization"] !== undefined
+      ) {
         const imageUrl = await kakaoImageUploading();
         window.Kakao.Share.sendDefault({
           objectType: "feed",
           content: {
             title: "To.Letter",
             description: `${myInfo.nickname}님에게 편지를 보내보세요!`,
-            imageUrl: imageUrl, // 업로드된 이미지 URL 사용
+            imageUrl: imageUrl,
             link: {
-              mobileWebUrl: "https://developers.kakao.com",
-              webUrl: "https://developers.kakao.com",
+              mobileWebUrl: currentUrl,
+              webUrl: currentUrl,
             },
           },
           buttons: [
             {
               title: "웹으로 이동",
               link: {
-                mobileWebUrl: "https://developers.kakao.com",
-                webUrl: "https://developers.kakao.com",
+                mobileWebUrl: currentUrl,
+                webUrl: currentUrl,
               },
             },
           ],
@@ -71,39 +83,41 @@ const LetterShareContents: React.FC = () => {
     } catch (error) {
       console.error("카카오톡 공유 중 오류가 발생했습니다:", error);
     }
-  }; */
+  };
 
   /** 트위터 공유 함수 */
-  /*   const twitterShare = () => {
-    const url = `${window.location.href}`;
+  const twitterShare = () => {
+    if (!mounted) return;
     const text = `To.Letter ${myInfo.nickname}님에게 편지를 보내보세요!`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       text
-    )}&url=${encodeURIComponent(url)}`;
+    )}&url=${encodeURIComponent(currentUrl)}`;
     window.open(twitterUrl);
   };
- */
+
   /** 페이스북 공유 함수 */
-  /*  function shareFacebook() {
-    const sendUrl = window.location.href;
-    window.open("http://www.facebook.com/sharer/sharer.php?u=" + sendUrl);
-  } */
+  const shareFacebook = () => {
+    if (!mounted) return;
+    window.open("http://www.facebook.com/sharer/sharer.php?u=" + currentUrl);
+  };
 
   /** URL 복사 */
-  /*   const copyUrlToClipboard = () => {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url).then(() => {
+  const copyUrlToClipboard = () => {
+    if (!mounted) return;
+    navigator.clipboard.writeText(currentUrl).then(() => {
       alert("URL이 복사되었습니다.");
     });
-  }; */
+  };
 
   /** 카카오 초기화 */
   useEffect(() => {
-    if (window.Kakao && !window.Kakao.isInitialized()) {
+    if (mounted && window.Kakao && !window.Kakao.isInitialized()) {
       window.Kakao.cleanup();
       window.Kakao.init("7df766006a2913dd75b028486db00859");
     }
-  }, []);
+  }, [mounted]);
+
+  if (!mounted) return null;
 
   return (
     <ElementBox
@@ -118,7 +132,7 @@ const LetterShareContents: React.FC = () => {
         background: "rgba(0, 0, 0, 0.5)",
       }}
     >
-      {/* <ElementBox
+      <ElementBox
         $width="400px"
         $direction="column"
         $alignItems="flex-start"
@@ -193,12 +207,12 @@ const LetterShareContents: React.FC = () => {
             />
           </ElementBox>
         </ElementBox>
-      </ElementBox> */}
+      </ElementBox>
     </ElementBox>
   );
 };
 
-/* const ShareButtonWrap = styled.button`
+const ShareButtonWrap = styled.button`
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -224,6 +238,6 @@ const UrlInput = styled.input`
     outline: none;
     border: none;
   }
-`; */
+`;
 
 export default LetterShareContents;

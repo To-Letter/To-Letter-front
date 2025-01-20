@@ -104,7 +104,9 @@ const Desk = () => {
   /** 연필통 클릭 이벤트 */
   const onClickPencil = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation();
-    if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
+    if (
+      axiosInterceptor.defaults.headers.common["Authorization"] !== undefined
+    ) {
       router.push("/letter/userconfirm");
     }
   };

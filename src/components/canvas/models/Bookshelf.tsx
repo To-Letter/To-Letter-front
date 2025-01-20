@@ -30,7 +30,9 @@ const Bookshelf = ({
   /** 책 선반 클릭 시 편지함 모달로 이동 */
   const onClickBookshelf = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation();
-    if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
+    if (
+      axiosInterceptor.defaults.headers.common["Authorization"] !== undefined
+    ) {
       router.push("/letter/letterbox/receive");
     }
   };

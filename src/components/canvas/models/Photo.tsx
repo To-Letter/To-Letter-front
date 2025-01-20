@@ -32,7 +32,7 @@ const Photo = ({
   /** 사진 클릭 함수 */
   const onClickphoto = () => {
     const isLoggedIn =
-      axiosInterceptor.defaults.headers.common["Authorization"] !== null;
+      axiosInterceptor.defaults.headers.common["Authorization"] !== undefined;
 
     if (popupId === "photo1" && isLoggedIn) {
       router.push("/share");
