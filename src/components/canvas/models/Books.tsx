@@ -4,7 +4,7 @@ import { useRef, useEffect, useCallback } from "react";
 import * as THREE from "three";
 import { ThreeEvent } from "@react-three/fiber";
 import { useRouter } from "next/navigation";
-/* import axiosInterceptor from "@/lib/api/axiosInterceptor"; */
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import usePointerCursor from "@/hooks/usePointerCursor";
 import { useGLTFLoader } from "@/hooks/useGLTFLoader";
 
@@ -49,10 +49,9 @@ const Books = () => {
   const onClickBooks = useCallback(
     (event: ThreeEvent<MouseEvent>) => {
       event.stopPropagation();
-      /*       if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
+      if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
         router.push("/letter/letterbox/receive");
-      } */
-      router.push("/letter/letterbox/receive");
+      }
     },
     [router]
   );

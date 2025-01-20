@@ -1,23 +1,25 @@
-"use client"; // Canvas와 Recoil을 사용하므로 필수
+"use client";
 
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import Scene from "../components/canvas/Scene"; // 경로 수정
+import Scene from "../components/canvas/Scene";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
-import { useRouter } from "next/navigation";
 import { useModelLoadingStore } from "@/store/recoil/zustand/modelLoadingStore";
 import { useEffect } from "react";
-/* import { useEffect } from "react";
-import { useRouter } from "next/navigation"; */
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Home() {
-  /*   const router = useRouter();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  /** kakao 리다이렉션 페이지에서 모달 전환을 위한 파라미터 처리 */
   useEffect(() => {
-    // 자주 사용되는 모달 경로들을 미리 프리페치
-    router.prefetch("/login");
-    router.prefetch("/signup");
-    // ... 다른 모달 경로들
-  }, [router]); */
+    if (searchParams.get("modal") === "kakao-signup") {
+      router.push("/auth/kakao");
+    } else if (searchParams.get("modal") === "login") {
+      router.push("/auth/login");
+    }
+  }, [searchParams, router]);
 
   const router = useRouter();
   const { progress } = useModelLoadingStore();

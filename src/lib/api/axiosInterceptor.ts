@@ -1,44 +1,33 @@
-"use client";
 import axios from "axios";
 import { AUTH_KEY } from "@/constants/authkey";
-import sendApi from "@/lib/api/sendApi";
 
-/**
- * axios 인터셉터 생성
- */
 const axiosInterceptor = axios.create({
   baseURL: AUTH_KEY.apiUrl,
   withCredentials: true,
   headers: {
-    "Access-Control-Allow-Origin": `${process.env.REACT_APP_SERVER_URL}`,
+    "Access-Control-Allow-Origin": `${AUTH_KEY.apiUrl}`,
     "Access-Control-Allow-Credentials": "true",
   },
 });
 
 /**
- * 재발급 토큰 요청 함수
- * @returns accessToken
- */
-async function getNewToken() {
-  const response = await sendApi.post(`${AUTH_KEY.apiUrl}/auth/reissue`);
-
-  return response.headers["Authorization"];
-}
-
-/**
  * 요청 인터셉터
  */
 axiosInterceptor.interceptors.request.use(
-  async (config: any) => {
+  async (config) => {
     const accessToken =
       axiosInterceptor.defaults.headers.common["Authorization"];
+    const refreshToken =
+      axiosInterceptor.defaults.headers.common["refreshToken"];
 
-    if (!accessToken) {
-      const newAccessToken = await getNewToken();
-      config.headers["Authorization"] = `Bearer ${newAccessToken}`;
-      axiosInterceptor.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${newAccessToken}`;
+    console.log("reissue accessToken", accessToken);
+
+    /* 두 토큰 모두 요청 헤더에 포함 */
+    if (accessToken) {
+      config.headers["Authorization"] = accessToken;
+    }
+    if (refreshToken) {
+      config.headers["refreshToken"] = refreshToken;
     }
 
     return config;
@@ -52,33 +41,35 @@ axiosInterceptor.interceptors.request.use(
  * 응답 인터셉터
  */
 axiosInterceptor.interceptors.response.use(
-  (response: any) => {
+  (response) => {
+    const newAccessToken = response.headers["authorization"];
+    if (newAccessToken) {
+      axiosInterceptor.defaults.headers.common["Authorization"] =
+        newAccessToken;
+      console.log("New Access Token:", newAccessToken);
+    }
     return response;
   },
   async (error) => {
-    const originalRequest = error.config;
+    /* 토큰 관련 에러 처리 */
+    const errorCode = error.response?.data.code;
 
-    if (
-      (error.response?.data.code === 1002 ||
-        error.response?.data.code === 1003) &&
-      !originalRequest._retry
-    ) {
-      originalRequest._retry = true;
-      const newAccessToken = await getNewToken();
-      axiosInterceptor.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${newAccessToken}`;
-      originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+    switch (errorCode) {
+      case 1001: // 유효하지 않은 토큰
+      case 1002: // 빈 문자열 토큰
+        alert("로그인이 필요한 서비스입니다.");
+        window.location.href = "/";
+        break;
 
-      return axiosInterceptor(originalRequest);
-    }
+      case 1003: // 만료된 토큰
+      case 1004: // 변조된 토큰
+      case 1005: // 잘못된 접근
+        alert("다시 로그인해주세요.");
+        window.location.href = "/";
+        break;
 
-    if (error.response?.data.code === 1006) {
-      alert("리프레쉬 토큰이 만료되었습니다. 재로그인 해주세요.");
-      window.location.href = "/";
-    } else {
-      alert("에러가 발생하였습니다.");
-      window.location.href = "/error";
+      default:
+        return Promise.reject(error);
     }
 
     return Promise.reject(error);

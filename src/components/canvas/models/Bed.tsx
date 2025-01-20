@@ -4,7 +4,7 @@ import { ThreeEvent } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { useRouter } from "next/navigation";
-/* import axiosInterceptor from "@/lib/api/axiosInterceptor"; */
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import usePointerCursor from "@/hooks/usePointerCursor";
 import { useGLTFLoader } from "@/hooks/useGLTFLoader";
 
@@ -20,10 +20,9 @@ const Bed = () => {
   /** 침대 클릭 마이페이지 모달로 이동 */
   const onClickBed = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation(); // 이벤트 전파 방지
-    /* if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
+    if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
       router.push("/mypage/myinfo");
-    } */
-    router.push("/mypage/myinfo");
+    }
   };
 
   /** 침대 모델 style 조정 */

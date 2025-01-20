@@ -13,7 +13,7 @@ export default function LetterEndContents() {
 
   /** 회원 탈퇴 버튼 클릭 시 이동 */
   const onClickButton = () => {
-    if (myInfo.userRole === "local") {
+    if (myInfo.userRole === "localLogin") {
       router.push("/mypage/letterend/localuserdelete");
     } else {
       router.push("/mypage/letterend/kakaouserdelete");
