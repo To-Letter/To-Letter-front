@@ -29,10 +29,6 @@ export default function Home() {
       router.push("/guide");
       return;
     }
-
-    // 자주 사용되는 모달 경로들을 미리 프리페치
-    router.prefetch("/login");
-    router.prefetch("/signup");
   }, [progress, router]);
 
   // 모델이 로드되지 않았다면 빈 화면을 보여줌
@@ -40,12 +36,6 @@ export default function Home() {
 
   const isAuthorized =
     axiosInterceptor.defaults.headers.common["Authorization"] !== undefined;
-
-  console.log(
-    axiosInterceptor.defaults.headers.common["Authorization"],
-    axiosInterceptor.defaults.headers.common["Authorization"] as string,
-    typeof (axiosInterceptor.defaults.headers.common["Authorization"] as string)
-  );
 
   return (
     <main>

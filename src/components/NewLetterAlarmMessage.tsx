@@ -34,29 +34,19 @@ export const NewLetterAlarmMessage = () => {
     );
 
     // connect 이벤트용 리스너
-    eventSource.current.addEventListener("connect", (event) => {
-      console.log("연결됨:", event);
+    eventSource.current.addEventListener("connect", () => {
+      console.log("sse 연결");
     });
 
     // 명시적으로 message 이벤트 리스너 추가
-    eventSource.current.addEventListener("message", function (event) {
-      console.log("메시지 이벤트 발생:", event);
-      console.log("메시지 데이터:", event.data);
-
-      try {
-        const parsedData = JSON.parse(event.data);
-        console.log("parsedData", parsedData);
-        setNewLetterAlarm(true);
-        setToast({ message: "새로운 편지가 도착했습니다!", visible: true });
-      } catch (e) {
-        console.log("데이터 파싱 실패:", e);
-      }
-
+    eventSource.current.addEventListener("message", function () {
+      setNewLetterAlarm(true);
+      setToast({ message: "새로운 편지가 도착했습니다!", visible: true });
       eventSource.current?.close();
     });
     // 에러 처리
     eventSource.current.onerror = (error) => {
-      console.error("SSE 에러 발생:", error);
+      console.error("SSE close", error);
       eventSource.current?.close();
       eventSource.current = null;
     };
@@ -76,16 +66,13 @@ export const NewLetterAlarmMessage = () => {
   };
 
   useEffect(() => {
-    console.log("랜더링");
     // Access token이 없으면 SSE 연결하지 않음
     if (
       axiosInterceptor.defaults.headers.common["Authorization"] === undefined ||
       eventSource.current !== null
     ) {
-      console.log("탈락!");
       return;
     }
-
     sseEventSourceFetch();
   }, [setNewLetterAlarm]);
 
