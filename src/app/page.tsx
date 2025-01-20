@@ -7,6 +7,7 @@ import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useModelLoadingStore } from "@/store/recoil/zustand/modelLoadingStore";
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { NewLetterAlarmMessage } from "@/components/NewLetterAlarmMessage";
 
 export default function Home() {
   const router = useRouter();
@@ -40,6 +41,12 @@ export default function Home() {
   const isAuthorized =
     axiosInterceptor.defaults.headers.common["Authorization"] !== undefined;
 
+  console.log(
+    axiosInterceptor.defaults.headers.common["Authorization"],
+    axiosInterceptor.defaults.headers.common["Authorization"] as string,
+    typeof (axiosInterceptor.defaults.headers.common["Authorization"] as string)
+  );
+
   return (
     <main>
       <Canvas shadows>
@@ -54,6 +61,7 @@ export default function Home() {
           maxDistance={isAuthorized ? 2 : 3}
         />
       </Canvas>
+      {isAuthorized && <NewLetterAlarmMessage />}
     </main>
   );
 }

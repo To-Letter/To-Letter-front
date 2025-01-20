@@ -11,6 +11,9 @@ import { useRouter } from "next/navigation";
 import usePointerCursor from "@/hooks/usePointerCursor";
 import { useGLTFLoader } from "@/hooks/useGLTFLoader";
 import { ThreeEvent } from "@react-three/fiber";
+import { newLetterAlarmState } from "@/store/recoil/letterAtom";
+import { useRecoilValue } from "recoil";
+import NewLetter from "./NewLetter";
 
 /**
  * 연필통 3D 모델의 메쉬별 색상 매핑 객체
@@ -52,6 +55,8 @@ const Desk = () => {
   const deskglb = useGLTFLoader("/models/desk.glb");
   /** 연필통 glb모델 */
   const pencilglb = useGLTFLoader("/models/pencil_case.glb");
+  /** 새로운 편지 알람 상태 */
+  const newLetterAlarm = useRecoilValue(newLetterAlarmState);
 
   /*   const newLetterAlarm = useRecoilValue(newLetterAlarmState); */
 
@@ -116,8 +121,8 @@ const Desk = () => {
         handlePointerOut={handlePointerOut}
       />
 
-      {/**편지지 */}
-      {/* {newLetterAlarm && <NewLetter />} */}
+      {/**편지 도착 */}
+      {newLetterAlarm && <NewLetter />}
 
       {/* 책상 */}
       <mesh rotation-y={Math.PI} scale={5} position={[0, -5, -2]}>
