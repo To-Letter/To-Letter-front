@@ -72,7 +72,7 @@ export const NewLetterAlarmMessage = () => {
     console.log("랜더링");
     // Access token이 없으면 SSE 연결하지 않음
     if (
-      axiosInterceptor.defaults.headers.common["Authorization"] !== undefined ||
+      axiosInterceptor.defaults.headers.common["Authorization"] === undefined ||
       eventSource.current !== null
     ) {
       console.log("탈락!");
