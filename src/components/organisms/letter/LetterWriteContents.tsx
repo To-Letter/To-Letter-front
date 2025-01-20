@@ -41,17 +41,18 @@ const LetterWriteContents: React.FC = () => {
   /** 편지 내용 변경시 편지내용 recoil에 업데이트 하는 함수 */
   const onChangeContents = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const contents = event.target.value;
-    setNicknameAndContents({ nickname: "", contents: contents });
+    setNicknameAndContents((prev) => {
+      return { ...prev, contents: contents };
+    });
   };
 
   /** 편지 내용이 있는 경우 편지 보내기 모달로 이동하는 함수 */
   const moveSendLetterModal = () => {
-    /* if (nicknameAndContents.contents !== "") {
+    if (nicknameAndContents.contents !== "") {
       router.push("/letter/lettersend");
     } else {
       setToast({ message: "편지에 내용을 써주세요.", visible: true });
-    } */
-    router.push("/letter/lettersend");
+    }
   };
 
   /** 편지 내용 스크롤 이벤트 관리 */

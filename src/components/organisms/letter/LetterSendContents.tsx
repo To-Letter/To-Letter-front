@@ -35,12 +35,6 @@ const LetterSendContents: React.FC = () => {
 
   /** 편지 보내기 함수 */
   const letterSend = async () => {
-    if (nicknameAndContents.contents === "") {
-      setToast({
-        message: "편지 내용을 입력해주세요.",
-        visible: true,
-      });
-    }
     setLoding(true);
     try {
       const res: any = await sendLetter({
