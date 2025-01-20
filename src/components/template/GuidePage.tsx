@@ -5,7 +5,6 @@ const GuidePage = () => {
   return (
     <div>
       <Slide />
-
       <CSRGuidePage />
     </div>
   );

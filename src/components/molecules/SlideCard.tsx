@@ -25,9 +25,9 @@ export default function SlideCard({
       />
       <section className="w-[540px] h-[600px] bg-[#eedbcf] border-l-2 border-solid border-zinc-400 p-[24px]">
         <div className="w-full h-[60px] border-b-2 border-solid border-zinc-700 flex items-center">
-          <h1 className="text-2xl font-bold">{guideHeader}</h1>
+          <h1 className="text-2xl text-black font-bold">{guideHeader}</h1>
         </div>
-        <div className="w-full h-full pt-[24px] whitespace-pre-line">
+        <div className="w-full h-full pt-[24px] text-black whitespace-pre-line">
           {guideContents}
         </div>
       </section>
