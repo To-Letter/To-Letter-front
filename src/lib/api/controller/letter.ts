@@ -40,6 +40,26 @@ export const getReceiveLetter = async (pageData: {
 };
 
 /**
+ * 안 읽은 편지함 요청
+ * @param page 현재 페이지
+ * @param size 페이지 사이즈
+ * @param sort 정렬 기준
+ * @returns response
+ */
+export const getUnReadLetter = async (pageData: {
+  page: number;
+  size: number;
+  sort: string;
+}) => {
+  const queryString = `?page=${pageData.page}&size=${pageData.size}&sort=${pageData.sort}`;
+  const response: any = await sendApi.get(
+    `/letter/receive/unRead${queryString}`
+  );
+
+  return response;
+};
+
+/**
  * 보낸 편지함 요청
  * @param page 현재 페이지
  * @param size 페이지 사이즈
