@@ -18,7 +18,7 @@ export default function MyPageLayout({
 
   return (
     <ModalBox
-      $width="400px"
+      $width="320px"
       $padding="24px 40px 20px 40px"
       $direction="column"
       $alignItems="flex-start"
