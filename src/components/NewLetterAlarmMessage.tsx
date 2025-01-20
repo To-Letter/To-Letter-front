@@ -38,23 +38,23 @@ export const NewLetterAlarmMessage = () => {
       console.log("SSE 연결 성공", eventSource.current);
     };
 
-    // connect 이벤트 리스너
-    eventSource.current.addEventListener("connect", (event) => {
-      console.log("연결 이벤트 수신:", event);
-    });
-
-    // 새로운 알림 이벤트 처리
-    eventSource.current.addEventListener("message", () => {
-      setNewLetterAlarm(true);
-      console.log("새로운 알림! new_thread");
-      setToast({ message: "새로운 편지가 도착했습니다!", visible: true });
-      eventSource.current?.close(); // 알림 수신 후 연결 닫기
+    // 메시지 수신 이벤트 처리
+    eventSource.current.addEventListener("message", (event) => {
+      try {
+        console.log("수신된 데이터message:", event);
+        console.log("수신된 데이터message:", event.data);
+        setNewLetterAlarm(true);
+        setToast({ message: "새로운 편지가 도착했습니다!", visible: true });
+        eventSource.current?.close();
+      } catch (error) {
+        console.error("메시지 처리 중 오류 발생:", error);
+      }
     });
 
     // 메시지 수신 이벤트 처리
     eventSource.current.onmessage = (event) => {
       try {
-        console.log("수신된 데이터:", event);
+        console.log("수신된 데이터onmessage:", event);
         setNewLetterAlarm(true);
         setToast({ message: "새로운 편지가 도착했습니다!", visible: true });
         eventSource.current?.close();
@@ -68,13 +68,6 @@ export const NewLetterAlarmMessage = () => {
       console.error("SSE 에러 발생:", error);
       eventSource.current?.close();
       eventSource.current = null;
-    };
-
-    eventSource.current.onmessage = async (event: any) => {
-      setNewLetterAlarm(true);
-      console.log("새로운 알림! onmessage", event);
-      setToast({ message: "새로운 편지가 도착했습니다!", visible: true });
-      eventSource.current?.close(); // 알림 수신 후 연결 닫기
     };
 
     // 브라우저가 닫히거나 새로고침될 때 SSE 해제
