@@ -17,7 +17,7 @@ export default function ModalLayout({
   }
   return (
     <ModalBox
-      $width="320px"
+      $width="400px"
       $padding="24px 40px 20px 40px"
       $direction="column"
       $alignItems="flex-start;"
