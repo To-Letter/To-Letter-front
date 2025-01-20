@@ -5,14 +5,16 @@ import { useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
 import { useGLTFLoader } from "@/hooks/useGLTFLoader";
-/* import { useSetRecoilState } from "recoil"; */
-/* import { newLetterPopupState } from "../../recoil/newLetterPopupState"; */
+import { useRouter } from "next/navigation";
+import { useSetRecoilState } from "recoil";
+import { newLetterAlarmState } from "@/store/recoil/letterAtom";
 
 const NewLetter = () => {
   /** 새로운 편지 glb모델 */
   const LetterGlb = useGLTFLoader("/models/letter.glb");
-  /** 새로운 편지 모델 상태 recoil */
-  /*   const setNewLetterPopup = useSetRecoilState(newLetterPopupState); */
+  /** 새로운 편지함 path이동 */
+  const router = useRouter();
+  const setNewLetterState = useSetRecoilState(newLetterAlarmState);
 
   /** 편지 모델 텍스처 */
   const letterTexture = useLoader(
@@ -43,7 +45,10 @@ const NewLetter = () => {
       position={[-0.5, -1.97, -2.5]}
       castShadow
       receiveShadow
-      /*       onClick={() => setNewLetterPopup(true)} */
+      onClick={() => {
+        setTimeout(() => setNewLetterState(false), 10000);
+        router.push("/letter/newletter");
+      }}
     >
       <primitive object={LetterGlb.scene} />
     </mesh>
