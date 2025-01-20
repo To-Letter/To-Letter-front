@@ -49,7 +49,9 @@ const Books = () => {
   const onClickBooks = useCallback(
     (event: ThreeEvent<MouseEvent>) => {
       event.stopPropagation();
-      if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
+      if (
+        axiosInterceptor.defaults.headers.common["Authorization"] !== undefined
+      ) {
         router.push("/letter/letterbox/receive");
       }
     },

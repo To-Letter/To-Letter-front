@@ -1,22 +1,22 @@
 "use client";
 
 import React, { useEffect } from "react";
-/* import styled from "styled-components";
+import styled from "styled-components";
 import { useUser } from "@/hooks/useUser";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
-import { useRouter } from "next/navigation"; */
+import { useRouter } from "next/navigation";
 import { ElementBox } from "../atoms/Box";
-/* import { Text } from "../atoms/Text";
+import { Text } from "../atoms/Text";
 import Button from "../atoms/Button";
- */
+
 /** 편지 공유 컴포넌트 */
 const LetterShareContents: React.FC = () => {
-  // const router = useRouter();
+  const router = useRouter();
   /** 유저 정보 커스텀 훅 */
-  // const { myInfo } = useUser();
+  const { myInfo } = useUser();
 
   /** 카카오 서버에 이미지 업로드 */
-  /* const kakaoImageUploading = (): Promise<string> => {
+  const kakaoImageUploading = (): Promise<string> => {
     return new Promise((resolve, reject) => {
       const imagePath = "/images/kakao_share_image.png";
       fetch(imagePath)
@@ -39,12 +39,14 @@ const LetterShareContents: React.FC = () => {
           reject(error);
         });
     });
-  }; */
+  };
 
   /** 카카오 공유 함수 */
-  /* const shareToKakao = async () => {
+  const shareToKakao = async () => {
     try {
-      if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
+      if (
+        axiosInterceptor.defaults.headers.common["Authorization"] !== undefined
+      ) {
         const imageUrl = await kakaoImageUploading();
         window.Kakao.Share.sendDefault({
           objectType: "feed",
@@ -71,10 +73,10 @@ const LetterShareContents: React.FC = () => {
     } catch (error) {
       console.error("카카오톡 공유 중 오류가 발생했습니다:", error);
     }
-  }; */
+  };
 
   /** 트위터 공유 함수 */
-  /*   const twitterShare = () => {
+  const twitterShare = () => {
     const url = `${window.location.href}`;
     const text = `To.Letter ${myInfo.nickname}님에게 편지를 보내보세요!`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
@@ -82,20 +84,20 @@ const LetterShareContents: React.FC = () => {
     )}&url=${encodeURIComponent(url)}`;
     window.open(twitterUrl);
   };
- */
+
   /** 페이스북 공유 함수 */
-  /*  function shareFacebook() {
+  function shareFacebook() {
     const sendUrl = window.location.href;
     window.open("http://www.facebook.com/sharer/sharer.php?u=" + sendUrl);
-  } */
+  }
 
   /** URL 복사 */
-  /*   const copyUrlToClipboard = () => {
+  const copyUrlToClipboard = () => {
     const url = window.location.href;
     navigator.clipboard.writeText(url).then(() => {
       alert("URL이 복사되었습니다.");
     });
-  }; */
+  };
 
   /** 카카오 초기화 */
   useEffect(() => {
@@ -118,7 +120,7 @@ const LetterShareContents: React.FC = () => {
         background: "rgba(0, 0, 0, 0.5)",
       }}
     >
-      {/* <ElementBox
+      <ElementBox
         $width="400px"
         $direction="column"
         $alignItems="flex-start"
@@ -193,12 +195,12 @@ const LetterShareContents: React.FC = () => {
             />
           </ElementBox>
         </ElementBox>
-      </ElementBox> */}
+      </ElementBox>
     </ElementBox>
   );
 };
 
-/* const ShareButtonWrap = styled.button`
+const ShareButtonWrap = styled.button`
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -224,6 +226,6 @@ const UrlInput = styled.input`
     outline: none;
     border: none;
   }
-`; */
+`;
 
 export default LetterShareContents;

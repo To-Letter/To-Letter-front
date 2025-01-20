@@ -18,8 +18,10 @@ const TrashBin = () => {
 
   /** 쓰레기통 클릭 함수 */
   const onClickTrashBin = (event: ThreeEvent<MouseEvent>) => {
-    event.stopPropagation(); // 이벤트 전파 방지
-    if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
+    event.stopPropagation();
+    if (
+      axiosInterceptor.defaults.headers.common["Authorization"] !== undefined
+    ) {
       router.push("/letter/letterdelete");
     }
     router.push("/letter/letterdelete");
