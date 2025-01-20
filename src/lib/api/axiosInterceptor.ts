@@ -42,6 +42,12 @@ axiosInterceptor.interceptors.request.use(
  */
 axiosInterceptor.interceptors.response.use(
   (response) => {
+    const newAccessToken = response.headers["authorization"];
+    if (newAccessToken) {
+      axiosInterceptor.defaults.headers.common["Authorization"] =
+        newAccessToken;
+      console.log("New Access Token:", newAccessToken);
+    }
     return response;
   },
   async (error) => {
