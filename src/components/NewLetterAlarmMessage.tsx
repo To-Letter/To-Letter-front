@@ -38,6 +38,11 @@ export const NewLetterAlarmMessage = () => {
       console.log("SSE 연결 성공", eventSource.current);
     };
 
+    // connect 이벤트 리스너
+    eventSource.current.addEventListener("connect", (event) => {
+      console.log("연결 이벤트 수신:", event);
+    });
+
     // 새로운 알림 이벤트 처리
     eventSource.current.addEventListener("message", () => {
       setNewLetterAlarm(true);
