@@ -20,6 +20,8 @@ axiosInterceptor.interceptors.request.use(
     const refreshToken =
       axiosInterceptor.defaults.headers.common["refreshToken"];
 
+    console.log("reissue accessToken", accessToken);
+
     /* 두 토큰 모두 요청 헤더에 포함 */
     if (accessToken) {
       config.headers["Authorization"] = accessToken;
