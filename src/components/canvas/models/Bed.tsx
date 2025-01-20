@@ -19,7 +19,11 @@ const Bed = () => {
 
   /** 침대 클릭 마이페이지 모달로 이동 */
   const onClickBed = (event: ThreeEvent<MouseEvent>) => {
-    event.stopPropagation(); // 이벤트 전파 방지
+    event.stopPropagation();
+    console.log(
+      "Bed console: ",
+      axiosInterceptor.defaults.headers.common["Authorization"]
+    );
     if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
       router.push("/mypage/myinfo");
     }
