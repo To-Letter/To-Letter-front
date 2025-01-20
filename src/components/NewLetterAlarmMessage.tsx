@@ -63,6 +63,10 @@ export const NewLetterAlarmMessage = () => {
       }
     };
 
+    setTimeout(() => {
+      console.log("SSE 연결 상태:", eventSource.current?.readyState);
+    }, 60000);
+
     // 에러 처리
     eventSource.current.onerror = (error) => {
       console.error("SSE 에러 발생:", error);
