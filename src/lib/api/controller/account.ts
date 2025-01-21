@@ -42,7 +42,6 @@ export const postLocalLogin = async (loginData: {
     email: loginData.email,
     password: loginData.password,
   });
-  console.log("login response", response);
 
   const accessToken = response.headers.get("authorization");
 

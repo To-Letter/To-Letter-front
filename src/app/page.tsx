@@ -5,7 +5,7 @@ import { OrbitControls } from "@react-three/drei";
 import Scene from "../components/canvas/Scene";
 import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useModelLoadingStore } from "@/store/recoil/zustand/modelLoadingStore";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { NewLetterAlarmMessage } from "@/components/NewLetterAlarmMessage";
 
@@ -13,6 +13,25 @@ export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { progress } = useModelLoadingStore();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  /** WebGL 콘솔 메시지 관리 */
+  useEffect(() => {
+    const originalConsoleLog = console.log;
+    console.log = (...args) => {
+      if (
+        typeof args[0] === "string" &&
+        args[0].includes("THREE.WebGLRenderer: Context Lost")
+      ) {
+        return;
+      }
+      originalConsoleLog.apply(console, args);
+    };
+
+    return () => {
+      console.log = originalConsoleLog;
+    };
+  }, []);
 
   /** kakao 리다이렉션 페이지에서 모달 전환을 위한 파라미터 처리 */
   useEffect(() => {
@@ -39,7 +58,15 @@ export default function Home() {
 
   return (
     <main>
-      <Canvas shadows>
+      <Canvas
+        ref={canvasRef}
+        shadows
+        gl={{
+          antialias: true,
+          powerPreference: "high-performance",
+          preserveDrawingBuffer: true,
+        }}
+      >
         <Scene />
         <OrbitControls
           minPolarAngle={Math.PI / (isAuthorized ? 2.8 : 2.5)}

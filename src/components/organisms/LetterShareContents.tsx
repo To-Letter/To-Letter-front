@@ -17,6 +17,8 @@ const LetterShareContents: React.FC = () => {
   const [currentUrl, setCurrentUrl] = useState<string>("");
   /** CSR 확인을 위한 상태 */
   const [mounted, setMounted] = useState(false);
+  /** 클라이언트 주소 */
+  const mainUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   useEffect(() => {
     setMounted(true);
@@ -58,8 +60,6 @@ const LetterShareContents: React.FC = () => {
       }
 
       const imageUrl = await kakaoImageUploading();
-
-      const mainUrl = "https://to-letter-front.vercel.app";
 
       await window.Kakao.Share.sendDefault({
         objectType: "feed",
