@@ -53,7 +53,10 @@ export default function Slide() {
           className="tw-flex tw-w-full tw-h-full tw-overflow-x-scroll tw-scroll-smooth tw-no-scrollbar"
         >
           {guideValue.map((item, index) => (
-            <div key={index} className="tw-flex-shrink-0 tw-w-full tw-h-full">
+            <div
+              key={index}
+              className="tw-flex-shrink-0 tw-w-full tw-h-full tw-overflow-hidden"
+            >
               <SlideCard
                 imgSrc={item.imgSrc}
                 imgAlt={item.imgAlt}
@@ -68,7 +71,7 @@ export default function Slide() {
       {currentIndex > 0 && (
         <button
           onClick={handlePrev}
-          className="tw-absolute tw-left-[12px] tw-top-1/2 tw-transform tw-translate-y-1/2 tw-bg-black tw-bg-opacity-50 tw-text-white tw-w-12 tw-h-12 tw-flex tw-justify-center tw-items-center tw-rounded-full tw-hover:tw-bg-opacity-75"
+          className="tw-absolute tw-left-[12px] tw-top-1/2 tw-transform tw-translate-y-1/2 tw-bg-black tw-bg-opacity-50 tw-text-white tw-w-12 tw-h-12 tw-flex tw-border-none tw-justify-center tw-items-center tw-rounded-full hover:tw-bg-opacity-75"
         >
           <FaArrowLeft />
         </button>
@@ -77,7 +80,7 @@ export default function Slide() {
       {currentIndex < totalSlides - 1 && (
         <button
           onClick={handleNext}
-          className="tw-absolute tw-right-[12px] tw-top-1/2 tw-transform tw-translate-y-1/2 tw-bg-black tw-bg-opacity-50 tw-text-white tw-w-12 tw-h-12 tw-flex tw-justify-center tw-items-center tw-rounded-full tw-hover:tw-bg-opacity-75"
+          className="tw-absolute tw-right-[12px] tw-top-1/2 tw-transform tw-translate-y-1/2 tw-bg-black tw-bg-opacity-50 tw-text-white tw-w-12 tw-h-12 tw-flex tw-border-none tw-justify-center tw-items-center tw-rounded-full hover:tw-bg-opacity-75"
         >
           <FaArrowRight />
         </button>
