@@ -3,7 +3,7 @@ import StyledComponentsRegistry from "@/lib/api/reistry";
 import { memo } from "react";
 import ClientProviders from "@/components/ClientProviders";
 import "@/style/globals.css";
-import Script from "next/script";
+import KakaoScript from "@/components/KakaoScript";
 
 export const metadata: Metadata = {
   title: "TO. Letter",
@@ -71,12 +71,7 @@ const RootLayout = memo(
           <StyledComponentsRegistry>
             <ClientProviders modal={modal}>{children}</ClientProviders>
           </StyledComponentsRegistry>
-          <Script
-            src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.3/kakao.min.js"
-            integrity="sha384-kLbo2SvoNtOFiniJ1EQ9o2iDA8i8xp+O6Cns+L5cd4RsOJfl+43z5pvieT2ayq3C"
-            crossOrigin="anonymous"
-            strategy="lazyOnload"
-          />
+          <KakaoScript />
         </body>
       </html>
     );
