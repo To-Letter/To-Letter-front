@@ -22,3 +22,15 @@
     border-radius: 4px;
   }
 }
+@layer utilities {
+  .tw-border-bottom {
+    border-bottom-width: 3px;
+    border-bottom-style: solid;
+    border-bottom-color: #3f3f46;
+  }
+  .tw-border-left {
+    border-left-width: 2px;
+    border-left-style: solid;
+    border-left-color: #a1a1aa;
+  }
+}
