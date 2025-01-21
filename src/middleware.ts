@@ -25,20 +25,11 @@ export function middleware(request: NextRequest) {
   // 둘 다 없는 경우에만 로그인이 필요하다고 판단
   const isAuthenticated = authHeader || refreshToken;
 
-  console.log({
-    pathname,
-    authHeader: !!authHeader,
-    refreshToken: !!refreshToken,
-    isAuthenticated,
-  }); // 디버깅용 로그
-
   // 보호된 경로에 접근하려고 할 때
   if (PROTECTED_PATHS.some((path) => pathname.startsWith(path))) {
     if (!isAuthenticated) {
-      const url = new URL("/", request.url);
-      url.searchParams.set("showLogin", "true");
-
-      return NextResponse.redirect(url);
+      // 로그인이 필요한 경우 루트 페이지로 리다이렉트
+      return NextResponse.redirect(new URL("/", request.url));
     }
   }
 
