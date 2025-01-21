@@ -22,10 +22,6 @@ const nextConfig = {
         source: "/:path*",
         headers: [
           {
-            key: "Permissions-Policy",
-            value: "browsing-topics=(), interest-cohort=(), cookies=()",
-          },
-          {
             key: "Cache-Control",
             value: "public, max-age=3600, must-revalidate",
           },
