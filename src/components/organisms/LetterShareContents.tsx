@@ -53,12 +53,13 @@ const LetterShareContents: React.FC = () => {
   const shareToKakao = async () => {
     if (!mounted) return;
     try {
-      // 카카오 SDK 초기화 확인
       if (!window.Kakao?.isInitialized()) {
         window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_API_KEY);
       }
 
       const imageUrl = await kakaoImageUploading();
+
+      const mainUrl = "https://to-letter-front.vercel.app";
 
       await window.Kakao.Share.sendDefault({
         objectType: "feed",
@@ -67,23 +68,22 @@ const LetterShareContents: React.FC = () => {
           description: `${myInfo.nickname}님에게 편지를 보내보세요!`,
           imageUrl: imageUrl,
           link: {
-            mobileWebUrl: currentUrl,
-            webUrl: currentUrl,
+            mobileWebUrl: mainUrl,
+            webUrl: mainUrl,
           },
         },
         buttons: [
           {
             title: "웹으로 이동",
             link: {
-              mobileWebUrl: currentUrl,
-              webUrl: currentUrl,
+              mobileWebUrl: mainUrl,
+              webUrl: mainUrl,
             },
           },
         ],
       });
     } catch (error) {
       console.error("카카오톡 공유 중 오류가 발생했습니다:", error);
-      // 사용자에게 오류 메시지 표시
       alert("카카오톡 공유 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
