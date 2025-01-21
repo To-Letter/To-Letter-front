@@ -23,8 +23,8 @@ export default function SlideCard({
         alt={imgAlt}
         className="tw-object-cover"
       />
-      <section className="tw-w-[540px] tw-h-[600px] tw-bg-[#eedbcf] tw-border-l-2 tw-border-solid tw-border-zinc-400 tw-p-[24px]">
-        <div className="tw-w-full tw-h-[60px] tw-border-b-2 tw-border-solid tw-border-zinc-700 tw-flex tw-items-center">
+      <section className="tw-w-[540px] tw-h-[600px] tw-bg-[#eedbcf] tw-border-left tw-p-[24px]">
+        <div className="tw-w-full tw-h-[60px] tw-border-bottom tw-flex tw-items-center">
           <h1 className="tw-text-2xl tw-text-black tw-font-bold">
             {guideHeader}
           </h1>
