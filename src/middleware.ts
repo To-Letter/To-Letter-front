@@ -18,14 +18,23 @@ const PUBLIC_PATHS = ["/", "/guide", "/photo", "/auth/login", "/auth/signup"];
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Authorization 헤더 또는 쿠키에서 토큰 확인
-  const token = request.headers.get("Authorization")?.replace("Bearer ", "");
+  // Authorization 헤더에서 액세스 토큰 확인
+  const authHeader = request.headers.get("Authorization");
+  const refreshToken = request.cookies.get("refreshToken");
+
+  // 둘 다 없는 경우에만 로그인이 필요하다고 판단
+  const isAuthenticated = authHeader || refreshToken;
+
+  console.log({
+    pathname,
+    authHeader: !!authHeader,
+    refreshToken: !!refreshToken,
+    isAuthenticated,
+  }); // 디버깅용 로그
 
   // 보호된 경로에 접근하려고 할 때
   if (PROTECTED_PATHS.some((path) => pathname.startsWith(path))) {
-    // 토큰이 없으면
-    if (!token) {
-      // URL에 현재 시도한 경로를 state로 포함
+    if (!isAuthenticated) {
       const url = new URL("/", request.url);
       url.searchParams.set("showLogin", "true");
 
