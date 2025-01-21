@@ -35,6 +35,11 @@ export function middleware(request: NextRequest) {
   const refreshToken = request.cookies.get("refreshToken");
   const isAuthenticated = authHeader || refreshToken;
 
+  // 루트 페이지는 리다이렉션하지 않도록 예외 처리
+  if (pathname === "/") {
+    return NextResponse.next();
+  }
+
   // 보호된 경로에 접근하려고 할 때
   if (
     PROTECTED_DIRECT_PATHS.includes(pathname) &&
@@ -43,7 +48,7 @@ export function middleware(request: NextRequest) {
   ) {
     if (!isAuthenticated) {
       // 로그인이 필요한 경우 루트 페이지로 리다이렉트
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/guide", request.url));
     }
   }
 }
