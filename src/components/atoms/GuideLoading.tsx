@@ -29,7 +29,7 @@ export default function GuideLoading() {
         $margin="20px 0 0 16px"
       >
         <Spinner />
-        <Text $color="white" $fontWeight="bold" $margin="0 px 0 0">
+        <Text $color="white" $fontWeight="bold" $margin="8px 0 0 0">
           {Math.round(progress)}%
         </Text>
       </ElementBox>
