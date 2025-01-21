@@ -33,7 +33,7 @@ export default function Home() {
     };
   }, []);
 
-  /** 보호된 경로와 kakao 리다이렉션 페이지에서 모달 전환을 위한 파라미터 처리 */
+  /** kakao 리다이렉션 페이지에서 모달 전환을 위한 파라미터 처리 */
   useEffect(() => {
     if (searchParams.get("modal") === "kakao-signup") {
       router.push("/auth/kakao");

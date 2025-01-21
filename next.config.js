@@ -6,8 +6,8 @@ const nextConfig = {
     styledComponents: true,
   },
   experimental: {
-    optimizeCss: true, // CSS 최적화
-    optimizePackageImports: ["@components"], // 패키지 임포트 최적화
+    optimizeCss: true,
+    optimizePackageImports: ["@components"],
   },
   webpack: (config) => {
     config.externals = config.externals || {};
@@ -22,12 +22,8 @@ const nextConfig = {
         source: "/:path*",
         headers: [
           {
-            key: "Cache-Control",
-            value: "public, max-age=3600, must-revalidate",
-          },
-          {
-            key: "Cross-Origin-Opener-Policy",
-            value: "same-origin",
+            key: "Permissions-Policy",
+            value: "browsing-topics=(), interest-cohort=(), cookies=()",
           },
         ],
       },
