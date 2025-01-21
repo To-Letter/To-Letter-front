@@ -11,6 +11,10 @@ export default function KakaoScript() {
       onLoad={() => {
         if (window.Kakao && !window.Kakao.isInitialized()) {
           window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_API_KEY);
+          if (window.Kakao.isInitialized()) {
+            console.log("Kakao SDK initialized successfully");
+          }
+          console.log("Kakao SDK initialized"); // 초기화 확인용
         }
       }}
     />

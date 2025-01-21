@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useUser } from "@/hooks/useUser";
-import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useRouter } from "next/navigation";
 import { ElementBox } from "../atoms/Box";
 import { Text } from "../atoms/Text";
@@ -25,63 +24,67 @@ const LetterShareContents: React.FC = () => {
   }, []);
 
   /** 카카오 서버에 이미지 업로드 */
-  const kakaoImageUploading = (): Promise<string> => {
-    return new Promise((resolve, reject) => {
+  const kakaoImageUploading = async (): Promise<string> => {
+    try {
+      // 카카오 SDK 초기화 확인
+      if (!window.Kakao?.isInitialized()) {
+        throw new Error("Kakao SDK not initialized");
+      }
+
       const imagePath = "/images/kakao_share_image.png";
-      fetch(imagePath)
-        .then((response) => response.blob())
-        .then((blob) => {
-          const file = new File([blob], "kakao_share_image.png", {
-            type: "image/png",
-          });
-          window.Kakao.Share.uploadImage({
-            file: [file],
-          })
-            .then(function (response: any) {
-              resolve(response.infos.original.url);
-            })
-            .catch(function (error: any) {
-              reject(error);
-            });
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
+      const response = await fetch(imagePath);
+      const blob = await response.blob();
+      const file = new File([blob], "kakao_share_image.png", {
+        type: "image/png",
+      });
+
+      const uploadResponse = await window.Kakao.Share.uploadImage({
+        file: [file],
+      });
+
+      return uploadResponse.infos.original.url;
+    } catch (error) {
+      console.error("Image upload error:", error);
+      throw error;
+    }
   };
 
   /** 카카오 공유 함수 */
   const shareToKakao = async () => {
     if (!mounted) return;
     try {
-      if (
-        axiosInterceptor.defaults.headers.common["Authorization"] !== undefined
-      ) {
-        const imageUrl = await kakaoImageUploading();
-        window.Kakao.Share.sendDefault({
-          objectType: "feed",
-          content: {
-            title: "To.Letter",
-            description: `${myInfo.nickname}님에게 편지를 보내보세요!`,
-            imageUrl: imageUrl,
+      // 카카오 SDK 초기화 확인
+      if (!window.Kakao?.isInitialized()) {
+        window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_API_KEY);
+      }
+
+      const imageUrl = await kakaoImageUploading();
+
+      await window.Kakao.Share.sendDefault({
+        objectType: "feed",
+        content: {
+          title: "To.Letter",
+          description: `${myInfo.nickname}님에게 편지를 보내보세요!`,
+          imageUrl: imageUrl,
+          link: {
+            mobileWebUrl: currentUrl,
+            webUrl: currentUrl,
+          },
+        },
+        buttons: [
+          {
+            title: "웹으로 이동",
             link: {
               mobileWebUrl: currentUrl,
               webUrl: currentUrl,
             },
           },
-          buttons: [
-            {
-              title: "웹으로 이동",
-              link: {
-                mobileWebUrl: currentUrl,
-                webUrl: currentUrl,
-              },
-            },
-          ],
-        });
-      }
+        ],
+      });
     } catch (error) {
       console.error("카카오톡 공유 중 오류가 발생했습니다:", error);
+      // 사용자에게 오류 메시지 표시
+      alert("카카오톡 공유 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
 
