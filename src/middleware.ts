@@ -36,7 +36,11 @@ export function middleware(request: NextRequest) {
   const isAuthenticated = authHeader || refreshToken;
 
   // 보호된 경로에 접근하려고 할 때
-  if (PROTECTED_DIRECT_PATHS.includes(pathname)) {
+  if (
+    PROTECTED_DIRECT_PATHS.includes(pathname) &&
+    request.method === "GET" &&
+    request.headers.get("accept")?.includes("text/html")
+  ) {
     if (!isAuthenticated) {
       // 로그인이 필요한 경우 루트 페이지로 리다이렉트
       return NextResponse.redirect(new URL("/", request.url));
