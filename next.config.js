@@ -23,7 +23,15 @@ const nextConfig = {
         headers: [
           {
             key: "Permissions-Policy",
-            value: "browsing-topics=(), interest-cohort=()",
+            value: "browsing-topics=(), interest-cohort=(), cookies=()",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=3600, must-revalidate",
+          },
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin",
           },
         ],
       },
