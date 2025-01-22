@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     description: "온라인을 통해 만나는 아날로그한 편지",
     images: [
       {
-        url: `${siteUrl}/images/openGraph/og_image.png`,
+        url: `${siteUrl}/images/openGraph/og-image.png`,
         width: 1200,
         height: 630,
         alt: "TO. Letter - 온라인 편지 서비스",
@@ -33,13 +33,13 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "TO. Letter",
     description: "온라인을 통해 만나는 아날로그한 편지",
-    images: [`${siteUrl}/images/openGraph/og_image.png`],
+    images: [`${siteUrl}/images/openGraph/og-image.png`],
   },
   /* 카카오톡 전용 */
   other: {
     "kakao:title": "TO. Letter",
     "kakao:description": "온라인을 통해 만나는 아날로그한 편지",
-    "kakao:image": `${siteUrl}/images/openGraph/kakao_card.png`,
+    "kakao:image": `${siteUrl}/images/openGraph/kakao-card.png`,
     "kakao:type": "website",
   },
   robots: {
