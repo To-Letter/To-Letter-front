@@ -23,7 +23,7 @@ const Bed = () => {
     if (
       axiosInterceptor.defaults.headers.common["Authorization"] !== undefined
     ) {
-      router.push("/mypage/myinfo");
+      router.replace("/mypage/myinfo");
     }
   };
 
