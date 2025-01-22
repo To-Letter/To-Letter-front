@@ -26,11 +26,10 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/auth/address",
-    "/auth/kakao",
-    "/auth/verify",
+    "/auth/:path*",
     "/letter/:path*",
     "/mypage/:path*",
+    "/photo",
     "/share",
     "/users",
   ],

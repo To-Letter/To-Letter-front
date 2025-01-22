@@ -32,6 +32,7 @@ export function SendLetters() {
         size: 10,
         sort: "desc",
       });
+      console.log("sendLetter res", res);
       const listLetter = res.data.responseData.listLetter;
       const pageable = res.data.responseData.pageable;
       const formattedMails = listLetter.map((letter: any) => ({
