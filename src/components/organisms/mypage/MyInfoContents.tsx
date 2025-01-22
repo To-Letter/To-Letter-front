@@ -128,12 +128,7 @@ export default function MyInfoContents() {
   };
 
   return (
-    <MainBox
-      $direction="column"
-      $alignItems="flex-start"
-      $width="100%"
-      $height="380px"
-    >
+    <MainBox $direction="column" $alignItems="flex-start" $width="100%">
       <SectionBox $direction="column" $width="100%" $margin="16px 0">
         <InputForm
           keyValue="inputform-email"
