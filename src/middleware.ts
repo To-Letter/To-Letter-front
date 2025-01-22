@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+/* import { NextResponse } from "next/server"; */
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
@@ -9,13 +9,13 @@ export function middleware(request: NextRequest) {
   console.log("request", request);
   console.log("token", token);
   // 토큰이 없으면
-  if (!token) {
+  /* if (!token) {
     // URL에 현재 시도한 경로를 state로 포함
     const url = new URL("/", request.url);
     url.searchParams.set("showLogin", "true");
 
-    return setTimeout(() => NextResponse.redirect(url), 500000);
-  }
+    return NextResponse.redirect(url);
+  } */
 }
 
 export const config = {
