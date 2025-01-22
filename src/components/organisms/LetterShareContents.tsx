@@ -33,7 +33,7 @@ const LetterShareContents: React.FC = () => {
         throw new Error("Kakao SDK not initialized");
       }
 
-      const imagePath = "/images/kakao_share_image.png";
+      const imagePath = "/images/SNS/kakao_share_image.png";
       const response = await fetch(imagePath);
       const blob = await response.blob();
       const file = new File([blob], "kakao_share_image.png", {
@@ -177,19 +177,19 @@ const LetterShareContents: React.FC = () => {
           >
             <ElementBox $direction="row" $alignItems="center">
               <ShareButtonWrap onClick={shareToKakao}>
-                <ShareImg src="/images/kakao_icon.png" alt="카카오톡" />
+                <ShareImg src="/images/SNS/kakao_icon.png" alt="카카오톡" />
                 <Text $color="white" $margin="5px 0 0 0">
                   카카오톡
                 </Text>
               </ShareButtonWrap>
               <ShareButtonWrap onClick={twitterShare}>
-                <ShareImg src="/images/x_icon.jpg" alt="X" />
+                <ShareImg src="/images/SNS/x_icon.jpg" alt="X" />
                 <Text $color="white" $margin="5px 0 0 0">
                   X
                 </Text>
               </ShareButtonWrap>
               <ShareButtonWrap onClick={shareFacebook}>
-                <ShareImg src="/images/facebook_icon.png" alt="페이스북" />
+                <ShareImg src="/images/SNS/facebook_icon.png" alt="페이스북" />
                 <Text $color="white" $margin="5px 0 0 0">
                   페이스북
                 </Text>

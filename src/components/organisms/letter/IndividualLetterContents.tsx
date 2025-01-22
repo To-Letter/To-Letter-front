@@ -137,7 +137,7 @@ const IndividualLetterContents = () => {
   useEffect(() => {
     setLoadingState(true);
     const img = new Image();
-    img.src = "/images/letter_background.jpg";
+    img.src = "/images/letter/letter_background.jpg";
     img.onload = () => {
       setIsImageLoaded(true);
       setLoadingState(false);
@@ -145,52 +145,65 @@ const IndividualLetterContents = () => {
   }, [setLoadingState, searchParams]);
 
   return isImageLoaded ? (
-    <LetterWrap ref={modalRef} $padding="10px" $width="700px">
-      <BackButtonWrapper onClick={closeModal}>
-        <IoArrowBack width="24px" height="24px" />
-      </BackButtonWrapper>
-      <CloseButton onClick={() => router.push("/")}>
-        <IoMdClose />
-      </CloseButton>
-      <PopupInner>
-        <ElementBox $alignItems="center">
-          <ToInput>{`To. ${individualLetterInfo.toUserNickname}`}</ToInput>
-        </ElementBox>
-        <StyledTextarea
-          value={content}
-          ref={textareaRef}
-          placeholder="Write your letter here..."
-          spellCheck={false}
-          readOnly
-          onFocus={(e) => e.target.blur()}
-          style={{ cursor: "default" }}
-        />
-      </PopupInner>
-      <FromText>From. {individualLetterInfo.fromUserNickname}</FromText>
-      {individualLetterInfo.onDelete && (
-        <DeleteButton onClick={handelDeleteConfirm}>
-          <FaTrash />
-        </DeleteButton>
-      )}
-      {confirm === "true" && (
-        <DeleteConfirmContents
-          mailIds={[individualLetterInfo.id]}
-          onClose={() => {
-            const params = new URLSearchParams(searchParams);
-            params.delete("confirm");
-            router.push(
-              `${pathname}${params.toString() ? `?${params.toString()}` : ""}`
-            );
-          }}
-          type={individualLetterInfo.tab}
-        />
-      )}
-    </LetterWrap>
+    <>
+      <LetterFontStyle />
+      <LetterWrap ref={modalRef} $padding="10px" $width="700px">
+        <BackButtonWrapper onClick={closeModal}>
+          <IoArrowBack width="24px" height="24px" />
+        </BackButtonWrapper>
+        <CloseButton onClick={() => router.push("/")}>
+          <IoMdClose />
+        </CloseButton>
+        <PopupInner>
+          <ElementBox $alignItems="center">
+            <ToInput>{`To. ${individualLetterInfo.toUserNickname}`}</ToInput>
+          </ElementBox>
+          <StyledTextarea
+            value={content}
+            ref={textareaRef}
+            placeholder="Write your letter here..."
+            spellCheck={false}
+            readOnly
+            onFocus={(e) => e.target.blur()}
+            style={{ cursor: "default" }}
+          />
+        </PopupInner>
+        <FromText>From. {individualLetterInfo.fromUserNickname}</FromText>
+        {individualLetterInfo.onDelete && (
+          <DeleteButton onClick={handelDeleteConfirm}>
+            <FaTrash />
+          </DeleteButton>
+        )}
+        {confirm === "true" && (
+          <DeleteConfirmContents
+            mailIds={[individualLetterInfo.id]}
+            onClose={() => {
+              const params = new URLSearchParams(searchParams);
+              params.delete("confirm");
+              router.push(
+                `${pathname}${params.toString() ? `?${params.toString()}` : ""}`
+              );
+            }}
+            type={individualLetterInfo.tab}
+          />
+        )}
+      </LetterWrap>
+    </>
   ) : null;
 };
 
+const LetterFontStyle = styled.div`
+  @font-face {
+    font-family: "LeeSeoyun";
+    src: url("/fonts/LeeSeoyun.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+`;
+
 const LetterWrap = styled(MainBox)`
-  background: url("/images/letter_background.jpg") no-repeat center center;
+  background: url("/images/letter/letter_background.jpg") no-repeat center
+    center;
   background-size: contain;
   z-index: 10;
   max-height: 700px;
@@ -237,7 +250,7 @@ const StyledTextarea = styled.textarea`
   height: 582px;
   border: none;
   background: transparent;
-  font-family: "Handwriting", sans-serif;
+  font-family: "LeeSeoyun", sans-serif;
   font-size: 16px;
   outline: none;
   resize: none;
@@ -270,7 +283,7 @@ const StyledTextarea = styled.textarea`
 `;
 
 const ToInput = styled.div`
-  font-family: "Handwriting", sans-serif;
+  font-family: "LeeSeoyun", sans-serif;
   font-size: 16px;
   color: #000000;
 
@@ -318,7 +331,7 @@ const FromText = styled.div`
   position: absolute;
   bottom: 29px;
   right: 67px;
-  font-family: "Handwriting", sans-serif;
+  font-family: "LeeSeoyun", sans-serif;
   font-size: 18px;
   color: #000000;
 `;

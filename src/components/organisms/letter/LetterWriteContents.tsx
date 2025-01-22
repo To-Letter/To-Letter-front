@@ -120,7 +120,8 @@ const LetterWriteContents: React.FC = () => {
 };
 
 const LetterWrap = styled(MainBox)`
-  background: url("/images/letter_background.jpg") no-repeat center center;
+  background: url("/images/letter/letter_background.jpg") no-repeat center
+    center;
   background-size: contain;
   z-index: 1000;
   max-height: 700px;

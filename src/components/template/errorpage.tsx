@@ -14,7 +14,7 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ reset }) => {
   const router = useRouter();
   return (
     <Container>
-      <Image src="/images/errorIcon.png" alt="Error" />
+      <Image src="/images/common/errorIcon.png" alt="Error" />
       <Message>잠시 연결이 불안해요</Message>
       <SubMessage>조금 뒤 다시 접속해 주세요</SubMessage>
       <HomeButton onClick={() => router.push("/")}>다시 돌아가기</HomeButton>

@@ -57,7 +57,10 @@ export const LetterItem = ({
         >
           <Sender>
             {type === "receive" && !letter.viewCheck && (
-              <UnreadIcon src="/images/letter_reading_icon.jpg" alt="Unread" />
+              <UnreadIcon
+                src="/images/letter/letter_reading_icon.jpg"
+                alt="Unread"
+              />
             )}
             {letter.sender}
           </Sender>

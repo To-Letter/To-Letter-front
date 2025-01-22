@@ -19,7 +19,7 @@ const NewLetter = () => {
   /** 편지 모델 텍스처 */
   const letterTexture = useLoader(
     THREE.TextureLoader,
-    "/images/letterDummyTexture.png"
+    "/images/letter/letterDummyTexture.png"
   );
   letterTexture.flipY = false;
 

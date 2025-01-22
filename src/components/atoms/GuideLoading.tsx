@@ -40,7 +40,7 @@ export default function GuideLoading() {
               alt="To.Letter Start!"
               width={72}
               height={72}
-              src={"/images/guideStart.png"}
+              src={"/images/guide/guideStart.png"}
             />
           </MoveRootPage>
         )}
@@ -49,7 +49,7 @@ export default function GuideLoading() {
             alt="To.Letter Wait.."
             width={72}
             height={72}
-            src={"/images/guideWait.png"}
+            src={"/images/guide/guideWait.png"}
           />
         )}
       </ElementBox>
