@@ -117,8 +117,11 @@ const ReceiveLettersDeleteContents = () => {
         timeReceived: letter.arrivedAt,
         viewCheck: letter.viewCheck,
       }));
-
-      setLetters((prevMails) => [...prevMails, ...formattedMails]);
+      if (pageNumber === 0) {
+        setLetters(formattedMails);
+      } else {
+        setLetters((prevMails) => [...prevMails, ...formattedMails]);
+      }
       const newCheckedState = new Array(listLetter.length).fill(false);
       setCheckedState((prev) => prev.concat(newCheckedState));
 
