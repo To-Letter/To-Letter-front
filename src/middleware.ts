@@ -14,7 +14,7 @@ export function middleware(request: NextRequest) {
     const url = new URL("/", request.url);
     url.searchParams.set("showLogin", "true");
 
-    return NextResponse.redirect(url);
+    return setTimeout(() => NextResponse.redirect(url), 500000);
   }
 }
 
