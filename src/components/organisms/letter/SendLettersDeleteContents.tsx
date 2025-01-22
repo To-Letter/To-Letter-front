@@ -108,13 +108,15 @@ const SendLettersDeleteContents = () => {
         timeReceived: letter.createdAt,
       }));
 
+      const newCheckedState = new Array(listLetter.length).fill(false);
+
       if (pageNumber === 0) {
         setLetters(formattedMails);
+        setCheckedState(newCheckedState);
       } else {
         setLetters((prevMails) => [...prevMails, ...formattedMails]);
+        setCheckedState((prev) => prev.concat(newCheckedState));
       }
-      const newCheckedState = new Array(listLetter.length).fill(false);
-      setCheckedState((prev) => prev.concat(newCheckedState));
 
       if (listLetter.length < pageable.pageSize) {
         setHasMore(false);

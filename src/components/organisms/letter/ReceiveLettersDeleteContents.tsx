@@ -117,13 +117,16 @@ const ReceiveLettersDeleteContents = () => {
         timeReceived: letter.arrivedAt,
         viewCheck: letter.viewCheck,
       }));
+
+      const newCheckedState = new Array(listLetter.length).fill(false);
+
       if (pageNumber === 0) {
         setLetters(formattedMails);
+        setCheckedState(newCheckedState);
       } else {
         setLetters((prevMails) => [...prevMails, ...formattedMails]);
+        setCheckedState((prev) => prev.concat(newCheckedState));
       }
-      const newCheckedState = new Array(listLetter.length).fill(false);
-      setCheckedState((prev) => prev.concat(newCheckedState));
 
       // 마지막 페이지 체크
       if (listLetter.length < pageable.pageSize) {
