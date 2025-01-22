@@ -44,6 +44,8 @@ const ReceiveLettersDeleteContents = () => {
   const [checkedState, setCheckedState] = useState<boolean[]>([]);
   /* 삭제할 편지 ID 관리 state */
   const [deleteLetterIds, setDeleteLetterIds] = useState<number[]>([]);
+  /** 메일 삭제 트리거 */
+  const [confirmMailDelete, setConfirmMailDelete] = useState<boolean>(false);
 
   /** 편지 삭제 버튼 클릭 시 실행 함수 */
   const handelDeleteConfirm = () => {
@@ -157,7 +159,7 @@ const ReceiveLettersDeleteContents = () => {
   /** 초기 받은 편지 데이터 로드 */
   useEffect(() => {
     getAllReceiveLetters(0);
-  }, [getAllReceiveLetters, router]);
+  }, [getAllReceiveLetters, confirmMailDelete]);
 
   /** 검색어 필터링 */
   const filteredLetters = useMemo(
@@ -204,6 +206,7 @@ const ReceiveLettersDeleteContents = () => {
             );
           }}
           setSearchTerm={setSearchTerm}
+          setConfirmMailDelete={setConfirmMailDelete}
           type="received"
         />
       )}

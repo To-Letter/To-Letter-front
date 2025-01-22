@@ -35,6 +35,8 @@ const SendLettersDeleteContents = () => {
   const [checkedState, setCheckedState] = useState<boolean[]>([]);
   /* 삭제할 편지 ID 관리 state */
   const [deleteLetterIds, setDeleteLetterIds] = useState<number[]>([]);
+  /** 메일 삭제 트리거 */
+  const [confirmMailDelete, setConfirmMailDelete] = useState<boolean>(false);
 
   /** 편지 삭제 버튼 클릭 시 실행 함수 */
   const handelDeleteConfirm = () => {
@@ -193,6 +195,7 @@ const SendLettersDeleteContents = () => {
             );
           }}
           setSearchTerm={setSearchTerm}
+          setConfirmMailDelete={setConfirmMailDelete}
           type="send"
         />
       )}

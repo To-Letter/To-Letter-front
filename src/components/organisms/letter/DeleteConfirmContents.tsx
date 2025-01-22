@@ -19,6 +19,7 @@ interface propsI {
   type: "received" | "send";
   setSearchTerm?: React.Dispatch<React.SetStateAction<string>> | null;
   setDeleteLetter?: React.Dispatch<React.SetStateAction<boolean>> | null;
+  setConfirmMailDelete: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const DeleteConfirmContents = ({
@@ -27,6 +28,7 @@ const DeleteConfirmContents = ({
   type = "received",
   setSearchTerm = null,
   setDeleteLetter = null,
+  setConfirmMailDelete,
 }: propsI) => {
   const router = useRouter();
 
@@ -74,6 +76,7 @@ const DeleteConfirmContents = ({
         tab: type,
       });
 
+      setConfirmMailDelete((prev) => !prev);
       router.push(
         `/letter/letterdelete/${type === "received" ? "receive" : "send"}`
       );
