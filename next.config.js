@@ -23,7 +23,7 @@ const nextConfig = {
         headers: [
           {
             key: "Permissions-Policy",
-            value: "browsing-topics=(), interest-cohort=(), cookies=()",
+            value: "browsing-topics=(), interest-cohort=()",
           },
         ],
       },
