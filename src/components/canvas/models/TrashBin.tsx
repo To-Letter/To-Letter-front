@@ -22,9 +22,8 @@ const TrashBin = () => {
     if (
       axiosInterceptor.defaults.headers.common["Authorization"] !== undefined
     ) {
-      router.push("/letter/letterdelete");
+      router.push("/letter/letterdelete/receive");
     }
-    router.push("/letter/letterdelete");
   };
 
   /** 쓰레기통 style 변경 */
