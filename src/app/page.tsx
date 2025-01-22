@@ -75,13 +75,13 @@ export default function Home() {
       >
         <Scene />
         <OrbitControls
-          minPolarAngle={Math.PI / (isAuthorized ? 2.8 : 2.5)}
-          maxPolarAngle={1.396}
-          minAzimuthAngle={-Math.PI / 4}
-          maxAzimuthAngle={Math.PI / 4}
+          minPolarAngle={Math.PI / (isAuthorized ? 2.6 : 2.4)}
+          maxPolarAngle={isAuthorized ? 1.396 : Math.PI / 2.4}
+          minAzimuthAngle={isAuthorized ? -Math.PI / 4 : 0}
+          maxAzimuthAngle={isAuthorized ? Math.PI / 4 : 0}
           enablePan={false}
-          minDistance={isAuthorized ? 2 : 3}
-          maxDistance={isAuthorized ? 2 : 3}
+          minDistance={isAuthorized ? 2.3 : 5.5}
+          maxDistance={isAuthorized ? 2.3 : 5.5}
         />
       </Canvas>
       {isAuthorized && <NewLetterAlarmMessage />}

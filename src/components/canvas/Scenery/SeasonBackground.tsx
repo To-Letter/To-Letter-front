@@ -142,7 +142,7 @@ const SeasonBackground = ({
       <mesh
         ref={meshRef}
         scale={0.5}
-        position={[20, -38, -150]}
+        position={[20, -38, -170]}
         castShadow
         receiveShadow
       >
