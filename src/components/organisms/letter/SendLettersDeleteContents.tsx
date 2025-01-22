@@ -51,6 +51,8 @@ const SendLettersDeleteContents = () => {
   /** 전체 선택 버튼 클릭 시 실행 함수 */
   const handleSelectAllClick = () => {
     const allChecked = checkedState.every(Boolean); // 모든 체크박스가 체크되어 있는지 확인
+    const newCheckedState = new Array(letters.length).fill(!allChecked);
+    setCheckedState(newCheckedState);
 
     if (!allChecked) {
       // 전체 체크하는 경우: 체크되지 않은 메일의 ID를 추가
@@ -144,7 +146,7 @@ const SendLettersDeleteContents = () => {
   /** 초기 받은 편지 데이터 로드 */
   useEffect(() => {
     getAllSendLetters(0);
-  }, [getAllSendLetters]);
+  }, [getAllSendLetters, router]);
 
   // 검색어 필터링
   const filteredLetters = useMemo(
