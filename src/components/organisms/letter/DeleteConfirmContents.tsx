@@ -74,7 +74,7 @@ const DeleteConfirmContents = ({
         tab: type,
       });
 
-      router.push("/letter/letterdelete");
+      router.push(`/letter/letterdelete/${type}`);
 
       if (setSearchTerm !== null) {
         setSearchTerm("");
