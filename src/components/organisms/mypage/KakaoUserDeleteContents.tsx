@@ -39,14 +39,9 @@ export default function KakaoUserDeleteContents() {
       if (res.data.responseCode === 200) {
         window.location.href = res.data.responseData;
       }
-    } catch (err: any) {
+    } catch (error: any) {
       setLoding(false);
-      console.error("kakao Login Error:", err);
-      alert("kakao Login code Error");
-      setToast({
-        message: "카카오 코드 받아오기에 실패 하였습니다. 다시 시도해주세요.",
-        visible: true,
-      });
+      alert("카카오 회원 탈퇴 오류입니다. 잠시후에 다시 시도해주세요.");
     }
   };
 

@@ -45,8 +45,8 @@ const LetterShareContents: React.FC = () => {
       });
 
       return uploadResponse.infos.original.url;
-    } catch (error) {
-      console.error("Image upload error:", error);
+    } catch (error: any) {
+      alert("이미지 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.");
       throw error;
     }
   };
@@ -82,9 +82,9 @@ const LetterShareContents: React.FC = () => {
           },
         ],
       });
-    } catch (error) {
-      console.error("카카오톡 공유 중 오류가 발생했습니다:", error);
+    } catch (error: any) {
       alert("카카오톡 공유 중 오류가 발생했습니다. 다시 시도해주세요.");
+      router.push("/");
     }
   };
 

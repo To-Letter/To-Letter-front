@@ -67,8 +67,8 @@ export default function MailVerifyContents() {
         alert("이미 이메일 인증을 완료했습니다. 로그인을 해주세요!");
         router.push("/auth/login");
       }
-    } catch (err) {
-      console.error(err);
+    } catch (error: any) {
+      alert("이메일 인증 요청 오류입니다. 잠시후에 다시 시도해주세요.");
     }
   };
 
@@ -110,8 +110,8 @@ export default function MailVerifyContents() {
           alert("메일이 존재하지 않습니다. 다른 메일로 시도해주세요.");
           router.push("/auth/signup");
         }
-      } catch (err) {
-        console.error(err);
+      } catch (error: any) {
+        alert("이메일 인증 요청 오류입니다. 잠시후에 다시 시도해주세요.");
       }
     }
   };

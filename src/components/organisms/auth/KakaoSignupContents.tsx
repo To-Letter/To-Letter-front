@@ -42,7 +42,6 @@ export default function KakaoSignupContents() {
       [e.target.name]: e.target.value,
     }));
     if (e.target.name === "nickname") setIsNicknameChecked(false);
-    console.log(signupForm);
   };
 
   /** 주소 입력 모달 열기 함수 */
@@ -96,9 +95,9 @@ export default function KakaoSignupContents() {
         alert("같은 이메일이 회원정보에 존재합니다.");
         router.push("/auth/login");
       }
-    } catch (err: any) {
-      console.log("kakao error: " + err);
-      setToast({ message: "입력란을 다시 확인해주세요.", visible: true });
+    } catch (error: any) {
+      alert("카카오 회원가입 오류입니다. 잠시후에 다시 시도해주세요.");
+      router.push("/");
     }
   };
 
@@ -118,8 +117,11 @@ export default function KakaoSignupContents() {
           setToast({ message: "중복된 닉네임입니다.", visible: true });
           setIsNicknameChecked(false);
         }
-      } catch (err: any) {
-        console.log("ninameerror : ", err);
+      } catch (error: any) {
+        setToast({
+          message: "닉네임 인증 요청 오류입니다. 잠시후에 다시 시도해주세요.",
+          visible: true,
+        });
       }
     }
   };

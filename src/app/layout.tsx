@@ -4,7 +4,6 @@ import { memo } from "react";
 import ClientProviders from "@/components/ClientProviders";
 import "@/style/globals.css";
 import KakaoScript from "@/components/KakaoScript";
-import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: "TO. Letter",
@@ -61,9 +60,6 @@ const RootLayout = memo(
     children: React.ReactNode;
     modal: React.ReactNode;
   }) => {
-    const token = headers().get("authorization");
-    console.log("token", token);
-
     return (
       <html lang="ko">
         <head>

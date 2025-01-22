@@ -74,7 +74,6 @@ export default function PasswordChangeContents() {
           "등록된 이메일로 검증이 진행되지 않았습니다. 이메일 인증을 먼저 진행해주세요."
         );
       } else {
-        console.log("res", res);
         setLoding(false);
         alert("등록된 유저가 없습니다.");
       }

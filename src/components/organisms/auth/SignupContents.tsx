@@ -46,7 +46,6 @@ export default function SignupContents() {
     }));
     if (e.target.name === "nickname") setIsNicknameChecked(false);
     else if (e.target.name === "email") setIsEmailChecked(false);
-    console.log(signupForm);
   };
 
   /** 주소 입력 모달 열기 함수 */
@@ -135,8 +134,11 @@ export default function SignupContents() {
           setToast({ message: "중복된 닉네임입니다.", visible: true });
           setIsNicknameChecked(false);
         }
-      } catch (err: any) {
-        console.log("nickNameError : ", err);
+      } catch (error: any) {
+        setToast({
+          message: "닉네임 인증 요청 오류입니다. 잠시후에 다시 시도해주세요.",
+          visible: true,
+        });
       }
     }
   };
@@ -157,8 +159,11 @@ export default function SignupContents() {
           setToast({ message: "중복된 이메일입니다.", visible: true });
           setIsNicknameChecked(false);
         }
-      } catch (err) {
-        console.log("emailError : ", err);
+      } catch (error: any) {
+        setToast({
+          message: "이메일 중복 체크 오류입니다. 잠시후에 다시 시도해주세요.",
+          visible: true,
+        });
       }
     }
   };

@@ -40,8 +40,8 @@ const KakaoUserWithdrawContents = () => {
             alert("알 수 없는 에러입니다. 다시 시도해주세요.");
             router.push("/");
           }
-        } catch (err) {
-          console.error("kakao token error :", err);
+        } catch (error: any) {
+          alert("카카오 회원 탈퇴 오류입니다. 잠시후에 다시 시도해주세요.");
         }
       } else {
         alert("코드가 유효하지 않습니다.");

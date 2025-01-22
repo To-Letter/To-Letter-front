@@ -93,9 +93,8 @@ export default function LoginContents() {
       if (res.data.responseCode === 200 && res.data.responseData) {
         window.location.href = res.data.responseData;
       }
-    } catch (err) {
-      console.error("kakao Login Error:", err);
-      alert("kakao Login code Error");
+    } catch (error: any) {
+      alert("카카오 로그인 오류입니다. 잠시후에 다시 시도해주세요.");
     }
   };
 

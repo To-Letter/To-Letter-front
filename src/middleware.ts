@@ -2,14 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
   const referer = request.headers.get("referer");
-
-  console.log({
-    pathname,
-    referer,
-    headers: Object.fromEntries(request.headers.entries()),
-  });
 
   // Authorization 헤더 또는 쿠키에서 토큰 확인
   const token = request.headers.get("authorization");

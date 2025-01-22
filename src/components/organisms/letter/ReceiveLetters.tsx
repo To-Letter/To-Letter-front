@@ -37,7 +37,6 @@ export function ReceiveLetters() {
       });
       const listLetter = res.data.responseData.letterDTO;
       const pageable = res.data.responseData.pageable;
-      console.log(pageNumber); // [삭제 필요] build error fix
       const formattedMails = listLetter.map((letter: any) => ({
         id: letter.id,
         sender: letter.fromUserNickname,
@@ -54,8 +53,8 @@ export function ReceiveLetters() {
       } else {
         setHasMore(true);
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error: any) {
+      alert("받은 편지함 조회 오류입니다. 잠시후에 다시 시도해주세요.");
     }
   }, []);
 

@@ -100,8 +100,8 @@ function AddressContents() {
             totalCount: Number(res.data.results.common.totalCount),
           });
         }
-      } catch (error) {
-        console.error(error);
+      } catch (error: any) {
+        alert("주소 검색 오류입니다. 잠시후에 다시 시도해주세요.");
       }
     }
   };
@@ -124,8 +124,8 @@ function AddressContents() {
           });
           setIsSearch((prev) => !prev);
         }
-      } catch (error) {
-        console.error(error);
+      } catch (error: any) {
+        alert("주소 검색 오류입니다. 잠시후에 다시 시도해주세요.");
       }
     }
   };

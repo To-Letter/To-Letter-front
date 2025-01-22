@@ -75,8 +75,8 @@ export default function PasswordMailVerifyContents() {
             visible: true,
           });
         }
-      } catch (err) {
-        console.error(err);
+      } catch (error: any) {
+        alert("이메일 인증 코드 확인 오류입니다. 잠시후에 다시 시도해주세요.");
       }
     }
   };
@@ -111,8 +111,11 @@ export default function PasswordMailVerifyContents() {
           visible: true,
         });
       }
-    } catch (err) {
-      console.error(err);
+    } catch (error: any) {
+      setToast({
+        message: "이메일 인증 요청 오류입니다. 잠시후에 다시 시도해주세요.",
+        visible: true,
+      });
     }
   };
 

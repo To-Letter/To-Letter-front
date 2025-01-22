@@ -77,10 +77,10 @@ export default function MyInfoContents() {
           visible: true,
         });
       }
-    } catch (error) {
-      console.error("업데이트 에러:", error);
+    } catch (error: any) {
       setToast({
-        message: "업데이트 중 오류가 발생했습니다.",
+        message:
+          "유저 정보 업데이트 중 오류가 발생했습니다. 잠시후에 다시 시도해주세요.",
         visible: true,
       });
     }
@@ -94,8 +94,9 @@ export default function MyInfoContents() {
         resetMyInfo();
         router.push("/");
       }
-    } catch (error) {
-      console.log("로그아웃 에러:", error);
+    } catch (error: any) {
+      alert("로그아웃 오류입니다. 잠시후에 다시 시도해주세요.");
+      router.push("/");
     }
   };
 
@@ -118,8 +119,11 @@ export default function MyInfoContents() {
         setToast({ message: "중복된 닉네임입니다.", visible: true });
         setIsNicknameChecked(false);
       }
-    } catch (err: any) {
-      console.log("nickNameError : ", err);
+    } catch (error: any) {
+      setToast({
+        message: "닉네임 중복 체크 오류입니다. 잠시후에 다시 시도해주세요.",
+        visible: true,
+      });
     }
   };
 

@@ -58,11 +58,8 @@ const Desk = () => {
   /** 새로운 편지 알람 상태 */
   const newLetterAlarm = useRecoilValue(newLetterAlarmState);
 
-  /*   const newLetterAlarm = useRecoilValue(newLetterAlarmState); */
-
   /** 책상과 연필 style 변경 */
   useEffect(() => {
-    /*     console.log("newLetterAlarm", newLetterAlarm); */
     if (deskglb && deskglb.scene) {
       deskglb.scene.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {

@@ -54,9 +54,11 @@ const NicknameConfirmContents: React.FC = () => {
         setIsNicknameChecked(true);
         setLoding(false);
       }
-    } catch (error) {
-      console.error(error);
-      setToast({ message: "서버 에러", visible: true });
+    } catch (error: any) {
+      setToast({
+        message: "닉네임 인증 요청 오류입니다. 잠시후에 다시 시도해주세요.",
+        visible: true,
+      });
     }
   };
 

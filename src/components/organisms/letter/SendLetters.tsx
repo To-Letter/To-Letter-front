@@ -32,7 +32,6 @@ export function SendLetters() {
         size: 10,
         sort: "desc",
       });
-      console.log("sendLetter res", res);
       const listLetter = res.data.responseData.listLetter;
       const pageable = res.data.responseData.pageable;
       const formattedMails = listLetter.map((letter: any) => ({
@@ -49,8 +48,8 @@ export function SendLetters() {
       } else {
         setHasMore(true);
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error: any) {
+      alert("보낸 편지함 조회 오류입니다. 잠시후에 다시 시도해주세요.");
     }
   }, []);
 

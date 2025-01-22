@@ -53,7 +53,7 @@ export const useUser = () => {
     } catch (error: any) {
       if (!error.response || error.response.status !== 401) {
         setError("Failed to fetch user info.");
-        console.error("마이페이지 조회 에러:", error);
+        alert("마이페이지 조회 오류입니다. 잠시후에 다시 시도해주세요.");
       }
     } finally {
       setIsLoading(false);

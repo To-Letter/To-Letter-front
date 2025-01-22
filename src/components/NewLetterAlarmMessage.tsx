@@ -33,11 +33,6 @@ export const NewLetterAlarmMessage = () => {
       }
     );
 
-    // connect 이벤트용 리스너
-    eventSource.current.addEventListener("connect", () => {
-      console.log("sse 연결");
-    });
-
     // 명시적으로 message 이벤트 리스너 추가
     eventSource.current.addEventListener("message", function () {
       setNewLetterAlarm(true);
