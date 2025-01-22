@@ -60,8 +60,6 @@ const ReceiveLettersDeleteContents = () => {
   /** 전체 선택 버튼 클릭 시 실행 함수 */
   const handleSelectAllClick = () => {
     const allChecked = checkedState.every(Boolean); // 모든 체크박스가 체크되어 있는지 확인
-    const newCheckedState = new Array(letters.length).fill(!allChecked);
-    setCheckedState(newCheckedState);
 
     if (!allChecked) {
       // 전체 체크하는 경우: 체크되지 않은 메일의 ID를 추가
@@ -117,6 +115,8 @@ const ReceiveLettersDeleteContents = () => {
       }));
 
       setLetters((prevMails) => [...prevMails, ...formattedMails]);
+      const newCheckedState = new Array(listLetter.length).fill(false);
+      setCheckedState((prev) => prev.concat(newCheckedState));
 
       // 마지막 페이지 체크
       if (listLetter.length < pageable.pageSize) {
