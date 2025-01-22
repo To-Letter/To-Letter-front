@@ -13,7 +13,6 @@ const Scene = () => {
       <Room />
       {axiosInterceptor.defaults.headers.common["Authorization"] !==
         undefined && <Chair />}
-      <Chair />
       <Desk />
     </>
   );

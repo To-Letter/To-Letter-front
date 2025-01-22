@@ -38,7 +38,6 @@ export default function Home() {
     const showLogin = searchParams.get("showLogin");
 
     if (showLogin === "true") {
-      // 패러렐 라우트를 사용하여 로그인 모달 표시
       router.push("/auth/login");
     }
 
@@ -49,8 +48,8 @@ export default function Home() {
     }
   }, [searchParams, router]);
 
+  /** 모델이 로드되지 않은 상태라면 가이드 페이지로 리다이렉트 */
   useEffect(() => {
-    /** 모델이 로드되지 않은 상태라면 가이드 페이지로 리다이렉트 */
     if (progress < 100) {
       router.push("/guide");
       return;
