@@ -158,6 +158,8 @@ const ReceiveLettersDeleteContents = () => {
 
   /** 초기 받은 편지 데이터 로드 */
   useEffect(() => {
+    console.log("confirmMailDelete", confirmMailDelete);
+
     getAllReceiveLetters(0);
   }, [getAllReceiveLetters, confirmMailDelete]);
 

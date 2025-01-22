@@ -147,8 +147,9 @@ const SendLettersDeleteContents = () => {
 
   /** 초기 받은 편지 데이터 로드 */
   useEffect(() => {
+    console.log("confirmMailDelete", confirmMailDelete);
     getAllSendLetters(0);
-  }, [getAllSendLetters, router]);
+  }, [getAllSendLetters, confirmMailDelete]);
 
   // 검색어 필터링
   const filteredLetters = useMemo(
