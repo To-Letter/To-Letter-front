@@ -10,6 +10,8 @@ import { MainBox } from "@/components/atoms/Box";
 import { DeleteLetterList } from "./DeleteLetterList";
 import DeleteLetterButton from "@/components/molecules/DeleteLetterButton";
 import { Mail } from "@/types/letterType";
+import useDebounce from "@/hooks/useDebounce";
+import { getSendLetter } from "@/lib/api/controller/letter";
 
 const SendLettersDeleteContents = () => {
   const router = useRouter();
@@ -26,61 +28,15 @@ const SendLettersDeleteContents = () => {
   /** 검색어 관리 state **/
   const [searchTerm, setSearchTerm] = useState("");
   /** 검색어 디바운스 훅 **/
-  // const debouncedSearchTerm = useDebounce(searchTerm, 300); // [주석 해제 필요] build error fix
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   /** 개별 편지 정보 관리 state **/
   const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
   /* 개별 편지 체크박스 상태 관리 state */
   const [checkedState, setCheckedState] = useState<boolean[]>([]);
   /* 삭제할 편지 ID 관리 state */
   const [deleteLetterIds, setDeleteLetterIds] = useState<number[]>([]);
-
-  /**
-   * [삭제 필요]받은 편지 데이터 예시
-   */
-  const listLetter = useMemo(() => {
-    return [
-      {
-        id: 1,
-        fromUserNickname: "윤미1",
-        contents: "1번 편지입니다.",
-        arrivedAt: new Date().toISOString(),
-        viewCheck: false,
-      },
-      {
-        id: 2,
-        fromUserNickname: "윤미2",
-        contents:
-          "test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2",
-        arrivedAt: new Date().toISOString(),
-        viewCheck: true,
-      },
-      {
-        id: 3,
-        fromUserNickname: "투레터",
-        contents:
-          "test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3",
-        arrivedAt: new Date().toISOString(),
-        viewCheck: true,
-      },
-      {
-        id: 4,
-        fromUserNickname: "메리크리스마스",
-        contents: "수요일 빨간 날 최고",
-        arrivedAt: new Date().toISOString(),
-        viewCheck: true,
-      },
-    ];
-  }, []);
-
-  /** [삭제 필요]페이지 데이터 예시 **/
-  const pageable = useMemo(() => {
-    return {
-      pageNumber: 1,
-      pageSize: 10,
-      totalElements: 4,
-      totalPages: 1,
-    };
-  }, []);
+  /** 메일 삭제 트리거 */
+  const [confirmMailDelete, setConfirmMailDelete] = useState<boolean>(false);
 
   /** 편지 삭제 버튼 클릭 시 실행 함수 */
   const handelDeleteConfirm = () => {
@@ -134,39 +90,43 @@ const SendLettersDeleteContents = () => {
       );
     }
   };
+
   /** 보낸 편지함 데이터 조회 함수 */
-  const getAllSendLetters = useCallback(
-    async (pageNumber = 0) => {
-      try {
-        /* const res = await getSendLetter({
-      page: pageNumber,
-      size: 10,
-      sort: "desc",
-    });
-    const listLetter = res.data.responseData.listLetter;
-    const pageable = res.data.responseData.pageable; */
-        console.log(pageNumber); // [삭제 필요] build error fix
-        const formattedMails = listLetter.map((letter: any) => ({
-          id: letter.id,
-          sender: letter.fromUserNickname,
-          subject: letter.contents,
-          timeReceived: letter.createdAt,
-        }));
+  const getAllSendLetters = useCallback(async (pageNumber = 0) => {
+    try {
+      const res = await getSendLetter({
+        page: pageNumber,
+        size: 10,
+        sort: "desc",
+      });
+      const listLetter = res.data.responseData.listLetter;
+      const pageable = res.data.responseData.pageable;
+      const formattedMails = listLetter.map((letter: any) => ({
+        id: letter.id,
+        sender: letter.fromUserNickname,
+        subject: letter.contents,
+        timeReceived: letter.createdAt,
+      }));
 
+      const newCheckedState = new Array(listLetter.length).fill(false);
+
+      if (pageNumber === 0) {
+        setLetters(formattedMails);
+        setCheckedState(newCheckedState);
+      } else {
         setLetters((prevMails) => [...prevMails, ...formattedMails]);
-        setCheckedState(new Array(formattedMails.length).fill(false));
-
-        if (listLetter.length < pageable.pageSize) {
-          setHasMore(false);
-        } else {
-          setHasMore(true);
-        }
-      } catch (err) {
-        console.log(err);
+        setCheckedState((prev) => prev.concat(newCheckedState));
       }
-    },
-    [listLetter, pageable.pageSize]
-  );
+
+      if (listLetter.length < pageable.pageSize) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
+    } catch (error: any) {
+      alert("보낸 편지함 조회 오류입니다. 잠시후에 다시 시도해주세요.");
+    }
+  }, []);
 
   /** 개별 메일 아이템 클릭 이벤트(개별 편지 팝업창) */
   const handleLetterClick = async (mail: Mail) => {
@@ -178,11 +138,11 @@ const SendLettersDeleteContents = () => {
       onDelete: true,
       tab: "send",
     });
-    // await getLetterReading(mail.id);
+
     router.push("/letter/individualletter");
   };
 
-  /** 무한 스크롤 page 관리 함수 */
+  // 무한 스크롤용 fetchMore 함수
   const fetchMore = () => {
     setPage((prevPage) => {
       const nextPage = prevPage + 1;
@@ -193,18 +153,19 @@ const SendLettersDeleteContents = () => {
 
   /** 초기 받은 편지 데이터 로드 */
   useEffect(() => {
+    console.log("confirmMailDelete", confirmMailDelete);
     getAllSendLetters(0);
-  }, [getAllSendLetters]);
+  }, [getAllSendLetters, confirmMailDelete]);
 
-  /** 검색어 필터링 */
+  // 검색어 필터링
   const filteredLetters = useMemo(
     () =>
-      /* letters.filter(
+      letters.filter(
         (mail) =>
           mail.subject.includes(debouncedSearchTerm) ||
           mail.sender.includes(debouncedSearchTerm)
-      ) */ letters,
-    [letters]
+      ),
+    [debouncedSearchTerm, letters]
   );
 
   return (
@@ -241,6 +202,7 @@ const SendLettersDeleteContents = () => {
             );
           }}
           setSearchTerm={setSearchTerm}
+          setConfirmMailDelete={setConfirmMailDelete}
           type="send"
         />
       )}

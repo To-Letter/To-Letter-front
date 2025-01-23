@@ -1,6 +1,5 @@
 "use client";
 
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useLoader } from "@react-three/fiber";
 import React, { useRef, useEffect, useState, useMemo } from "react";
 import {
@@ -17,6 +16,7 @@ import { grassPosition, seasonFile } from "@/constants/seasonTree";
 import Spring from "./Spring";
 import Summer from "./Summer";
 import Autumn from "./Autumn";
+import { useGLTFLoader } from "@/hooks/useGLTFLoader";
 
 /**
  * SeasonBackground components props
@@ -30,8 +30,8 @@ const SeasonBackground = ({
   nowMonthValue,
   weatherInfo,
 }: SeasonBackgroundProps) => {
-  const groundGlb = useLoader(GLTFLoader, "/models/ground.glb");
-  const grassGlb = useLoader(GLTFLoader, "/models/grass.glb");
+  const groundGlb = useGLTFLoader("/models/ground.glb");
+  const grassGlb = useGLTFLoader("/models/grass.glb");
   const groundTexture = useLoader(
     THREE.TextureLoader,
     `/images/scenery/base.jpg`
@@ -142,7 +142,7 @@ const SeasonBackground = ({
       <mesh
         ref={meshRef}
         scale={0.5}
-        position={[20, -38, -150]}
+        position={[20, -38, -170]}
         castShadow
         receiveShadow
       >

@@ -6,8 +6,8 @@ const nextConfig = {
     styledComponents: true,
   },
   experimental: {
-    optimizeCss: true, // CSS 최적화
-    optimizePackageImports: ["@components"], // 패키지 임포트 최적화
+    optimizeCss: true,
+    optimizePackageImports: ["@components"],
   },
   webpack: (config) => {
     config.externals = config.externals || {};
@@ -15,6 +15,19 @@ const nextConfig = {
       three: "THREE",
     });
     return config;
+  },
+  headers: async () => {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Permissions-Policy",
+            value: "browsing-topics=(), interest-cohort=()",
+          },
+        ],
+      },
+    ];
   },
 };
 

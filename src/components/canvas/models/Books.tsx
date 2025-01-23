@@ -1,13 +1,12 @@
 "use client";
 
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { useLoader } from "@react-three/fiber";
 import { useRef, useEffect, useCallback } from "react";
 import * as THREE from "three";
 import { ThreeEvent } from "@react-three/fiber";
 import { useRouter } from "next/navigation";
-/* import axiosInterceptor from "@/lib/api/axiosInterceptor"; */
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import usePointerCursor from "@/hooks/usePointerCursor";
+import { useGLTFLoader } from "@/hooks/useGLTFLoader";
 
 /**
  * 책의 설정값을 정의하는 인터페이스
@@ -42,7 +41,7 @@ const Books = () => {
   /** 커서 스타일 커스텀 훅 */
   const { handlePointerOver, handlePointerOut } = usePointerCursor();
   /* 책 glb 모델 */
-  const booksglb = useLoader(GLTFLoader, "/models/books.glb");
+  const booksglb = useGLTFLoader("/models/books.glb");
   /* 책 ref */
   const booksRef = useRef<THREE.Mesh>(null);
 
@@ -50,10 +49,11 @@ const Books = () => {
   const onClickBooks = useCallback(
     (event: ThreeEvent<MouseEvent>) => {
       event.stopPropagation();
-      /*       if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
+      if (
+        axiosInterceptor.defaults.headers.common["Authorization"] !== undefined
+      ) {
         router.push("/letter/letterbox/receive");
-      } */
-      router.push("/letter/letterbox/receive");
+      }
     },
     [router]
   );

@@ -3,10 +3,11 @@
 import { styled } from "styled-components";
 import MenuTab from "@/components/molecules/MenuTab";
 import { IoIosMail } from "react-icons/io";
-/* import axiosInterceptor from "@/lib/api/axiosInterceptor"; */
 import { useRouter } from "next/navigation";
 import ModalBox from "@/components/atoms/ModalBox";
 import { HeaderBox } from "@/components/atoms/Box";
+import { usePathname } from "next/navigation";
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 
 export default function LetterBoxLayout({
   children,
@@ -14,15 +15,20 @@ export default function LetterBoxLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
+  if (pathname === "/") {
+    return;
+  }
 
   const handleLetterWriteClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     event.stopPropagation();
-    /*     if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
+    if (
+      axiosInterceptor.defaults.headers.common["Authorization"] !== undefined
+    ) {
       router.push("/letter/userconfirm");
-    } */
-    router.push("/letter/userconfirm");
+    }
   };
 
   return (

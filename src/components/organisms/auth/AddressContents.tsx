@@ -13,8 +13,9 @@ import { useInView } from "react-intersection-observer";
 import { useRouter } from "next/navigation";
 import AddressListItem from "../../molecules/AddressListItem";
 import { ElementBox, MainBox, SectionBox } from "../../atoms/Box";
-import { myInfoState, signupState } from "@/store/recoil/accountAtom";
+import { signupState } from "@/store/recoil/accountAtom";
 import { useRecoilState } from "recoil";
+import { useUser } from "@/hooks/useUser";
 
 interface commonI {
   countPerPage: number;
@@ -30,6 +31,8 @@ interface AddressData {
 
 function AddressContents() {
   const router = useRouter();
+  /** 유저 정보 관리 */
+  const { updateMyInfo } = useUser();
   /** 주소 데이터 무한 스크롤 */
   const [ref] = useInView({
     threshold: 1,
@@ -58,8 +61,6 @@ function AddressContents() {
   });
   /** 회원가입 정보 관리 recoil */
   const [, setSignupForm] = useRecoilState(signupState);
-  /** 유저 정보 관리 recoil */
-  const [, setMyInfo] = useRecoilState(myInfoState);
 
   /**
    * 유저가 선택한 주소 값
@@ -70,10 +71,9 @@ function AddressContents() {
       ...prev,
       mailboxAddress: selectedAddress,
     }));
-    setMyInfo((prev) => ({
-      ...prev,
+    updateMyInfo({
       address: selectedAddress,
-    }));
+    });
 
     router.back();
   };
@@ -100,8 +100,8 @@ function AddressContents() {
             totalCount: Number(res.data.results.common.totalCount),
           });
         }
-      } catch (error) {
-        console.error(error);
+      } catch (error: any) {
+        alert("주소 검색 오류입니다. 잠시후에 다시 시도해주세요.");
       }
     }
   };
@@ -124,8 +124,8 @@ function AddressContents() {
           });
           setIsSearch((prev) => !prev);
         }
-      } catch (error) {
-        console.error(error);
+      } catch (error: any) {
+        alert("주소 검색 오류입니다. 잠시후에 다시 시도해주세요.");
       }
     }
   };

@@ -1,109 +1,126 @@
 "use client";
 
-import React, { useEffect } from "react";
-/* import styled from "styled-components";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import { useUser } from "@/hooks/useUser";
-import axiosInterceptor from "@/lib/api/axiosInterceptor";
-import { useRouter } from "next/navigation"; */
+import { useRouter } from "next/navigation";
 import { ElementBox } from "../atoms/Box";
-/* import { Text } from "../atoms/Text";
+import { Text } from "../atoms/Text";
 import Button from "../atoms/Button";
- */
+
 /** 편지 공유 컴포넌트 */
 const LetterShareContents: React.FC = () => {
-  // const router = useRouter();
+  const router = useRouter();
   /** 유저 정보 커스텀 훅 */
-  // const { myInfo } = useUser();
+  const { myInfo } = useUser();
+  /** 현재 URL */
+  const [currentUrl, setCurrentUrl] = useState<string>("");
+  /** CSR 확인을 위한 상태 */
+  const [mounted, setMounted] = useState(false);
+  /** 클라이언트 주소 */
+  const mainUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+  useEffect(() => {
+    setMounted(true);
+    setCurrentUrl(window.location.href);
+  }, []);
 
   /** 카카오 서버에 이미지 업로드 */
-  /* const kakaoImageUploading = (): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const imagePath = "/images/kakao_share_image.png";
-      fetch(imagePath)
-        .then((response) => response.blob())
-        .then((blob) => {
-          const file = new File([blob], "kakao_share_image.png", {
-            type: "image/png",
-          });
-          window.Kakao.Share.uploadImage({
-            file: [file],
-          })
-            .then(function (response: any) {
-              resolve(response.infos.original.url);
-            })
-            .catch(function (error: any) {
-              reject(error);
-            });
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  }; */
+  const kakaoImageUploading = async (): Promise<string> => {
+    try {
+      // 카카오 SDK 초기화 확인
+      if (!window.Kakao?.isInitialized()) {
+        throw new Error("Kakao SDK not initialized");
+      }
+
+      const imagePath = "/images/SNS/kakao_share_image.png";
+      const response = await fetch(imagePath);
+      const blob = await response.blob();
+      const file = new File([blob], "kakao_share_image.png", {
+        type: "image/png",
+      });
+
+      const uploadResponse = await window.Kakao.Share.uploadImage({
+        file: [file],
+      });
+
+      return uploadResponse.infos.original.url;
+    } catch (error: any) {
+      alert("이미지 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.");
+      throw error;
+    }
+  };
 
   /** 카카오 공유 함수 */
-  /* const shareToKakao = async () => {
+  const shareToKakao = async () => {
+    if (!mounted) return;
     try {
-      if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
-        const imageUrl = await kakaoImageUploading();
-        window.Kakao.Share.sendDefault({
-          objectType: "feed",
-          content: {
-            title: "To.Letter",
-            description: `${myInfo.nickname}님에게 편지를 보내보세요!`,
-            imageUrl: imageUrl, // 업로드된 이미지 URL 사용
+      if (!window.Kakao?.isInitialized()) {
+        window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_API_KEY);
+      }
+
+      const imageUrl = await kakaoImageUploading();
+
+      await window.Kakao.Share.sendDefault({
+        objectType: "feed",
+        content: {
+          title: "To.Letter",
+          description: `${myInfo.nickname}님에게 편지를 보내보세요!`,
+          imageUrl: imageUrl,
+          link: {
+            mobileWebUrl: mainUrl,
+            webUrl: mainUrl,
+          },
+        },
+        buttons: [
+          {
+            title: "웹으로 이동",
             link: {
-              mobileWebUrl: "https://developers.kakao.com",
-              webUrl: "https://developers.kakao.com",
+              mobileWebUrl: mainUrl,
+              webUrl: mainUrl,
             },
           },
-          buttons: [
-            {
-              title: "웹으로 이동",
-              link: {
-                mobileWebUrl: "https://developers.kakao.com",
-                webUrl: "https://developers.kakao.com",
-              },
-            },
-          ],
-        });
-      }
-    } catch (error) {
-      console.error("카카오톡 공유 중 오류가 발생했습니다:", error);
+        ],
+      });
+    } catch (error: any) {
+      alert("카카오톡 공유 중 오류가 발생했습니다. 다시 시도해주세요.");
+      router.push("/");
     }
-  }; */
+  };
 
   /** 트위터 공유 함수 */
-  /*   const twitterShare = () => {
-    const url = `${window.location.href}`;
+  const twitterShare = () => {
+    if (!mounted) return;
     const text = `To.Letter ${myInfo.nickname}님에게 편지를 보내보세요!`;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       text
-    )}&url=${encodeURIComponent(url)}`;
+    )}&url=${encodeURIComponent(currentUrl)}`;
     window.open(twitterUrl);
   };
- */
+
   /** 페이스북 공유 함수 */
-  /*  function shareFacebook() {
-    const sendUrl = window.location.href;
-    window.open("http://www.facebook.com/sharer/sharer.php?u=" + sendUrl);
-  } */
+  const shareFacebook = () => {
+    if (!mounted) return;
+    window.open("http://www.facebook.com/sharer/sharer.php?u=" + currentUrl);
+  };
 
   /** URL 복사 */
-  /*   const copyUrlToClipboard = () => {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url).then(() => {
+  const copyUrlToClipboard = () => {
+    if (!mounted) return;
+    navigator.clipboard.writeText(currentUrl).then(() => {
       alert("URL이 복사되었습니다.");
     });
-  }; */
+  };
 
   /** 카카오 초기화 */
   useEffect(() => {
-    if (window.Kakao && !window.Kakao.isInitialized()) {
+    if (mounted && window.Kakao && !window.Kakao.isInitialized()) {
       window.Kakao.cleanup();
       window.Kakao.init("7df766006a2913dd75b028486db00859");
     }
-  }, []);
+  }, [mounted]);
+
+  if (!mounted) return null;
 
   return (
     <ElementBox
@@ -118,7 +135,7 @@ const LetterShareContents: React.FC = () => {
         background: "rgba(0, 0, 0, 0.5)",
       }}
     >
-      {/* <ElementBox
+      <ElementBox
         $width="400px"
         $direction="column"
         $alignItems="flex-start"
@@ -160,19 +177,19 @@ const LetterShareContents: React.FC = () => {
           >
             <ElementBox $direction="row" $alignItems="center">
               <ShareButtonWrap onClick={shareToKakao}>
-                <ShareImg src="/images/kakao_icon.png" alt="카카오톡" />
+                <ShareImg src="/images/SNS/kakao_icon.png" alt="카카오톡" />
                 <Text $color="white" $margin="5px 0 0 0">
                   카카오톡
                 </Text>
               </ShareButtonWrap>
               <ShareButtonWrap onClick={twitterShare}>
-                <ShareImg src="/images/x_icon.jpg" alt="X" />
+                <ShareImg src="/images/SNS/x_icon.jpg" alt="X" />
                 <Text $color="white" $margin="5px 0 0 0">
                   X
                 </Text>
               </ShareButtonWrap>
               <ShareButtonWrap onClick={shareFacebook}>
-                <ShareImg src="/images/facebook_icon.png" alt="페이스북" />
+                <ShareImg src="/images/SNS/facebook_icon.png" alt="페이스북" />
                 <Text $color="white" $margin="5px 0 0 0">
                   페이스북
                 </Text>
@@ -193,12 +210,12 @@ const LetterShareContents: React.FC = () => {
             />
           </ElementBox>
         </ElementBox>
-      </ElementBox> */}
+      </ElementBox>
     </ElementBox>
   );
 };
 
-/* const ShareButtonWrap = styled.button`
+const ShareButtonWrap = styled.button`
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -224,6 +241,6 @@ const UrlInput = styled.input`
     outline: none;
     border: none;
   }
-`; */
+`;
 
 export default LetterShareContents;

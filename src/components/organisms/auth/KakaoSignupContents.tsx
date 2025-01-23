@@ -10,10 +10,10 @@ import Button from "../../atoms/Button";
 import { useRecoilState } from "recoil";
 import { signupState } from "@/store/recoil/accountAtom";
 import styled from "styled-components";
-/* import {
+import {
   getNicknameConfirm,
   postKakaoSignup,
-} from "@/lib/api/controller/account"; */
+} from "@/lib/api/controller/account";
 import ToastMessage from "@/components/atoms/ToastMessage";
 
 export default function KakaoSignupContents() {
@@ -42,7 +42,6 @@ export default function KakaoSignupContents() {
       [e.target.name]: e.target.value,
     }));
     if (e.target.name === "nickname") setIsNicknameChecked(false);
-    console.log(signupForm);
   };
 
   /** 주소 입력 모달 열기 함수 */
@@ -55,7 +54,7 @@ export default function KakaoSignupContents() {
   };
 
   /** 카카오 회원가입 api 통신 및 응답 처리 함수 */
-  /*   const onClickKakaoSignup = async () => {
+  const onClickKakaoSignup = async () => {
     const conditions = [
       {
         check: signupForm.nickname !== "",
@@ -96,14 +95,14 @@ export default function KakaoSignupContents() {
         alert("같은 이메일이 회원정보에 존재합니다.");
         router.push("/auth/login");
       }
-    } catch (err: any) {
-      console.log("kakao error: " + err);
-      setToast({ message: "입력란을 다시 확인해주세요.", visible: true });
+    } catch (error: any) {
+      alert("카카오 회원가입 오류입니다. 잠시후에 다시 시도해주세요.");
+      router.push("/");
     }
-  }; */
+  };
 
   /** 닉네임 중복확인 함수 */
-  /*   const onClickConfirmNickname = async () => {
+  const onClickConfirmNickname = async () => {
     if (signupForm.nickname === "") {
       setToast({ message: "닉네임을 입력해주세요.", visible: true });
     } else {
@@ -118,11 +117,14 @@ export default function KakaoSignupContents() {
           setToast({ message: "중복된 닉네임입니다.", visible: true });
           setIsNicknameChecked(false);
         }
-      } catch (err: any) {
-        console.log("ninameerror : ", err);
+      } catch (error: any) {
+        setToast({
+          message: "닉네임 인증 요청 오류입니다. 잠시후에 다시 시도해주세요.",
+          visible: true,
+        });
       }
     }
-  }; */
+  };
 
   /** 주소값을 가져오는 로직 */
   useEffect(() => {
@@ -131,17 +133,6 @@ export default function KakaoSignupContents() {
       mailboxAddress: signupForm.mailboxAddress,
     }));
   }, [router, setSignupForm, signupForm.mailboxAddress]);
-
-  useEffect(() => {
-    console.log("확인", signupForm);
-  }, [
-    signupForm.nickname,
-    signupForm.email,
-    signupForm.password,
-    signupForm.mailboxAddress,
-    isNicknameChecked,
-    signupForm,
-  ]);
 
   return (
     <MainBox $direction="column" $alignItems="flex-start" $width="100%">
@@ -155,8 +146,7 @@ export default function KakaoSignupContents() {
           value={signupForm.nickname}
           isExistButton={true}
           buttonTitle="중복 체크"
-          /* onClick={onClickConfirmNickname} */
-          onClick={() => {}}
+          onClick={onClickConfirmNickname}
           $disable={isNicknameChecked}
         />
         <InputForm
@@ -201,8 +191,7 @@ export default function KakaoSignupContents() {
       <SectionBox $direction="column" $width="100%">
         <Button
           title="Signup"
-          /* onClick={onClickKakaoSignup} */
-          onClick={() => {}}
+          onClick={onClickKakaoSignup}
           $padding="8px 0"
           $margin="0 0 16px 0"
         />

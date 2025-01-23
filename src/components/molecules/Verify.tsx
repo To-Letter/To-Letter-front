@@ -20,7 +20,11 @@ export default function Verify({
         이메일 인증
         {children}
       </ElementBox>
-      <FormInput type="text" onChange={onChangeMailKey} />
+      <FormInput
+        type="text"
+        placeholder="여기에 인증 코드를 입력하세요."
+        onChange={onChangeMailKey}
+      />
       <Text $fontSize="10px" $margin="10px 0 0 0">
         {message && "이메일 인증코드가 발송되었습니다."}
       </Text>

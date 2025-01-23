@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { useLoader } from "@react-three/fiber";
 import { Group, Object3DEventMap } from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from "three";
 import { treePosition } from "@/constants/seasonTree";
 import { seasonFile } from "@/constants/seasonTree";
 import { Plane } from "@react-three/drei";
+import { useGLTFLoader } from "@/hooks/useGLTFLoader";
 
 const meshColors: { [key: string]: string } = {
   //나무 가지
@@ -24,7 +24,7 @@ const Winter = () => {
   const [bgTexture, setBgTexture] = useState<THREE.Texture | null>(null);
   const [treeClones, setTreeClones] = useState<Group<Object3DEventMap>[]>([]);
 
-  const treeglb = useLoader(GLTFLoader, seasonFile.spring.modelPath);
+  const treeglb = useGLTFLoader(seasonFile.spring.modelPath);
 
   const woodTexture = useLoader(
     THREE.TextureLoader,

@@ -118,7 +118,7 @@ const TimeBackground = ({ nowHoursValue }: BackgroundProps) => {
           <Plane
             args={[400, 75]}
             rotation={[0, -Math.PI / 2, 0]}
-            position={[150, 0, -75]}
+            position={[150, 0, -100]}
           >
             <meshStandardMaterial map={bgTexture} side={THREE.DoubleSide} />
           </Plane>

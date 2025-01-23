@@ -1,16 +1,19 @@
 "use client";
 
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { useLoader, ThreeEvent } from "@react-three/fiber";
 import { useEffect } from "react";
 import { MeshStandardMaterial } from "three";
 import * as THREE from "three";
 import Calender from "./Calender";
 import Bookshelf from "./Bookshelf";
 /* import NewLetter from "./NewLetter"; */
-/* import axiosInterceptor from "@/lib/api/axiosInterceptor"; */
+import axiosInterceptor from "@/lib/api/axiosInterceptor";
 import { useRouter } from "next/navigation";
 import usePointerCursor from "@/hooks/usePointerCursor";
+import { useGLTFLoader } from "@/hooks/useGLTFLoader";
+import { ThreeEvent } from "@react-three/fiber";
+import { newLetterAlarmState } from "@/store/recoil/letterAtom";
+import { useRecoilValue } from "recoil";
+import NewLetter from "./NewLetter";
 
 /**
  * 연필통 3D 모델의 메쉬별 색상 매핑 객체
@@ -49,15 +52,14 @@ const Desk = () => {
   /** 커서 스타일 커스텀 훅 */
   const { handlePointerOver, handlePointerOut } = usePointerCursor();
   /** 책상 glb모델 */
-  const deskglb = useLoader(GLTFLoader, "/models/desk.glb");
+  const deskglb = useGLTFLoader("/models/desk.glb");
   /** 연필통 glb모델 */
-  const pencilglb = useLoader(GLTFLoader, "/models/pencil_case.glb");
-
-  /*   const newLetterAlarm = useRecoilValue(newLetterAlarmState); */
+  const pencilglb = useGLTFLoader("/models/pencil_case.glb");
+  /** 새로운 편지 알람 상태 */
+  const newLetterAlarm = useRecoilValue(newLetterAlarmState);
 
   /** 책상과 연필 style 변경 */
   useEffect(() => {
-    /*     console.log("newLetterAlarm", newLetterAlarm); */
     if (deskglb && deskglb.scene) {
       deskglb.scene.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {
@@ -99,10 +101,11 @@ const Desk = () => {
   /** 연필통 클릭 이벤트 */
   const onClickPencil = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation();
-    /*     if (axiosInterceptor.defaults.headers.common["Authorization"] !== null) {
+    if (
+      axiosInterceptor.defaults.headers.common["Authorization"] !== undefined
+    ) {
       router.push("/letter/userconfirm");
-    } */
-    router.push("/letter/letterbox/receive");
+    }
   };
 
   return (
@@ -117,8 +120,8 @@ const Desk = () => {
         handlePointerOut={handlePointerOut}
       />
 
-      {/**편지지 */}
-      {/* {newLetterAlarm && <NewLetter />} */}
+      {/**편지 도착 */}
+      {newLetterAlarm && <NewLetter />}
 
       {/* 책상 */}
       <mesh rotation-y={Math.PI} scale={5} position={[0, -5, -2]}>

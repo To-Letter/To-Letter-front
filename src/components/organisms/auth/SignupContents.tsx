@@ -11,11 +11,11 @@ import { useRecoilState } from "recoil";
 import { signupState } from "@/store/recoil/accountAtom";
 import styled from "styled-components";
 import ToastMessage from "@/components/atoms/ToastMessage";
-/* import {
-  getEmialConfirm,
+import {
+  getEmailConfirm,
   getNicknameConfirm,
   postLocalSignup,
-} from "@/lib/api/controller/account"; */
+} from "@/lib/api/controller/account";
 
 export default function SignupContents() {
   const router = useRouter();
@@ -46,7 +46,6 @@ export default function SignupContents() {
     }));
     if (e.target.name === "nickname") setIsNicknameChecked(false);
     else if (e.target.name === "email") setIsEmailChecked(false);
-    console.log(signupForm);
   };
 
   /** 주소 입력 모달 열기 함수 */
@@ -63,7 +62,7 @@ export default function SignupContents() {
   }, [router, setSignupForm, signupForm.mailboxAddress]);
 
   /** 회원가입 api 통신 및 응답 처리 함수 */
-  /*   const onClickSignup = async () => {
+  const onClickSignup = async () => {
     const conditions = [
       {
         check: signupForm.nickname !== "",
@@ -117,10 +116,10 @@ export default function SignupContents() {
     } catch (err: any) {
       setToast({ message: "입력란을 다시 확인해주세요.", visible: true });
     }
-  }; */
+  };
 
   /** 닉네임 중복확인 api 통신 및 응답 처리 함수 */
-  /*   const onClickConfirmNickname = async () => {
+  const onClickConfirmNickname = async () => {
     if (signupForm.nickname === "") {
       setToast({ message: "닉네임을 입력해주세요.", visible: true });
     } else {
@@ -135,19 +134,22 @@ export default function SignupContents() {
           setToast({ message: "중복된 닉네임입니다.", visible: true });
           setIsNicknameChecked(false);
         }
-      } catch (err: any) {
-        console.log("nickNameError : ", err);
+      } catch (error: any) {
+        setToast({
+          message: "닉네임 인증 요청 오류입니다. 잠시후에 다시 시도해주세요.",
+          visible: true,
+        });
       }
     }
-  }; */
+  };
 
   /** 이메일 중복확인 api 통신 및 응답 처리 함수 */
-  /*   const onClickConfirmEmail = async () => {
+  const onClickConfirmEmail = async () => {
     if (signupForm.email === "") {
       setToast({ message: "이메일을 입력해주세요.", visible: true });
     } else {
       try {
-        const res: any = await getEmialConfirm({
+        const res: any = await getEmailConfirm({
           email: signupForm.email,
         });
         if (res.data.responseCode === 200) {
@@ -157,23 +159,14 @@ export default function SignupContents() {
           setToast({ message: "중복된 이메일입니다.", visible: true });
           setIsNicknameChecked(false);
         }
-      } catch (err) {
-        console.log("emailError : ", err);
+      } catch (error: any) {
+        setToast({
+          message: "이메일 중복 체크 오류입니다. 잠시후에 다시 시도해주세요.",
+          visible: true,
+        });
       }
     }
-  }; */
-
-  useEffect(() => {
-    console.log("확인", signupForm);
-  }, [
-    signupForm.nickname,
-    signupForm.email,
-    signupForm.password,
-    signupForm.mailboxAddress,
-    isNicknameChecked,
-    isEmailChecked,
-    signupForm,
-  ]);
+  };
 
   return (
     <MainBox $direction="column" $alignItems="flex-start" $width="100%">
@@ -187,8 +180,7 @@ export default function SignupContents() {
           value={signupForm.nickname}
           isExistButton={true}
           buttonTitle="중복 체크"
-          /* onClick={onClickConfirmNickname} */
-          onClick={() => {}}
+          onClick={onClickConfirmNickname}
           $disable={isNicknameChecked}
         />
         <InputForm
@@ -200,8 +192,7 @@ export default function SignupContents() {
           value={signupForm.email}
           isExistButton={true}
           buttonTitle="중복 체크"
-          /* onClick={onClickConfirmEmail} */
-          onClick={() => {}}
+          onClick={onClickConfirmEmail}
           $disable={isEmailChecked}
         />
         <InputForm
@@ -245,8 +236,7 @@ export default function SignupContents() {
       <SectionBox $direction="column" $width="100%">
         <Button
           title="Signup"
-          /* onClick={onClickSignup} */
-          onClick={() => {}}
+          onClick={onClickSignup}
           $padding="8px 0"
           $margin="0 0 16px 0"
         />

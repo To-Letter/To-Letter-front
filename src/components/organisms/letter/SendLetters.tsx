@@ -1,11 +1,10 @@
 "use client";
 
-// components/organisms/letter/SendLetters.tsx
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useSetRecoilState } from "recoil";
 import { individualLetterState } from "@/store/recoil/letterAtom";
-// import { getSendLetter } from "@/lib/api/controller/letter";
-// import useDebounce from "@/hooks/useDebounce"; //[주석 해제 필요] build error fix
+import { getSendLetter } from "@/lib/api/controller/letter";
+import useDebounce from "@/hooks/useDebounce";
 import { LetterList } from "./LetterList";
 import { Mail } from "@/types/letterType";
 import { useRouter } from "next/navigation";
@@ -21,90 +20,38 @@ export function SendLetters() {
   /** 검색어 관리 state **/
   const [searchTerm, setSearchTerm] = useState("");
   /** 검색어 디바운스 훅 **/
-  // const debouncedSearchTerm = useDebounce(searchTerm, 300); // [주석 해제 필요] build error fix
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   /** 개별 편지 정보 관리 state **/
   const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
 
-  /**
-   * [삭제 필요]받은 편지 데이터 예시
-   */
-  const listLetter = useMemo(() => {
-    return [
-      {
-        id: 1,
-        fromUserNickname: "윤미1",
-        contents: "1번 편지입니다.",
-        arrivedAt: new Date().toISOString(),
-        viewCheck: false,
-      },
-      {
-        id: 2,
-        fromUserNickname: "윤미2",
-        contents:
-          "test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2",
-        arrivedAt: new Date().toISOString(),
-        viewCheck: true,
-      },
-      {
-        id: 3,
-        fromUserNickname: "투레터",
-        contents:
-          "test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3",
-        arrivedAt: new Date().toISOString(),
-        viewCheck: true,
-      },
-      {
-        id: 4,
-        fromUserNickname: "메리크리스마스",
-        contents: "수요일 빨간 날 최고",
-        arrivedAt: new Date().toISOString(),
-        viewCheck: true,
-      },
-    ];
-  }, []);
-
-  /** [삭제 필요]페이지 데이터 예시 **/
-  const pageable = useMemo(() => {
-    return {
-      pageNumber: 1,
-      pageSize: 10,
-      totalElements: 4,
-      totalPages: 1,
-    };
-  }, []);
-
   /** 보낸 편지함 데이터 조회 함수 */
-  const getAllSendLetters = useCallback(
-    async (pageNumber = 0) => {
-      try {
-        /* const res = await getSendLetter({
+  const getAllSendLetters = useCallback(async (pageNumber = 0) => {
+    try {
+      const res = await getSendLetter({
         page: pageNumber,
         size: 10,
         sort: "desc",
       });
       const listLetter = res.data.responseData.listLetter;
-      const pageable = res.data.responseData.pageable; */
-        console.log(pageNumber); // [삭제 필요] build error fix
-        const formattedMails = listLetter.map((letter: any) => ({
-          id: letter.id,
-          sender: letter.fromUserNickname,
-          subject: letter.contents,
-          timeReceived: letter.createdAt,
-        }));
+      const pageable = res.data.responseData.pageable;
+      const formattedMails = listLetter.map((letter: any) => ({
+        id: letter.id,
+        sender: letter.fromUserNickname,
+        subject: letter.contents,
+        timeReceived: letter.createdAt,
+      }));
 
-        setLetters((prevMails) => [...prevMails, ...formattedMails]);
+      setLetters((prevMails) => [...prevMails, ...formattedMails]);
 
-        if (listLetter.length < pageable.pageSize) {
-          setHasMore(false);
-        } else {
-          setHasMore(true);
-        }
-      } catch (err) {
-        console.log(err);
+      if (listLetter.length < pageable.pageSize) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
       }
-    },
-    [listLetter, pageable.pageSize]
-  );
+    } catch (error: any) {
+      alert("보낸 편지함 조회 오류입니다. 잠시후에 다시 시도해주세요.");
+    }
+  }, []);
 
   /** 개별 편지 클릭 핸들러 */
   const handleLetterClick = async (mail: Mail) => {
@@ -136,12 +83,12 @@ export function SendLetters() {
   // 검색어 필터링
   const filteredLetters = useMemo(
     () =>
-      /* letters.filter(
+      letters.filter(
         (mail) =>
           mail.subject.includes(debouncedSearchTerm) ||
           mail.sender.includes(debouncedSearchTerm)
-      ) */ letters,
-    [letters]
+      ),
+    [debouncedSearchTerm, letters]
   );
 
   return (
@@ -152,7 +99,7 @@ export function SendLetters() {
       hasMore={hasMore}
       searchTerm={searchTerm}
       onSearchChange={(e) => setSearchTerm(e.target.value)}
-      type="send" // 보낸 편지함 타입으로 설정
+      type="send"
     />
   );
 }

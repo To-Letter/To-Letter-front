@@ -2,18 +2,18 @@
 
 import React, { ChangeEvent, useState } from "react";
 import ToastMessage from "@/components/atoms/ToastMessage";
-/* import { loadingState } from "@/store/recoil/loadingAtom";
+import { loadingState } from "@/store/recoil/loadingAtom";
 import { useSetRecoilState } from "recoil";
 import { patchPasswordUpdate } from "@/lib/api/controller/account";
 import { useUser } from "@/hooks/useUser";
-import { useRouter } from "next/navigation"; */
+import { useRouter } from "next/navigation";
 import { MainBox, SectionBox } from "@/components/atoms/Box";
 import { Text } from "@/components/atoms/Text";
 import Button from "@/components/atoms/Button";
 import InputForm from "@/components/molecules/InputForm";
 
 export default function PasswordChangeContents() {
-  /*   const router = useRouter(); */
+  const router = useRouter();
   /** 변경 비밀번호 관리 state */
   const [firstPass, setFirstPass] = useState<string>("");
   /** 변경 비밀번호 확인 관리 state */
@@ -21,14 +21,14 @@ export default function PasswordChangeContents() {
   /** 두 비밀번호 동일 여부 관리 state */
   const [checkSamePass, setCheckSamePass] = useState<boolean>(false);
   /** 유저 정보 관리 */
-  /*   const { myInfo } = useUser(); */
+  const { myInfo } = useUser();
   /** 토스트 메시지 관리 state */
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: "",
     visible: false,
   });
   /** 로딩 상태 관리 recoil */
-  /*   const setLoding = useSetRecoilState(loadingState); */
+  const setLoding = useSetRecoilState(loadingState);
 
   /** 비밀번호 검증 함수 */
   const validatePasswords = (pass1: string, pass2: string) => {
@@ -48,7 +48,7 @@ export default function PasswordChangeContents() {
   };
 
   /** 변경 비밀번호 api통신 및 응답 처리 함수 */
-  /*   const submitChangePass = async () => {
+  const submitChangePass = async () => {
     if (checkSamePass && firstPass.length !== 0 && secondPass.length !== 0) {
       setLoding(true);
       const res: any = await patchPasswordUpdate({
@@ -74,7 +74,6 @@ export default function PasswordChangeContents() {
           "등록된 이메일로 검증이 진행되지 않았습니다. 이메일 인증을 먼저 진행해주세요."
         );
       } else {
-        console.log("res", res);
         setLoding(false);
         alert("등록된 유저가 없습니다.");
       }
@@ -85,7 +84,7 @@ export default function PasswordChangeContents() {
         visible: true,
       });
     }
-  }; */
+  };
 
   return (
     <MainBox
@@ -124,8 +123,7 @@ export default function PasswordChangeContents() {
         <Button
           title="비밀번호 변경"
           $padding="8px 0"
-          /* onClick={submitChangePass} */
-          onClick={() => {}}
+          onClick={submitChangePass}
         />
         {toast.visible && (
           <ToastMessage

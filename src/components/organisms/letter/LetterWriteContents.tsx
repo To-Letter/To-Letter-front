@@ -41,7 +41,9 @@ const LetterWriteContents: React.FC = () => {
   /** 편지 내용 변경시 편지내용 recoil에 업데이트 하는 함수 */
   const onChangeContents = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const contents = event.target.value;
-    setNicknameAndContents({ nickname: "", contents: contents });
+    setNicknameAndContents((prev) => {
+      return { ...prev, contents: contents };
+    });
   };
 
   /** 편지 내용이 있는 경우 편지 보내기 모달로 이동하는 함수 */
@@ -85,40 +87,53 @@ const LetterWriteContents: React.FC = () => {
     };
   }, [handleClickOutside]);
   return (
-    <LetterWrap ref={modalRef} $padding="10px" $width="700px">
-      <CloseButton onClick={() => router.push("/")}>
-        <IoMdClose />
-      </CloseButton>
-      <LetterInner $direction="column" $height="800px" $margin="auto">
-        <ElementBox $alignItems="center">
-          <ToInput $fontSize="16px">
-            {`To. ${nicknameAndContents.nickname}`}
-          </ToInput>
-        </ElementBox>
-        <StyledTextarea
-          value={nicknameAndContents.contents}
-          ref={textareaRef}
-          onChange={onChangeContents}
-          placeholder="Write your letter here..."
-          spellCheck={false}
-        />
-      </LetterInner>
-      <FromText>From. {myInfo.nickname}</FromText>
-      <SendButton onClick={moveSendLetterModal}>
-        <IoIosMail />
-      </SendButton>
-      {toast.visible && (
-        <ToastMessage
-          message={toast.message}
-          onClose={() => setToast({ ...toast, visible: false })}
-        />
-      )}
-    </LetterWrap>
+    <>
+      <LetterFontStyle />
+      <LetterWrap ref={modalRef} $padding="10px" $width="700px" $color="black">
+        <CloseButton onClick={() => router.push("/")}>
+          <IoMdClose />
+        </CloseButton>
+        <LetterInner $direction="column" $height="800px" $margin="auto">
+          <ElementBox $alignItems="center">
+            <ToInput $fontSize="16px">
+              {`To. ${nicknameAndContents.nickname}`}
+            </ToInput>
+          </ElementBox>
+          <StyledTextarea
+            value={nicknameAndContents.contents}
+            ref={textareaRef}
+            onChange={onChangeContents}
+            placeholder="Write your letter here..."
+            spellCheck={false}
+          />
+        </LetterInner>
+        <FromText>From. {myInfo.nickname}</FromText>
+        <SendButton onClick={moveSendLetterModal}>
+          <IoIosMail />
+        </SendButton>
+        {toast.visible && (
+          <ToastMessage
+            message={toast.message}
+            onClose={() => setToast({ ...toast, visible: false })}
+          />
+        )}
+      </LetterWrap>
+    </>
   );
 };
 
+const LetterFontStyle = styled.div`
+  @font-face {
+    font-family: "LeeSeoyun";
+    src: url("/fonts/LeeSeoyun.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+`;
+
 const LetterWrap = styled(MainBox)`
-  background: url("/images/letter_background.jpg") no-repeat center center;
+  background: url("/images/letter/letter_background.jpg") no-repeat center
+    center;
   background-size: contain;
   z-index: 1000;
   max-height: 700px;
@@ -160,7 +175,7 @@ const StyledTextarea = styled.textarea`
   height: 582px;
   border: none;
   background: transparent;
-  font-family: "Handwriting", sans-serif;
+  font-family: "LeeSeoyun", sans-serif;
   font-size: 16px;
   outline: none;
   resize: none;
@@ -193,7 +208,7 @@ const StyledTextarea = styled.textarea`
 `;
 
 const ToInput = styled(Text)`
-  font-family: "Handwriting", sans-serif;
+  font-family: "LeeSeoyun", sans-serif;
   // height @mediaquery
   @media (min-height: 501px) and (max-height: 800px) {
     font-size: 16px;
@@ -238,7 +253,7 @@ const FromText = styled.div`
   position: absolute;
   bottom: 29px;
   right: 67px;
-  font-family: "Handwriting", sans-serif;
+  font-family: "LeeSeoyun", sans-serif;
   font-size: 18px;
 `;
 

@@ -35,12 +35,6 @@ const LetterSendContents: React.FC = () => {
 
   /** 편지 보내기 함수 */
   const letterSend = async () => {
-    if (nicknameAndContents.contents === "") {
-      setToast({
-        message: "편지 내용을 입력해주세요.",
-        visible: true,
-      });
-    }
     setLoding(true);
     try {
       const res: any = await sendLetter({
@@ -58,8 +52,8 @@ const LetterSendContents: React.FC = () => {
         setLoding(false);
         alert("존재하지 않는 유저입니다. 다시 닉네임을 확인해주세요.");
       }
-    } catch (error) {
-      console.error("sendLetter Error:", error);
+    } catch (error: any) {
+      alert("편지 보내기 오류입니다. 잠시후에 다시 시도해주세요.");
     }
   };
 

@@ -1,17 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { individualLetterState } from "@/store/recoil/letterAtom";
 import { useRouter } from "next/navigation";
 import { MainBox } from "@/components/atoms/Box";
 import { LetterList } from "./LetterList";
 import { Mail } from "@/types/letterType";
+import { getUnReadLetter } from "@/lib/api/controller/letter";
 
 export default function NewLettersubject() {
   const router = useRouter();
   /** 받은 메일 리스트 관리 state **/
-  /* const [letters, setLetters] = useState<Mail[]>([]); */
+  const [letters, setLetters] = useState<Mail[]>([]);
   /** 무한스크롤을 위한 받은 편지 페이지 관리 state **/
   const [, setPage] = useState(0);
   /** 무한스크롤을 위한 받은 편지 페이지 마지막 여부 관리 state **/
@@ -19,41 +20,36 @@ export default function NewLettersubject() {
   /** 개별 편지 정보 관리 state **/
   const setIndividualLetterInfo = useSetRecoilState(individualLetterState);
 
-  /**
-   * [삭제 필요]받은 편지 데이터 예시
-   */
-  const listLetter = [
-    {
-      id: 1,
-      sender: "윤미1",
-      subject: "1번 편지입니다.",
-      timeReceived: new Date().toISOString(),
-      viewCheck: false,
-    },
-    {
-      id: 2,
-      sender: "윤미2",
-      subject:
-        "test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2test2",
-      timeReceived: new Date().toISOString(),
-      viewCheck: false,
-    },
-    {
-      id: 3,
-      sender: "투레터",
-      subject:
-        "test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3test3",
-      timeReceived: new Date().toISOString(),
-      viewCheck: false,
-    },
-    {
-      id: 4,
-      sender: "메리크리스마스",
-      subject: "수요일 빨간 날 최고",
-      timeReceived: new Date().toISOString(),
-      viewCheck: false,
-    },
-  ];
+  /** 안 읽은 편지함 데이터 조회 함수 */
+  const getUnReadLetters = useCallback(async (pageNumber = 0) => {
+    try {
+      const res = await getUnReadLetter({
+        page: pageNumber,
+        size: 10,
+        sort: "desc",
+      });
+      const listLetter = res.data.responseData.letterDTO;
+      const pageable = res.data.responseData.pageable;
+      const formattedMails = listLetter.map((letter: any) => ({
+        id: letter.id,
+        sender: letter.fromUserNickname,
+        subject: letter.contents,
+        timeReceived: letter.arrivedAt,
+        viewCheck: letter.viewCheck,
+      }));
+
+      setLetters((prevMails) => [...prevMails, ...formattedMails]);
+
+      // 마지막 페이지 체크
+      if (listLetter.length < pageable.pageSize) {
+        setHasMore(false);
+      } else {
+        setHasMore(true);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
 
   /** 메일 아이템 클릭 이벤트(개별 편지 팝업창) */
   const handleMailItemClick = (mail: Mail) => {
@@ -79,10 +75,15 @@ export default function NewLettersubject() {
     });
   };
 
+  /** 초기 안 읽은 편지 데이터 로드 */
+  useEffect(() => {
+    getUnReadLetters(0);
+  }, [getUnReadLetters]);
+
   return (
     <MainBox $width="100%" $height="100%">
       <LetterList
-        letters={listLetter}
+        letters={letters}
         onLetterClick={handleMailItemClick}
         fetchMore={fetchMore}
         hasMore={hasMore}
