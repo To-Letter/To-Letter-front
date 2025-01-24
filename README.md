@@ -1,9 +1,10 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/To-Letter/To-Letter-front/main/public/icon/apple-touch-icon.png" alt="To.Letter Logo" width="200">
+
   
-  <h2><a href="https://www.toletter.co.kr" style="text-decoration: none">✉️Welcome To TO.LETTER!</a></h2>
-  
-  <h3>📮온라인을 통해 만나는 아날로그한 편지</h3>
+  <h2>:envelope:온라인을 통해 만나는 아날로그한 편지:mailbox_with_mail:</h2>
+
+  <a href="https://www.toletter.co.kr" style="text-decoration: none; display:none"><img src="https://github.com/user-attachments/assets/1b013684-0d35-412a-af2e-60b492be235b" alt="To.Letter Logo" width="200"></a>
+  <h3>Welcome To TO.LETTER!</h3>
 
   [![Visit](https://img.shields.io/badge/VISIT-TO.LETTER-FF4154?style=for-the-badge&logoColor=white)](https://www.toletter.co.kr)
   [![Stars](https://img.shields.io/github/stars/To-Letter/To-Letter-front?style=for-the-badge&color=ffd93b)](https://github.com/To-Letter/To-Letter-front/stargazers)
