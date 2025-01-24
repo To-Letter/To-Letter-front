@@ -1,9 +1,26 @@
-# :envelope: 온라인을 통해 만나는 아날로그한 편지, TO. Letter :mailbox_with_mail:
+<div align="center">
+  <img src="https://raw.githubusercontent.com/To-Letter/To-Letter-front/main/public/icon/apple-touch-icon.png" alt="To.Letter Logo" width="200">
+  
+  <h2><a href="https://www.toletter.co.kr" style="text-decoration: none">✉️Welcome To TO.LETTER!</a></h2>
+  
+  <h3>📮온라인을 통해 만나는 아날로그한 편지</h3>
 
-- threejs를 통해 가상의 나의 방에서 편지를 주고 받을 수 있어요.
-- 내가 설정해둔 우편함 위치를 기준으로 편지가 도착하는 시간이 정해져요.
-- 나의 편지 주소를 카카오톡으로 공유할 수 있어요.
-- 로그인시 새로 도착한 편지 알림을 받을 수 있어요.
+  [![Visit](https://img.shields.io/badge/VISIT-TO.LETTER-FF4154?style=for-the-badge&logoColor=white)](https://www.toletter.co.kr)
+  [![Stars](https://img.shields.io/github/stars/To-Letter/To-Letter-front?style=for-the-badge&color=ffd93b)](https://github.com/To-Letter/To-Letter-front/stargazers)
+
+  <p>
+    <a href="https://www.toletter.co.kr">
+      <img src="https://img.shields.io/badge/Website-toletter.co.kr-blue?style=flat-square" alt="Website"/>
+    </a>
+  </p>
+</div>
+
+## ✨ 주요 기능
+
+- **3D 가상 편지함** - Three.js를 통해 나만의 방에서 편지를 주고 받을 수 있어요
+- **시간차 배달** - 설정한 우편함 위치에 따라 편지 도착 시간이 달라져요
+- **편지 공유** - 나의 편지 주소를 카카오톡으로 공유할 수 있어요
+- **실시간 알림** - 로그인 시 새로 도착한 편지 알림을 받을 수 있어요
 
 <br/>
 
@@ -17,14 +34,39 @@
 
 ### 2. 개발 환경
 
-- front: react, typescript
-- 버전 및 이슈관리 : Github, Github Issues, Github Project
-- 서비스 배포 환경 : -
-- 협업 툴: [Github Wiki](https://github.com/To-Letter/To-Letter-front/wiki)
+- **프론트엔드**: 
+  - React → Next.js (React 기반 프레임워크)
+  - TypeScript
+- **버전 및 이슈관리**: 
+  - Github
+  - Github Issues
+  - Github Project
+- **서비스 배포 환경**: 
+  - Vercel (Next.js 공식 배포 플랫폼)
+  - Github Actions
+- **협업 툴**: 
+  - [Github Wiki](https://github.com/To-Letter/To-Letter-front/wiki)
+
+> 💡 **Note**: React에서 Next.js로 마이그레이션을 통해 서버 사이드 렌더링(SSR)을 적용하여 SEO(검색 엔진 최적화) 성능을 크게 개선했습니다. 이를 통해 검색 엔진에서의 웹사이트 노출도를 향상시켰습니다.
 
 ### 3. 사용 기술
 
-- threeJs, recoil, styled-components
+- **3D 그래픽스**
+  - React Three Fiber (R3F)
+  - Three.js
+  - 선언적인 방식으로 3D 씬 구성 및 관리
+  - 실시간 3D 인터랙션 구현
+
+- **상태 관리 & 네트워크**
+  - Recoil: 전역 상태 관리
+  - Axios: 인터셉터를 통한 요청/응답 핸들링
+  - Event Source Polyfill: 실시간 서버 이벤트 수신 지원
+
+- **스타일링**
+  - Styled Components: CSS-in-JS 라이브러리로 컴포넌트 기반 스타일링
+  - Tailwind CSS: Next.js 서버 컴포넌트 UI 스타일링
+
+> 💡 **Note**: Three.js와 React Three Fiber를 활용하여 3D 가상 공간을 구현하고, 실시간 이벤트 처리를 위한 SSE(Server-Sent Events)를 도입했습니다. 또한 서버 컴포넌트와 클라이언트 컴포넌트에 각각 최적화된 스타일링 솔루션을 적용했습니다.
 
 <br/>
 
