@@ -144,7 +144,7 @@
  <summary><h4>1. 가이드 페이지 - 인덱스 페이지 접근 시 리다이렉트</h4> </summary>
 <table >
     <tr>
-        <td ><img src="https://github.com/user-attachments/assets/74430186-5db8-4d5e-9d40-6aa842f7eadf" width="760"/></td>
+        <td ><img src="https://github.com/user-attachments/assets/74430186-5db8-4d5e-9d40-6aa842f7eadf" width="580"/></td>
         <td>• To.Letter를 이용하기 위한 <br/>&nbsp&nbsp안내사항 및 사용법 <br/><br/>• 모델 다운로드 완료 시<br/>&nbsp&nbspstart 버튼 활성화</td>
     </tr>
 </table>
@@ -154,9 +154,9 @@
  <summary><h4>2. 로그인 / 회원가입 - 의자</h4></summary>
 <table >
     <tr>
-        <td><img src="https://github.com/user-attachments/assets/d108733e-9b9d-47a8-b190-0bcc18109ea3" width="560" height="272"></td>
-        <td ><img src="https://github.com/user-attachments/assets/76ed7c00-b92b-4bb1-bbbe-a9da9076e355" width="300"> </td>
-        <td><img src="https://github.com/user-attachments/assets/7ef5266b-c664-4768-9ce9-fe46518608b7" width="300"></td>
+        <td><img src="https://github.com/user-attachments/assets/d108733e-9b9d-47a8-b190-0bcc18109ea3" width="400" height="272"></td>
+        <td ><img src="https://github.com/user-attachments/assets/76ed7c00-b92b-4bb1-bbbe-a9da9076e355" width="320"> </td>
+        <td><img src="https://github.com/user-attachments/assets/7ef5266b-c664-4768-9ce9-fe46518608b7" width="320"></td>
     </tr>
    <tr>
         <td>• 로그인 전 기본 화면 <br/>• 시점 이동 불가</td>
@@ -170,7 +170,7 @@
  <summary><h4>3. 기본 배경</h4></summary>
 <table >
     <tr>
-        <td ><img src="https://github.com/user-attachments/assets/f9147aa3-f697-4c92-a7cc-0bdd8fc77963" width="760"/></td>
+        <td ><img src="https://github.com/user-attachments/assets/f9147aa3-f697-4c92-a7cc-0bdd8fc77963" width="620"/></td>
         <td>• 방(침대, 책상, 의자, 서랍, 캘린더, 벽걸이 랙, 창문, 커튼 등)<br/>• 야외 풍경(계절 별, 시간대 별, 날씨 별)</td>
     </tr>
 </table>
@@ -180,9 +180,9 @@
  <summary><h4>4. 마이 페이지 모달 - 침대</h4> </summary>
 <table >
     <tr>
-        <td ><img src="https://github.com/user-attachments/assets/949ad9e7-5111-4494-b511-fd09bc0724ef" width="310"/></td>
-        <td ><img src="https://github.com/user-attachments/assets/ea2550e6-690e-4531-a3be-5487b69fe44c" width="310"/></td>
-        <td ><img src="https://github.com/user-attachments/assets/ea2550e6-690e-4531-a3be-5487b69fe44c" width="310"/></td>
+        <td ><img src="https://github.com/user-attachments/assets/949ad9e7-5111-4494-b511-fd09bc0724ef" width="270"/></td>
+        <td ><img src="https://github.com/user-attachments/assets/ea2550e6-690e-4531-a3be-5487b69fe44c" width="270"/></td>
+        <td ><img src="https://github.com/user-attachments/assets/ea2550e6-690e-4531-a3be-5487b69fe44c" width="270"/></td>
     </tr>
   <tr>
         <td>• 내 정보 확인 및 수정/로그아웃</td>
@@ -236,7 +236,7 @@
  <summary><h4>8. 편지 도착 알림 - (발생 시)책상 위 편지봉투 더미 등장</h4> </summary>
 <table >
     <tr>
-        <td ><img src="https://github.com/user-attachments/assets/4191709a-018a-466b-825b-f22df979b3af" width="760"/></td>
+        <td ><img src="https://github.com/user-attachments/assets/4191709a-018a-466b-825b-f22df979b3af" width="620"/></td>
         <td>• 새로운 편지 알람</td>
     </tr>
 </table>
