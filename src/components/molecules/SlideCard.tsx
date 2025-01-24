@@ -5,6 +5,7 @@ interface SlideCardProps {
   imgSrc: string;
   imgAlt: string;
   guideHeader: string;
+  guideSubtitle: string | null;
   guideContents: string;
 }
 
@@ -12,6 +13,7 @@ export default function SlideCard({
   imgSrc,
   imgAlt,
   guideHeader,
+  guideSubtitle,
   guideContents,
 }: SlideCardProps) {
   return (
@@ -29,7 +31,12 @@ export default function SlideCard({
             {guideHeader}
           </h1>
         </div>
-        <div className="tw-w-full tw-h-full tw-pt-[24px] tw-text-black tw-whitespace-pre-line">
+        <div className="tw-w-full tw-h-full tw-pt-[24px] tw-text-black tw-leading-7 tw-whitespace-pre-line">
+          {guideSubtitle !== null && (
+            <div className="tw-text-lg tw-font-bold tw-mb-2">
+              {guideSubtitle}
+            </div>
+          )}
           {guideContents}
         </div>
       </section>
