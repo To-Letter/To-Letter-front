@@ -180,9 +180,9 @@
  <summary><h4>4. 마이 페이지 모달 - 침대</h4> </summary>
 <table >
     <tr>
-        <td ><img src="https://github.com/user-attachments/assets/949ad9e7-5111-4494-b511-fd09bc0724ef" width="270"/></td>
-        <td ><img src="https://github.com/user-attachments/assets/ea2550e6-690e-4531-a3be-5487b69fe44c" width="270"/></td>
-        <td ><img src="https://github.com/user-attachments/assets/ea2550e6-690e-4531-a3be-5487b69fe44c" width="270"/></td>
+        <td ><img src="https://github.com/user-attachments/assets/949ad9e7-5111-4494-b511-fd09bc0724ef" width="248"/></td>
+        <td ><img src="https://github.com/user-attachments/assets/ea2550e6-690e-4531-a3be-5487b69fe44c" width="248"/></td>
+        <td ><img src="https://github.com/user-attachments/assets/ea2550e6-690e-4531-a3be-5487b69fe44c" width="248"/></td>
     </tr>
   <tr>
         <td>• 내 정보 확인 및 수정/로그아웃</td>
