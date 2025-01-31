@@ -17,6 +17,7 @@ export default function ModalLayout({
   }
   return (
     <ModalBox
+      isAuth={true}
       $width="320px"
       $padding="24px 40px 20px 40px"
       $direction="column"
