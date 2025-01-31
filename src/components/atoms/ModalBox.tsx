@@ -3,10 +3,13 @@
 import React from "react";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
+import { signupState } from "@/store/recoil/accountAtom";
+import { useResetRecoilState } from "recoil";
 
 interface props {
   children?: React.ReactNode;
   isExitBtn?: boolean;
+  isAuth?: boolean;
   $direction?: "row" | "column";
   $justifyContent?: string;
   $alignItems?: string;
@@ -27,7 +30,8 @@ interface defaultStyleProps {
 }
 /**
  * @param children 모달 안에 들어갈 하위 노드(React.ReactNode)
- * @param isExitBtn 나가기 버튼 유무, 기본 값 false(boolean)
+ * @param isExitBtn 나가기 버튼 유무, 기본 값 true(boolean)
+ * @param isAuth Auth page인지 확인, 기본 값 false(boolean)
  * @param $direction?: "row" | "column"; 기본 값 "row"
  * @param $justifyContent?: string; 기본 값 "center"
  * @param $alignItems?: string; 기본 값 "center"
@@ -40,6 +44,7 @@ interface defaultStyleProps {
 export default function ModalBox({
   children,
   isExitBtn = true,
+  isAuth = false,
   $direction = "row",
   $justifyContent = "center",
   $alignItems = "center",
@@ -49,6 +54,15 @@ export default function ModalBox({
   $margin = "0",
 }: props) {
   const router = useRouter();
+  const resetSignupForm = useResetRecoilState(signupState);
+
+  const onClickExit = () => {
+    router.push("/");
+    if (isAuth) {
+      resetSignupForm();
+    }
+  };
+
   return (
     <BackgroundOverlay>
       <BoxWrap
@@ -60,7 +74,7 @@ export default function ModalBox({
         $margin={$margin}
         $padding={$padding}
       >
-        {isExitBtn && <Exit onClick={() => router.push("/")}>X</Exit>}
+        {isExitBtn && <Exit onClick={onClickExit}>X</Exit>}
         {children}
       </BoxWrap>
     </BackgroundOverlay>

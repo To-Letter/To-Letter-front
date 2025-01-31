@@ -151,9 +151,6 @@ export default function MailVerifyContents() {
           onClick={submitSignup}
         />
       </SectionBox>
-      <Text $color="#e9e9e9" $fontSize="10px" $margin="0 0 24px 0">
-        {authReqMessage && "이메일 인증코드가 발송되었습니다."}
-      </Text>
       {toast.visible && (
         <ToastMessage
           message={toast.message}
