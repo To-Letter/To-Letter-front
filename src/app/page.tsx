@@ -33,7 +33,7 @@ export default function Home() {
     };
   }, []);
 
-  /** 보호된 경로와 kakao 리다이렉션 페이지에서 모달 전환을 위한 파라미터 처리 */
+  /** 보호된 경로와 kakao 리다이렉션 페이지에서 모달 전환을 위한 파라미터 처리 및 모델이 로드되지 않은 상태라면 가이드 페이지로 리다이렉트 */
   useEffect(() => {
     const showLogin = searchParams.get("showLogin");
 
@@ -45,19 +45,12 @@ export default function Home() {
       router.push("/auth/kakao");
     } else if (searchParams.get("modal") === "login") {
       router.push("/auth/login");
+    } else {
+      if (progress < 100) {
+        router.push("/guide");
+      }
     }
-  }, [searchParams, router]);
-
-  /** 모델이 로드되지 않은 상태라면 가이드 페이지로 리다이렉트 */
-  useEffect(() => {
-    if (progress < 100) {
-      router.push("/guide");
-      return;
-    }
-  }, [progress, router]);
-
-  /** 모델이 로드되지 않았다면 빈 화면을 보여줌 */
-  if (progress < 100) return null;
+  }, [searchParams, router, progress]);
 
   const isAuthorized =
     axiosInterceptor.defaults.headers.common["Authorization"] !== undefined;
