@@ -12,7 +12,9 @@ interface myInfoType {
 /** 회원가입 정보 타입 */
 interface SignupType {
   nickname: string;
+  isNicknameChecked: boolean;
   email: string;
+  isEmailChecked: boolean;
   password: string;
   mailboxAddress: string;
 }
@@ -22,7 +24,9 @@ export const signupState = atom<SignupType>({
   key: "signupState",
   default: {
     nickname: "",
+    isNicknameChecked: false,
     email: "",
+    isEmailChecked: false,
     password: "",
     mailboxAddress: "",
   },
