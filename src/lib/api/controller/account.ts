@@ -179,16 +179,11 @@ export const postKakaoToken = async (code: { code: string }) => {
     if (response.data.responseCode === 201) {
       /* 이미 회원가입이 되있는 유저에 대한 토큰 저장 -> 로그인 */
       const accessToken = response.headers.get("authorization");
-      const refreshToken = response.headers.get("refreshToken");
 
       if (accessToken) {
         axiosInterceptor.defaults.headers.common[
           "Authorization"
         ] = `${accessToken}`;
-      }
-
-      if (refreshToken) {
-        axiosInterceptor.defaults.headers.common["refreshToken"] = refreshToken;
       }
     }
 
