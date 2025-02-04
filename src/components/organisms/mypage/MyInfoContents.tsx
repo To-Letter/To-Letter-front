@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { styled } from "styled-components";
 import { useRouter } from "next/navigation";
 import { ElementBox, MainBox, SectionBox } from "@/components/atoms/Box";
@@ -31,6 +31,9 @@ export default function MyInfoContents() {
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
   /** 초기 닉네임 저장 */
   const [originalNickname] = useState(myInfo.nickname);
+  /** 주소 변경 페이지 이동 감지 */
+  const [isFromAddressPage, setIsFromAddressPage] = useState(false);
+  const [prevPathname, setPrevPathname] = useState<string>("");
   /** 토스트 메시지 */
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: "",
@@ -48,6 +51,7 @@ export default function MyInfoContents() {
 
   /** 주소 입력 모달 열기 함수 */
   const onClickOpenModal = () => {
+    setIsFromAddressPage(true);
     router.push("/auth/address");
   };
 
@@ -126,6 +130,21 @@ export default function MyInfoContents() {
       });
     }
   };
+
+  useEffect(() => {
+    return () => {
+      const nextPath = window.location.pathname;
+
+      // 주소 변경 페이지로 이동하는 경우가 아닐 때만 refreshMyInfo 실행
+      if (
+        !nextPath.includes("/auth/address") &&
+        !nextPath.includes("/mypage/myinfo")
+      ) {
+        refreshMyInfo();
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <MainBox $direction="column" $alignItems="flex-start" $width="100%">
