@@ -57,6 +57,8 @@ const Desk = () => {
   const pencilglb = useGLTFLoader("/models/pencil_case.glb");
   /** 새로운 편지 알람 상태 */
   const newLetterAlarm = useRecoilValue(newLetterAlarmState);
+  const isAuthorized =
+    axiosInterceptor.defaults.headers.common["Authorization"] !== undefined;
 
   /** 책상과 연필 style 변경 */
   useEffect(() => {
@@ -121,7 +123,7 @@ const Desk = () => {
       />
 
       {/**편지 도착 */}
-      {newLetterAlarm && <NewLetter />}
+      {newLetterAlarm && isAuthorized && <NewLetter />}
 
       {/* 책상 */}
       <mesh rotation-y={Math.PI} scale={5} position={[0, -5, -2]}>

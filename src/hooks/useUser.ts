@@ -11,6 +11,8 @@ interface MyInfoI {
   address: string;
   email: string;
   nickname: string;
+  prevNickname: string;
+  isNicknameChecked: boolean;
   userRole: "local" | "kakao";
 }
 
@@ -47,6 +49,8 @@ export const useUser = () => {
           address: result.data.responseData.address,
           email: result.data.responseData.email,
           nickname: result.data.responseData.nickname,
+          prevNickname: result.data.responseData.nickname,
+          isNicknameChecked: true,
           userRole: result.data.responseData.loginType,
         });
       }

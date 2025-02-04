@@ -27,18 +27,15 @@ export default function MyInfoContents() {
     값으로, 실제 자신의 주소를 입력하지 않아도 괜찮아요!
     `
   );
-  /** 닉네임 중복 체크 */
-  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
-  /** 초기 닉네임 저장 */
-  const [originalNickname] = useState(myInfo.nickname);
-  /** 주소 변경 페이지 이동 감지 */
-  const [isFromAddressPage, setIsFromAddressPage] = useState(false);
-  const [prevPathname, setPrevPathname] = useState<string>("");
   /** 토스트 메시지 */
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: "",
     visible: false,
   });
+
+  const checkNicknameHdr = (bool: boolean) => {
+    updateMyInfo({ isNicknameChecked: bool });
+  };
 
   /** 유저 정보 업데이트 함수 */
   const onChangeFormHdr = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,21 +43,20 @@ export default function MyInfoContents() {
     updateMyInfo({
       [name]: value,
     });
-    if (e.target.name === "nickname") setIsNicknameChecked(false);
+    if (e.target.name === "nickname") checkNicknameHdr(false);
   };
 
   /** 주소 입력 모달 열기 함수 */
   const onClickOpenModal = () => {
-    setIsFromAddressPage(true);
     router.push("/auth/address");
   };
 
   /** 유저 정보 변경 함수 */
   const onClickUpdata = async () => {
     /** 닉네임 변경 여부 확인 */
-    const isNicknameChanged = originalNickname !== myInfo.nickname;
+    const isNicknameChanged = myInfo.prevNickname !== myInfo.nickname;
     /** 닉네임이 변경되었는데 중복체크를 하지 않은 경우 */
-    if (isNicknameChanged && !isNicknameChecked) {
+    if (isNicknameChanged && !myInfo.isNicknameChecked) {
       setToast({
         message: "닉네임 중복 체크를 진행해주세요.",
         visible: true,
@@ -118,10 +114,10 @@ export default function MyInfoContents() {
 
       if (res.data.responseCode === 200) {
         setToast({ message: "사용 가능한 닉네임입니다.", visible: true });
-        setIsNicknameChecked(true);
+        checkNicknameHdr(true);
       } else if (res.data.responseCode === 401) {
         setToast({ message: "중복된 닉네임입니다.", visible: true });
-        setIsNicknameChecked(false);
+        checkNicknameHdr(false);
       }
     } catch (error: any) {
       setToast({
@@ -169,7 +165,7 @@ export default function MyInfoContents() {
           buttonTitle="중복 체크"
           value={myInfo.nickname}
           onClick={onClickConfirmNickname}
-          $disable={isNicknameChecked}
+          $disable={myInfo.isNicknameChecked}
         />
         <ElementBox $justifyContent="space-between" $margin="16px 0 0">
           <ElementBox>

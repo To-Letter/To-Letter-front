@@ -6,6 +6,8 @@ interface myInfoType {
   address: string;
   email: string;
   nickname: string;
+  prevNickname: string;
+  isNicknameChecked: boolean;
   userRole: "localLogin" | "kakaoLogin" | "";
 }
 
@@ -40,6 +42,8 @@ export const myInfoState = atom<myInfoType>({
     address: "",
     email: "",
     nickname: "",
+    prevNickname: "",
+    isNicknameChecked: false,
     userRole: "",
   },
 });
