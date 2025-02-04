@@ -104,6 +104,7 @@ const SendLettersDeleteContents = () => {
       const formattedMails = listLetter.map((letter: any) => ({
         id: letter.id,
         sender: letter.fromUserNickname,
+        receiver: letter.toUserNickname,
         subject: letter.contents,
         timeReceived: letter.createdAt,
       }));
@@ -132,7 +133,7 @@ const SendLettersDeleteContents = () => {
   const handleLetterClick = async (mail: Mail) => {
     setIndividualLetterInfo({
       id: mail.id,
-      toUserNickname: mail.sender,
+      toUserNickname: mail.receiver,
       letterContent: mail.subject,
       fromUserNickname: mail.sender,
       onDelete: true,
@@ -153,7 +154,6 @@ const SendLettersDeleteContents = () => {
 
   /** 초기 받은 편지 데이터 로드 */
   useEffect(() => {
-    console.log("confirmMailDelete", confirmMailDelete);
     getAllSendLetters(0);
   }, [getAllSendLetters, confirmMailDelete]);
 

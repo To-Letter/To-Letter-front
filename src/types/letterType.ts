@@ -4,6 +4,7 @@
 export interface Mail {
   id: number;
   sender: string;
+  receiver: string;
   subject: string;
   timeReceived: string;
   viewCheck?: boolean; // optional로 변경

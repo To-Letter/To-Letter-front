@@ -93,8 +93,8 @@ const NicknameConfirmContents: React.FC = () => {
             <ElementBox $alignItems="center" $justifyContent="center">
               받는 사람 닉네임
               <SummaryTip
-                $margin="0 8px"
-                $bottom="24px"
+                $bottom="421px"
+                $left="52%"
                 tipText="편지를 보내는 사람의 닉네임이 존재하는지 확인해주세요."
               />
             </ElementBox>

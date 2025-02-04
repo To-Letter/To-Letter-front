@@ -18,6 +18,7 @@ import useDebounce from "@/hooks/useDebounce";
 interface Mail {
   id: number;
   sender: string;
+  receiver: string;
   subject: string;
   timeReceived: string;
 }
@@ -113,6 +114,7 @@ const ReceiveLettersDeleteContents = () => {
       const formattedMails = listLetter.map((letter: any) => ({
         id: letter.id,
         sender: letter.fromUserNickname,
+        receiver: letter.toUserNickname,
         subject: letter.contents,
         timeReceived: letter.arrivedAt,
         viewCheck: letter.viewCheck,
@@ -143,7 +145,7 @@ const ReceiveLettersDeleteContents = () => {
   const handleLetterClick = async (mail: Mail) => {
     setIndividualLetterInfo({
       id: mail.id,
-      toUserNickname: mail.sender,
+      toUserNickname: mail.receiver,
       letterContent: mail.subject,
       fromUserNickname: mail.sender,
       onDelete: true,
@@ -164,8 +166,6 @@ const ReceiveLettersDeleteContents = () => {
 
   /** 초기 받은 편지 데이터 로드 */
   useEffect(() => {
-    console.log("confirmMailDelete", confirmMailDelete);
-
     getAllReceiveLetters(0);
   }, [getAllReceiveLetters, confirmMailDelete]);
 

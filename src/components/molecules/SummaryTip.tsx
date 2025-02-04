@@ -60,7 +60,7 @@ export const SummryWrap = styled.div<defaultStyleProps>`
 
 export const TipBox = styled.div<defaultStyleProps>`
   display: none;
-  position: absolute;
+  position: fixed;
   bottom: ${({ $bottom }) => $bottom};
   left: ${({ $left }) => $left};
   transform: translateX(-50%);
@@ -69,7 +69,7 @@ export const TipBox = styled.div<defaultStyleProps>`
   padding: 5px;
   border-radius: 3px;
   white-space: break-spaces;
-  z-index: 10;
+  z-index: 9999;
   width: 200px;
   text-align: center;
   word-break: keep-all;

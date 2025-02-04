@@ -40,6 +40,7 @@ export function ReceiveLetters() {
       const formattedMails = listLetter.map((letter: any) => ({
         id: letter.id,
         sender: letter.fromUserNickname,
+        receiver: letter.toUserNickname,
         subject: letter.contents,
         timeReceived: letter.arrivedAt,
         viewCheck: letter.viewCheck,
@@ -62,7 +63,7 @@ export function ReceiveLetters() {
   const handleLetterClick = async (mail: Mail) => {
     setIndividualLetterInfo({
       id: mail.id,
-      toUserNickname: mail.sender,
+      toUserNickname: mail.receiver,
       letterContent: mail.subject,
       fromUserNickname: mail.sender,
       onDelete: false,
