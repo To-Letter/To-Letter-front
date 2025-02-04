@@ -60,14 +60,14 @@
  <summary><h4>4. 마이 페이지 모달 - 침대</h4> </summary>
 <table >
     <tr>
-        <td ><img src="https://github.com/user-attachments/assets/949ad9e7-5111-4494-b511-fd09bc0724ef" width="248"/></td>
-        <td ><img src="https://github.com/user-attachments/assets/ea2550e6-690e-4531-a3be-5487b69fe44c" width="248"/></td>
-        <td ><img src="https://github.com/user-attachments/assets/ea2550e6-690e-4531-a3be-5487b69fe44c" width="248"/></td>
+        <td ><img src="https://github.com/user-attachments/assets/5339368d-9725-48a8-adb9-7c792c9630cb" width="248"/></td>
+        <td ><img src="https://github.com/user-attachments/assets/3600498a-49d7-456c-86f7-5b9c3a8bfac1" width="248"/></td>
+        <td ><img src="https://github.com/user-attachments/assets/710a87a5-60dd-4431-9dfd-b0fa78ab8177" width="248"/></td>
     </tr>
   <tr>
         <td>• 내 정보 확인 및 수정/로그아웃</td>
         <td>• 이메일 인증 후 비밀번호 변경</td>
-        <td>• 회원탈퇴가 들어갈 예정</td>
+        <td>• 비민번호 확인 후 회원 탈퇴</td>
     </tr>
 </table>
 </details>
@@ -78,12 +78,24 @@
 
 <table >
     <tr>
-        <td> 편지 보내는 과정</td>
-        <td>공유 결과</td>
+        <td> 
+          <img src="https://github.com/user-attachments/assets/911127e2-80eb-4d1f-97a4-18ee70037735" width="348"/>
+          <br/><br/>
+          <img src="https://github.com/user-attachments/assets/ccf6fccf-401c-42a3-8e10-be75b22f525b" width="348"/>
+          <br/><br/>
+          <img src="https://github.com/user-attachments/assets/2b6717ab-11a8-453f-9445-92bf641ac291" width="348"/>
+        </td>
+        <td>
+          <img src="https://github.com/user-attachments/assets/7559388a-d6c6-4bdc-82b7-aac229cf8d56" width="348"/>
+          <br/>
+          <img src="https://github.com/user-attachments/assets/291ea84e-bfda-4a05-961a-9e970a950903" width="348"/>
+          <br/>
+          <img src="https://github.com/user-attachments/assets/7f4ad674-76b2-481b-bcd3-86d95e0f1983" width="348"/>
+        </td>
     </tr>
     <tr>
         <td>• 수신자 존재 확인 <br/>• 편지 작성<br/>• 보낸 편지함 저장 여부 선택<br>• 설정 우편함 위치 기준 도착 시간 설정</td>
-        <td>• 편지 주소 공유 기능</td>
+        <td>• 편지 주소 공유 기능<br/>• 카카오톡 공유- 닉네임 공유 기능 포함 <br/>• 페이스북, X, 링크 복사 붙여넣기 - 미리보기 이미지 첨부 </td>
     </tr>
 </table>
 </details>
@@ -116,7 +128,12 @@
  <summary><h4>8. 편지 도착 알림 - (발생 시)책상 위 편지봉투 더미 등장</h4> </summary>
 <table >
     <tr>
-        <td ><img src="https://github.com/user-attachments/assets/4191709a-018a-466b-825b-f22df979b3af" width="620"/></td>
+        <td >
+          <img src="https://github.com/user-attachments/assets/4191709a-018a-466b-825b-f22df979b3af" width="496"/>
+          <img src="https://github.com/user-attachments/assets/b8d9da52-390d-4333-b8e3-5cbc27c4ed7e" width="200"/>
+        </td>
+    </tr>
+  <tr>
         <td>• 새로운 편지 알람</td>
     </tr>
 </table>
