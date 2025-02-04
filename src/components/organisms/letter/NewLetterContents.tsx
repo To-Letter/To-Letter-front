@@ -33,6 +33,7 @@ export default function NewLettersubject() {
       const formattedMails = listLetter.map((letter: any) => ({
         id: letter.id,
         sender: letter.fromUserNickname,
+        receiver: letter.toUserNickname,
         subject: letter.contents,
         timeReceived: letter.arrivedAt,
         viewCheck: letter.viewCheck,
@@ -55,7 +56,7 @@ export default function NewLettersubject() {
   const handleMailItemClick = (mail: Mail) => {
     setIndividualLetterInfo({
       id: mail.id,
-      toUserNickname: mail.sender,
+      toUserNickname: mail.receiver,
       letterContent: mail.subject,
       fromUserNickname: mail.sender,
       onDelete: true,

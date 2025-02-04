@@ -65,7 +65,6 @@ export default function KakaoCallback() {
       } else {
         alert("카카오 로그인 오류입니다. 다시 로그인해주세요.");
         router.replace("/?modal=login");
-        console.log("kakao : ", 405);
       }
     } catch (error: any) {
       alert("카카오 로그인 중 오류가 발생했습니다.");
