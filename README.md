@@ -104,8 +104,8 @@
  <summary><h4>6. 나의 편지함(보낸/받은 편지) - 책상 위 책장</h4> </summary>
 <table >
     <tr>
-        <td></td>
-        <td>보낸, 받은 편지, 무한스크롤 적용</td>
+        <td><img src="https://github.com/user-attachments/assets/c1ff5cae-6d8b-41e5-9db1-30df6fa0a27d" width="580"/></td>
+        <td>• 보낸/받은 편지함(무한스크롤 적용)<br/>• 개별 편지 열람</td>
     </tr>
 </table>
 </details>
@@ -114,8 +114,14 @@
  <summary><h4>7. 편지 삭제 - 책상 오른쪽 쓰레기통</h4> </summary>
 <table >
   <tr>
-        <td>개별 삭제</td>
-        <td>목록 선택 삭제</td>
+        <tr>
+        <td> 
+          <img src="https://github.com/user-attachments/assets/347062d8-0d9a-480b-8f07-c5f13c5a2842" width="348"/>
+        </td>
+        <td>
+          <img src="https://github.com/user-attachments/assets/0c775e01-b850-4b05-8d2e-69df6e5a9eae" width="348"/>
+        </td>
+    </tr>
     </tr>
     <tr>
         <td> 개별 삭제</td>
