@@ -82,6 +82,7 @@ const LetterSendContents: React.FC = () => {
               편지를 이대로 보내시겠습니까
               <SummaryTip
                 $margin="0 0 0 4px"
+                $left="-50px"
                 tipText="※ To. Letter의 편지는 유저들이 등록한 주소 거리에 기반하여 우편 도착시간이 결정됩니다."
               />
             </ElementBox>
