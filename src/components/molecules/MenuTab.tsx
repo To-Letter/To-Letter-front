@@ -28,8 +28,6 @@ export default function MenuTab() {
     return menuList[pathKey];
   }, [pathKey]);
 
-  console.log("Current userRole:", myInfo.userRole); // 실제 값 확인
-
   if (tabOption === "underline") {
     return (
       <NavBox>
