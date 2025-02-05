@@ -11,7 +11,7 @@ interface MyInfoI {
   address: string;
   email: string;
   nickname: string;
-  userRole: "local" | "kakao";
+  userRole: "localLogin" | "kakaoLogin";
 }
 
 /**
