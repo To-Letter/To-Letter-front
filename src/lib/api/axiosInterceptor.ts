@@ -17,15 +17,9 @@ axiosInterceptor.interceptors.request.use(
   async (config) => {
     const accessToken =
       axiosInterceptor.defaults.headers.common["Authorization"];
-    const refreshToken =
-      axiosInterceptor.defaults.headers.common["refreshToken"];
-
     /* 두 토큰 모두 요청 헤더에 포함 */
     if (accessToken) {
       config.headers["Authorization"] = accessToken;
-    }
-    if (refreshToken) {
-      config.headers["refreshToken"] = refreshToken;
     }
 
     return config;
