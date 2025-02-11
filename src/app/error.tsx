@@ -1,5 +1,3 @@
-"use client";
-
 import ErrorPage from "@/components/template/errorpage";
 
 export default function Error({
