@@ -8,14 +8,16 @@ import { useSetRecoilState } from "recoil";
 import { getFindMailAuth, postEmailVerify } from "@/lib/api/controller/account";
 import { useUser } from "@/hooks/useUser";
 import { emailVerifyAuthType } from "@/constants/emailVerify";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Verify from "@/components/molecules/Verify";
 import Button from "@/components/atoms/Button";
 import { Text } from "@/components/atoms/Text";
 import { MainBox, SectionBox } from "@/components/atoms/Box";
+import InputForm from "@/components/molecules/InputForm";
 
 export default function PasswordMailVerifyContents() {
   const router = useRouter();
+  const pathName = usePathname();
   /** 토스트 메시지를 관리하는 state */
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: "",
@@ -27,13 +29,18 @@ export default function PasswordMailVerifyContents() {
   /** 이메일 인증 여부 */
   const [verifyMe, setVerifyMe] = useState<boolean>(false);
   /** 유저 정보 관리 */
-  const { myInfo } = useUser();
+  const { myInfo, updateMyInfo } = useUser();
   /** 로딩 상태를 관리하는 recoil */
   const setLoding = useSetRecoilState(loadingState);
 
   /** 인증 번호 입력 업데이트 함수 */
   const onChangeMailKey = (e: ChangeEvent<HTMLInputElement>) => {
     setMailKey(e.target.value);
+  };
+
+  /** 이메일 업데이트 함수 */
+  const onChangeEmailInput = (e: ChangeEvent<HTMLInputElement>) => {
+    updateMyInfo({ email: e.target.value });
   };
 
   /** 인증 코드 확인 함수 */
@@ -56,7 +63,11 @@ export default function PasswordMailVerifyContents() {
 
         if (res.data.responseCode === 201) {
           setLoding(false);
-          router.push("/mypage/passwordmailverify/passwordchange");
+          if (pathName.includes("auth")) {
+            router.push("/auth/findaccount/passwordchange");
+          } else {
+            router.push("/mypage/passwordmailverify/passwordchange");
+          }
           setToast({ message: "이메일 확인 성공!", visible: true });
         } else if (res.data.responseCode === 401) {
           setLoding(false);
@@ -83,6 +94,10 @@ export default function PasswordMailVerifyContents() {
 
   /** 이메일 인증코드 발송 함수 */
   const authRequest = async () => {
+    if (myInfo.email === "") {
+      setToast({ message: "이메일 주소를 입력하세요.", visible: true });
+      return;
+    }
     setLoding(true);
     try {
       const res: any = await getFindMailAuth(myInfo.email);
@@ -130,6 +145,17 @@ export default function PasswordMailVerifyContents() {
         <Text $color="#cecece" $fontSize="20px" $margin="0 0 8px 0">
           비밀번호 변경
         </Text>
+        {pathName.includes("auth") && (
+          <InputForm
+            key="emailValue"
+            labelTitle="이메일 입력"
+            name="eamil"
+            onChange={onChangeEmailInput}
+            keyValue="email"
+            type="text"
+            value={myInfo.email}
+          />
+        )}
         <Verify onChangeMailKey={onChangeMailKey} message={verifyMe}>
           {verifyMe ? (
             <Timer setVerifyMe={setVerifyMe} />
