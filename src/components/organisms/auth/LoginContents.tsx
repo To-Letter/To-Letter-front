@@ -143,6 +143,7 @@ export default function LoginContents() {
           $color="#e9e9e9"
           $fontSize="16px"
           $isClickAble={true}
+          onClick={() => router.push("/auth/findaccount")}
         >{`can't login?`}</Text>
       </SectionBox>
     </MainBox>
