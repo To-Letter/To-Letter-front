@@ -75,10 +75,12 @@ export default function LoginContents() {
         res.data.responseCode === 401 ||
         res.data.responseCode === 400
       ) {
+        console.log("login : res.data.responseCode ", res.data.responseCode);
         alert("이메일 혹은 비밀번호를 잘못입력하셨습니다.");
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (_error) {
+    } catch (_error: any) {
+      console.log(_error);
       alert("이메일 혹은 비밀번호를 잘못입력하셨습니다.");
     }
   };
